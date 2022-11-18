@@ -3,3 +3,5 @@
 /WorkManagerDal/bin/
 /WorkManagerDal/obj/
 /RiskerWorkManager/WorkManager.db
+/RiskerWorkManager/WorkManager.db-shm
+/RiskerWorkManager/WorkManager.db-wal
