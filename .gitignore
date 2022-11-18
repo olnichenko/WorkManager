@@ -1,2 +1,4 @@
 /.vs/
 /RiskerWorkManager/ClientApp/.angular/
+/WorkManagerDal/bin/
+/WorkManagerDal/obj/

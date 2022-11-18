@@ -1,4 +1,22 @@
+using RiskerWorkManager;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// if is Development get setting from appsettings.<computer name>.json
+// else standart settings
+if (builder.Environment.EnvironmentName == "Development")
+{
+    builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
+        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+        .AddJsonFile($"appsettings.{Environment.MachineName}.json", optional: true)
+        .AddEnvironmentVariables();
+}
+
+// extensions Startup.cs
+builder.Services.ConfigureServices();
+builder.Services.MapSettings(builder.Configuration);
+builder.Services.MapRepositories();
+builder.Services.MapServices();
 
 // Add services to the container.
 
