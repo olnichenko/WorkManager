@@ -16,7 +16,7 @@ if (builder.Environment.EnvironmentName == "Development")
 builder.Services.ConfigureServices();
 builder.Services.MapSettings(builder.Configuration);
 builder.Services.MapRepositories();
-builder.Services.MapServices();
+builder.Services.MapServices(builder.Configuration);
 
 // Add services to the container.
 

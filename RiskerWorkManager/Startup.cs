@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RiskerWorkManager.ConfigurationSettings;
 using System;
 using WorkManagerDal;
+using WorkManagerDal.Services;
 
 namespace RiskerWorkManager
 {
     public static class Startup
     {
+        
         public static void ConfigureServices(this IServiceCollection services)
         {
             //services.AddAutoMapper(typeof(Program));
@@ -17,17 +20,24 @@ namespace RiskerWorkManager
         {
             services.Configure<DbSettings>(configuration.GetSection(DbSettings.SectionName));
             services.Configure<JWTTokenSettings>(configuration.GetSection(JWTTokenSettings.SectionName));
-
-            var dbSettings = configuration.GetSection(DbSettings.SectionName).Get<DbSettings>();
-            services.AddScoped((_) => new WorkManagerDbContext(dbSettings.ConnectionString));
         }
         public static void MapRepositories(this IServiceCollection services)
         {
             //services.AddScoped<IUserRepository<User, long>, UserRepository>();
             //services.AddScoped<IResetPasswordKeyRepository<ResetPasswordKey, Guid>, ResetPasswordKeyRepository>();
         }
-        public static void MapServices(this IServiceCollection services)
+        public static void MapServices(this IServiceCollection services, IConfiguration configuration)
         {
+            var dbSettings = configuration.GetSection(DbSettings.SectionName).Get<DbSettings>();
+
+            var context = new WorkManagerDbContext(dbSettings.ConnectionString);
+            var unitOfWork = new WorkManagerUnitOfWork(context);
+
+            services.AddScoped((_) => context);
+            services.AddScoped((_) => unitOfWork);
+            services.AddScoped((_) => new UsersService(unitOfWork));
+
+            //services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
             //services.AddScoped<IValidator<User>, UserValidator>();
 
             //services.AddScoped<ITokenService, TokenService>();

@@ -11,6 +11,7 @@ namespace WorkManagerDal.Models
     public class Role : BaseEntity<int>
     {
         public string Name { get; set; }
-        public ICollection<User>? Users { get; set; }
+        public List<User> Users { get; set; } = new();
+        public List<ControllerAction> ControllerActions {get;set;} = new();
     }
 }

@@ -10,6 +10,6 @@ namespace WorkManagerDal.Models
     {
         public string Controller { get; set; }
         public string Action { get; set; }
-        public ICollection<Role> Roles { get; set; }
+        public List<Role> Roles { get; set; } = new();
     }
 }
