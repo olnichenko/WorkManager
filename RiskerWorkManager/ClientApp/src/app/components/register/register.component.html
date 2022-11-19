@@ -3,16 +3,7 @@
     <mat-form-field>
         <mat-label>Enter your email</mat-label>
         <input matInput placeholder="email@example.com" formControlName="email">
-        <div *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">
-            <mat-error *ngIf="userForm.get('email')?.invalid">{{getErrorMessage('email', 'dsdf')}}</mat-error>
-            <!--<div *ngIf="userForm.get('email')?.errors?.['required']">
-                EMAIL is required.
-            </div>
-            <div *ngIf="userForm.get('email')?.errors?.['email']">
-                Must be correct EMAIL.
-            </div>-->
-        </div>
-        
+        <mat-error *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">{{getErrorMessage('email')}}</mat-error>      
     </mat-form-field>
     <button type="button" [disabled]="!userForm.valid" class="btn btn-primary">Submit</button>
 </form>

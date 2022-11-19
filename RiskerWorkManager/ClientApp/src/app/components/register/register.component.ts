@@ -32,9 +32,25 @@ export class RegisterComponent implements OnInit {
     })
   }
 
-  getErrorMessage(propertyName: string, errorName: string): string | void {
-    this.userForm.get(propertyName)?.errors;
-    return "You must enter a value";
+  getErrorMessage(propertyName: string): string | void {
+    //let obj = this.userForm.get(propertyName)?.errors;
+    //Object.entries(obj!).forEach(([key, value], index) => {
+    //  console.log(key, value, index);
+    //});
+    //return "You must enter a value";
+    switch (propertyName) {
+      case 'email':
+        if (this.userForm.get(propertyName)?.hasError("required")) {
+          return 'Email is required';
+        }
+        if (this.userForm.get(propertyName)?.hasError("email")) {
+          return 'Enter correct email';
+        }
+        break;
+      default:
+    }
+    
+    
   }
 
   checkPasswords: ValidatorFn = (userForm: AbstractControl): ValidationErrors | null => {
