@@ -7,6 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.Repositories;
 
 namespace WorkManagerDal.Services
 {
@@ -20,12 +21,32 @@ namespace WorkManagerDal.Services
 
         public async Task<bool> IsEmailUseAsync(string email)
         {
-            var existUser = await _unitOfWork.Users.FindByCondition(x => x.Email == email).FirstOrDefaultAsync();
-            return existUser != null;
+            var existUser = await _unitOfWork.Users.FindByCondition(x => x.Email == email).AnyAsync();
+            return existUser;
         }
 
         public async Task<User> RegisterAsync(User user)
         {
+            user.IsAdmin = false;
+            return await RegisterUserAsync(user);
+        }
+
+        public async Task<bool> IsAdminExistAsync()
+        {
+            var result = await _unitOfWork.Users.FindByCondition(x => x.IsAdmin).AnyAsync();
+            return result;
+        }
+
+        public async Task<User> RegisterAdminAsync(User user)
+        {
+            user.IsAdmin = true;
+            return await RegisterUserAsync(user);
+        }
+
+        private async Task<User> RegisterUserAsync(User user)
+        {
+            user.DateRegistration = DateTime.Now;
+            user.Password = GetHash(user.Password);
             _unitOfWork.Users.Create(user);
             await _unitOfWork.SaveAsync();
             return user;

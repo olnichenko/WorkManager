@@ -5,9 +5,9 @@ using WorkManagerDal.Services;
 
 namespace RiskerWorkManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : ControllerBase, IDisposable
     {
         private readonly UsersService _usersService;
         public AccountController(UsersService usersService)
@@ -15,18 +15,30 @@ namespace RiskerWorkManager.Controllers
             _usersService = usersService;
         }
 
-        [HttpPost]
-        public async Task<IResult> IsEmailUse(string email)
+        [HttpGet]
+        public async Task<bool> IsEmailUse(string email)
         {
             var result = await _usersService.IsEmailUseAsync(email);
-            return Results.Ok(result);
+            return result;
         }
 
         [HttpPost]
-        public async Task<IResult> Register(User user)
+        public async Task<User> Register(User user)
         {
             var result = await _usersService.RegisterAsync(user);
-            return Results.Ok(result);
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<bool> IsAdminExist()
+        {
+            var result = await _usersService.IsAdminExistAsync();
+            return result;
+        }
+
+        void IDisposable.Dispose()
+        {
+            _usersService.Dispose();
         }
     }
 }

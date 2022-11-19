@@ -12,6 +12,5 @@ namespace WorkManagerDal.Models
     {
         public string Name { get; set; }
         public List<User> Users { get; set; } = new();
-        public List<ControllerAction> ControllerActions {get;set;} = new();
     }
 }

@@ -18,11 +18,17 @@ builder.Services.MapSettings(builder.Configuration);
 builder.Services.MapRepositories();
 builder.Services.MapServices(builder.Configuration);
 
+if (builder.Environment.EnvironmentName == "Development")
+{
+    builder.Services.AddSwaggerGen();
+}
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
 
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -31,15 +37,27 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseCors("AllowAllOrigins");
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapFallbackToFile("index.html");
+
+if (builder.Environment.EnvironmentName == "Development")
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V2");
+    });
+}
 
 app.Run();

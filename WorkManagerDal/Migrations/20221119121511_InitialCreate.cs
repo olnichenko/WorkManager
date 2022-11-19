@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -10,20 +11,6 @@ namespace WorkManagerDal.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "ControllerActions",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Controller = table.Column<string>(type: "TEXT", nullable: false),
-                    Action = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ControllerActions", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
@@ -44,35 +31,13 @@ namespace WorkManagerDal.Migrations
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false)
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DateRegistration = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ControllerActionRole",
-                columns: table => new
-                {
-                    ControllerActionsId = table.Column<long>(type: "INTEGER", nullable: false),
-                    RolesId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ControllerActionRole", x => new { x.ControllerActionsId, x.RolesId });
-                    table.ForeignKey(
-                        name: "FK_ControllerActionRole_ControllerActions_ControllerActionsId",
-                        column: x => x.ControllerActionsId,
-                        principalTable: "ControllerActions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ControllerActionRole_Roles_RolesId",
-                        column: x => x.RolesId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -100,11 +65,6 @@ namespace WorkManagerDal.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ControllerActionRole_RolesId",
-                table: "ControllerActionRole",
-                column: "RolesId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Roles_Name",
                 table: "Roles",
                 column: "Name",
@@ -126,13 +86,7 @@ namespace WorkManagerDal.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ControllerActionRole");
-
-            migrationBuilder.DropTable(
                 name: "RoleUser");
-
-            migrationBuilder.DropTable(
-                name: "ControllerActions");
 
             migrationBuilder.DropTable(
                 name: "Roles");

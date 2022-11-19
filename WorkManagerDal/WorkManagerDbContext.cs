@@ -28,6 +28,5 @@ namespace WorkManagerDal
 
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<ControllerAction> ControllerActions { get; set; }
     }
 }

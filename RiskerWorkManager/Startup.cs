@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RiskerWorkManager.ConfigurationSettings;
@@ -29,13 +30,19 @@ namespace RiskerWorkManager
         public static void MapServices(this IServiceCollection services, IConfiguration configuration)
         {
             var dbSettings = configuration.GetSection(DbSettings.SectionName).Get<DbSettings>();
+            var corsSettgins = configuration.GetSection(CORSSettings.SectionName).Get<CORSSettings>();
 
-            var context = new WorkManagerDbContext(dbSettings.ConnectionString);
-            var unitOfWork = new WorkManagerUnitOfWork(context);
+            // var context = new WorkManagerDbContext(dbSettings.ConnectionString);
+            // var unitOfWork = new WorkManagerUnitOfWork(context);
 
-            services.AddScoped((_) => context);
-            services.AddScoped((_) => unitOfWork);
-            services.AddScoped((_) => new UsersService(unitOfWork));
+            services.AddScoped((_) => new WorkManagerDbContext(dbSettings.ConnectionString));
+            services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
+            services.AddScoped((_) => new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", GenerateCorsPolicy(corsSettgins));
+            });
 
             //services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
             //services.AddScoped<IValidator<User>, UserValidator>();
@@ -44,6 +51,17 @@ namespace RiskerWorkManager
             //services.AddScoped<IUserService, UserService>();
             //services.AddScoped<IResetPasswordKeyService, ResetPasswordKeyService>();
             //services.AddScoped<IMailService, SmtpMailService>();
+        }
+
+        public static CorsPolicy GenerateCorsPolicy(CORSSettings settings)
+        {
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            //corsBuilder.AllowAnyOrigin(); // For anyone access.
+            corsBuilder.WithOrigins(settings.AllowOrigins); // for a specific url. Don't add a forward slash on the end!
+            corsBuilder.AllowCredentials();
+            return corsBuilder.Build();
         }
     }
 }

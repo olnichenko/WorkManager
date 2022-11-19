@@ -12,7 +12,6 @@ namespace WorkManagerDal
         private WorkManagerDbContext _dbContext;
         private RolesRepository _rolesRepository;
         private UsersRepository _usersRepository;
-        private ControllerActionsRepository _controllerActionsRepository;
         public WorkManagerUnitOfWork(WorkManagerDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -39,18 +38,6 @@ namespace WorkManagerDal
                     _usersRepository = new UsersRepository(_dbContext);
                 }
                 return _usersRepository;
-            }
-        }
-
-        public ControllerActionsRepository ControllerActions
-        {
-            get
-            {
-                if (_controllerActionsRepository == null)
-                {
-                    _controllerActionsRepository = new ControllerActionsRepository(_dbContext);
-                }
-                return _controllerActionsRepository;
             }
         }
 

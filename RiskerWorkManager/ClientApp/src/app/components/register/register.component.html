@@ -1,1 +1,56 @@
-<p>register works!</p>
+<h2 class="text-center">Sign up</h2>
+<form [formGroup]="userForm" (ngSubmit)="register()">
+    <mat-form-field>
+        <mat-label>Enter your email</mat-label>
+        <input matInput placeholder="email@example.com" formControlName="email">
+        <div *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">
+            <mat-error *ngIf="userForm.get('email')?.invalid">{{getErrorMessage('email', 'dsdf')}}</mat-error>
+            <!--<div *ngIf="userForm.get('email')?.errors?.['required']">
+                EMAIL is required.
+            </div>
+            <div *ngIf="userForm.get('email')?.errors?.['email']">
+                Must be correct EMAIL.
+            </div>-->
+        </div>
+        
+    </mat-form-field>
+    <button type="button" [disabled]="!userForm.valid" class="btn btn-primary">Submit</button>
+</form>
+<!--<form [formGroup]="userForm" (ngSubmit)="register()">
+    <div class="mb-3">
+        <label for="inputEmail" class="form-label">Email</label>
+        <input type="email" class="form-control" formControlName="email" id="email" name="email" aria-describedby="emailHelp">
+        <div id="emailHelp" class="form-text">EMAIL\Login</div>
+        <div *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)"
+             class="alert alert-danger">
+            <div *ngIf="userForm.get('email')?.errors?.['required']">
+                EMAIL is required.
+            </div>
+            <div *ngIf="userForm.get('email')?.errors?.['email']">
+                Must be correct EMAIL.
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" name="password" formControlName="password" class="form-control" id="password">
+        <div *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)"
+             class="alert alert-danger">
+            <div *ngIf="userForm.get('password')?.errors?.['required']">
+                Password is required.
+            </div>
+            <div *ngIf="userForm.get('password')?.errors?.['minLength']">
+                Password min lenght 6.
+            </div>
+            <div *ngIf="userForm.get('password')?.errors?.['notSame']">
+                confirm.
+            </div>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirm password</label>
+        <input type="password" name="confirmPassword" formControlName="confirmPassword" class="form-control" id="confirmPassword">
+    </div>
+    <button type="button" [disabled]="!userForm.valid" class="btn btn-primary">Submit</button>
+</form>-->
+
