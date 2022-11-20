@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagerDal;
 
@@ -10,9 +11,11 @@ using WorkManagerDal;
 namespace WorkManagerDal.Migrations
 {
     [DbContext(typeof(WorkManagerDbContext))]
-    partial class WorkManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221120082724_UpdateUserTable")]
+    partial class UpdateUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -64,6 +67,7 @@ namespace WorkManagerDal.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsAdmin")
@@ -73,6 +77,7 @@ namespace WorkManagerDal.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Password")

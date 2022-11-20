@@ -85,11 +85,16 @@ export class ApiClient {
     }
 
     /**
+     * @param password (optional) 
      * @param body (optional) 
      * @return Success
      */
-    register(body: User | undefined): Observable<User> {
-        let url_ = this.baseUrl + "/Account/Register";
+    register(password: string | undefined, body: UserVm | undefined): Observable<UserVm> {
+        let url_ = this.baseUrl + "/Account/Register?";
+        if (password === null)
+            throw new Error("The parameter 'password' cannot be null.");
+        else if (password !== undefined)
+            url_ += "password=" + encodeURIComponent("" + password) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -112,14 +117,14 @@ export class ApiClient {
                 try {
                     return this.processRegister(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<User>;
+                    return _observableThrow(e) as any as Observable<UserVm>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<User>;
+                return _observableThrow(response_) as any as Observable<UserVm>;
         }));
     }
 
-    protected processRegister(response: HttpResponseBase): Observable<User> {
+    protected processRegister(response: HttpResponseBase): Observable<UserVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -130,7 +135,7 @@ export class ApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = User.fromJS(resultData200);
+            result200 = UserVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -184,6 +189,68 @@ export class ApiClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param email (optional) 
+     * @param password (optional) 
+     * @return Success
+     */
+    login(email: string | undefined, password: string | undefined): Observable<User> {
+        let url_ = this.baseUrl + "/Account/Login?";
+        if (email === null)
+            throw new Error("The parameter 'email' cannot be null.");
+        else if (email !== undefined)
+            url_ += "email=" + encodeURIComponent("" + email) + "&";
+        if (password === null)
+            throw new Error("The parameter 'password' cannot be null.");
+        else if (password !== undefined)
+            url_ += "password=" + encodeURIComponent("" + password) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLogin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLogin(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<User>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<User>;
+        }));
+    }
+
+    protected processLogin(response: HttpResponseBase): Observable<User> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = User.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -375,6 +442,42 @@ export interface IRole {
     users: User[] | null;
 }
 
+export class RoleVm implements IRoleVm {
+    name!: string | null;
+
+    constructor(data?: IRoleVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): RoleVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new RoleVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name !== undefined ? this.name : <any>null;
+        return data;
+    }
+}
+
+export interface IRoleVm {
+    name: string | null;
+}
+
 export class User implements IUser {
     id!: number;
     email!: string | null;
@@ -382,6 +485,9 @@ export class User implements IUser {
     roles!: Role[] | null;
     isAdmin!: boolean;
     dateRegistration!: Date;
+    isBlocked!: boolean;
+    firstName!: string | null;
+    lastName!: string | null;
 
     constructor(data?: IUser) {
         if (data) {
@@ -407,6 +513,9 @@ export class User implements IUser {
             }
             this.isAdmin = _data["isAdmin"] !== undefined ? _data["isAdmin"] : <any>null;
             this.dateRegistration = _data["dateRegistration"] ? new Date(_data["dateRegistration"].toString()) : <any>null;
+            this.isBlocked = _data["isBlocked"] !== undefined ? _data["isBlocked"] : <any>null;
+            this.firstName = _data["firstName"] !== undefined ? _data["firstName"] : <any>null;
+            this.lastName = _data["lastName"] !== undefined ? _data["lastName"] : <any>null;
         }
     }
 
@@ -429,6 +538,9 @@ export class User implements IUser {
         }
         data["isAdmin"] = this.isAdmin !== undefined ? this.isAdmin : <any>null;
         data["dateRegistration"] = this.dateRegistration ? this.dateRegistration.toISOString() : <any>null;
+        data["isBlocked"] = this.isBlocked !== undefined ? this.isBlocked : <any>null;
+        data["firstName"] = this.firstName !== undefined ? this.firstName : <any>null;
+        data["lastName"] = this.lastName !== undefined ? this.lastName : <any>null;
         return data;
     }
 }
@@ -440,6 +552,72 @@ export interface IUser {
     roles: Role[] | null;
     isAdmin: boolean;
     dateRegistration: Date;
+    isBlocked: boolean;
+    firstName: string | null;
+    lastName: string | null;
+}
+
+export class UserVm implements IUserVm {
+    email!: string | null;
+    roles!: RoleVm[] | null;
+    isAdmin!: boolean;
+    firstName!: string | null;
+    lastName!: string | null;
+
+    constructor(data?: IUserVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"] !== undefined ? _data["email"] : <any>null;
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(RoleVm.fromJS(item));
+            }
+            else {
+                this.roles = <any>null;
+            }
+            this.isAdmin = _data["isAdmin"] !== undefined ? _data["isAdmin"] : <any>null;
+            this.firstName = _data["firstName"] !== undefined ? _data["firstName"] : <any>null;
+            this.lastName = _data["lastName"] !== undefined ? _data["lastName"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): UserVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email !== undefined ? this.email : <any>null;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item.toJSON());
+        }
+        data["isAdmin"] = this.isAdmin !== undefined ? this.isAdmin : <any>null;
+        data["firstName"] = this.firstName !== undefined ? this.firstName : <any>null;
+        data["lastName"] = this.lastName !== undefined ? this.lastName : <any>null;
+        return data;
+    }
+}
+
+export interface IUserVm {
+    email: string | null;
+    roles: RoleVm[] | null;
+    isAdmin: boolean;
+    firstName: string | null;
+    lastName: string | null;
 }
 
 export class WeatherForecast implements IWeatherForecast {

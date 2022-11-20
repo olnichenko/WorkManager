@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WorkManagerDal.Models
 {
@@ -15,5 +10,8 @@ namespace WorkManagerDal.Models
         public List<Role> Roles { get; set; } = new();
         public bool IsAdmin { get; set; }
         public DateTime DateRegistration { get; set; }
+        public bool IsBlocked { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
     }
 }

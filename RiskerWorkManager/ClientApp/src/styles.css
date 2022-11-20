@@ -18,3 +18,20 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+button.mat-primary {
+  background-color: #3996C1 !important;
+  color: black !important;
+}
+
+mat-card {
+  box-shadow: 2px 3px 6px gray !important;
+  background-color: floralwhite !important;
+}
+
+.mat-form-field-ripple {
+  background-color: #3996C1 !important;
+}
+.mat-form-field.mat-focused .mat-form-field-label {
+  color: #3996C1 !important;
+}

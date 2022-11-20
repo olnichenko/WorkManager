@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RiskerWorkManager.ConfigurationSettings;
+using RiskerWorkManager.Services;
 using System;
 using WorkManagerDal;
 using WorkManagerDal.Services;
@@ -29,6 +30,8 @@ namespace RiskerWorkManager
         }
         public static void MapServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddAutoMapper(typeof(AppMappingProfile));
+
             var dbSettings = configuration.GetSection(DbSettings.SectionName).Get<DbSettings>();
             var corsSettgins = configuration.GetSection(CORSSettings.SectionName).Get<CORSSettings>();
 
@@ -38,6 +41,11 @@ namespace RiskerWorkManager
             services.AddScoped((_) => new WorkManagerDbContext(dbSettings.ConnectionString));
             services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
             services.AddScoped((_) => new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))));
+            services.AddScoped((_) => {
+                return new UserIdentityService(
+                    new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)))
+                    );
+                });
 
             services.AddCors(options =>
             {

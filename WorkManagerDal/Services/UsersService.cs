@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using System.Threading.Tasks;
 using WorkManagerDal.Models;
-using WorkManagerDal.Repositories;
 
 namespace WorkManagerDal.Services
 {
@@ -17,6 +11,13 @@ namespace WorkManagerDal.Services
         public UsersService(WorkManagerUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
+        }
+
+        public async Task<User> GetActiveUserByEmailAndPasswordAsync(string email, string password)
+        {
+            password = GetHash(password);
+            var user = await _unitOfWork.Users.FindByCondition(x => !x.IsBlocked && x.Email == email && x.Password == password).SingleOrDefaultAsync();
+            return user;
         }
 
         public async Task<bool> IsEmailUseAsync(string email)

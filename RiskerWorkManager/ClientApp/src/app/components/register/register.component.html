@@ -1,47 +1,50 @@
-<h2 class="text-center">Sign up</h2>
-<form [formGroup]="userForm" (ngSubmit)="register()">
-    <mat-form-field>
-        <mat-label>Enter your email</mat-label>
-        <input matInput placeholder="email@example.com" formControlName="email">
-        <mat-error *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">{{getErrorMessage('email')}}</mat-error>      
-    </mat-form-field>
-    <button type="button" [disabled]="!userForm.valid" class="btn btn-primary">Submit</button>
+<form [formGroup]="userForm" novalidate (ngSubmit)="register()">
+    <mat-card class="shipping-card col-xl-8" style="margin-top: 10%">
+        <mat-card-header>
+            <mat-card-title>Sign up</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>E-mail</mat-label>
+                        <input matInput placeholder="email@example.com" formControlName="email">
+                        <mat-error *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">{{getErrorMessage('email')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Password</mat-label>
+                        <input type="password" matInput placeholder="Password" formControlName="password">
+                        <mat-error *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)">{{getErrorMessage('password')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Confirm password</mat-label>
+                        <input type="password" matInput placeholder="Confirm password" formControlName="confirmPassword">
+                        <mat-error *ngIf="userForm.get('confirmPassword')?.invalid && (userForm.get('confirmPassword')?.dirty || userForm.get('confirmPassword')?.touched)">{{getErrorMessage('confirmPassword')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button [disabled]="!userForm.valid" color="primary" type="submit">
+                Submit
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+            </button>
+        </mat-card-actions>
+        <mat-error *ngIf="userForm.hasError('notEqualsPasswords')">
+            Passwords is not equals
+        </mat-error>
+        <mat-error *ngIf="isEmailUse">
+            This E-mail is used
+        </mat-error>
+    </mat-card>
 </form>
-<!--<form [formGroup]="userForm" (ngSubmit)="register()">
-    <div class="mb-3">
-        <label for="inputEmail" class="form-label">Email</label>
-        <input type="email" class="form-control" formControlName="email" id="email" name="email" aria-describedby="emailHelp">
-        <div id="emailHelp" class="form-text">EMAIL\Login</div>
-        <div *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)"
-             class="alert alert-danger">
-            <div *ngIf="userForm.get('email')?.errors?.['required']">
-                EMAIL is required.
-            </div>
-            <div *ngIf="userForm.get('email')?.errors?.['email']">
-                Must be correct EMAIL.
-            </div>
-        </div>
-    </div>
-    <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" formControlName="password" class="form-control" id="password">
-        <div *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)"
-             class="alert alert-danger">
-            <div *ngIf="userForm.get('password')?.errors?.['required']">
-                Password is required.
-            </div>
-            <div *ngIf="userForm.get('password')?.errors?.['minLength']">
-                Password min lenght 6.
-            </div>
-            <div *ngIf="userForm.get('password')?.errors?.['notSame']">
-                confirm.
-            </div>
-        </div>
-    </div>
-    <div class="mb-3">
-        <label for="confirmPassword" class="form-label">Confirm password</label>
-        <input type="password" name="confirmPassword" formControlName="confirmPassword" class="form-control" id="confirmPassword">
-    </div>
-    <button type="button" [disabled]="!userForm.valid" class="btn btn-primary">Submit</button>
-</form>-->
+<app-toast></app-toast>
 
