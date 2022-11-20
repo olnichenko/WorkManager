@@ -15,8 +15,6 @@ import { MaterialModule } from './material.module';
 
 import { ApiClient, BASE_URL } from './api-clients/api-client';
 import { environment } from '../environments/environment';
-import { MatSpinnerOverlayComponent } from './components/mat-spinner-overlay/mat-spinner-overlay.component';
-import { ToastComponent } from './components/toast/toast.component';
 
 // export const BASE_URL = new InjectionToken<string>('BASE_URL');
 
@@ -28,9 +26,7 @@ import { ToastComponent } from './components/toast/toast.component';
     CounterComponent,
     FetchDataComponent,
     RegisterComponent,
-    RegisterAdminComponent,
-    MatSpinnerOverlayComponent,
-    ToastComponent
+    RegisterAdminComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
