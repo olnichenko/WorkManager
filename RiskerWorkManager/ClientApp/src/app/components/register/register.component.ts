@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { ApiClient, User } from '../../api-clients/api-client';
+import { ApiClient, UserVm } from '../../api-clients/api-client';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -11,13 +12,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RegisterComponent implements OnInit {
   public isEmailUse: boolean = false;
   public showLoader: boolean = false;
-  public user: User = new User();
-  public showMessage: boolean = false;
-  public messageText!: string;
-  public messageClass! :string;
+  public user: UserVm = new UserVm();
 
   userForm!: FormGroup;
-  constructor(protected apiClient: ApiClient, protected formBuilder: FormBuilder, protected matSnackBar: MatSnackBar) { }
+  constructor(protected apiClient: ApiClient, protected formBuilder: FormBuilder, protected snackBar: MatSnackBar, protected router: Router) { }
 
   ngOnInit(): void {
     this.userForm = this.formBuilder.group({
@@ -25,7 +23,7 @@ export class RegisterComponent implements OnInit {
       password: ["", [Validators.required, Validators.minLength(6)]],
       confirmPassword: ["", [Validators.required, Validators.minLength(6)]],
       firstName: ["", [Validators.required, Validators.minLength(3)]],
-      lastName: [""]
+      lastName: ["", [Validators.minLength(3)]]
     }, { validators: this.checkPasswords })
   }
 
@@ -40,9 +38,12 @@ export class RegisterComponent implements OnInit {
       }
       this.apiClient.register(this.userForm.get('password')?.value, this.user).subscribe((data) => {
         if (data != null) {
-          this.openMessage('You have successfully registered.', 'alert-success');
+          let snack = this.openMessage('You have successfully registered.', 'Success');
+          snack.afterDismissed().subscribe(() => {
+            this.router.navigate(['login']);
+          });
         } else {
-          this.openMessage('Registration failed.', 'alert-danger');
+          this.openMessage('Registration failed.', 'Error');
         }
         this.showLoader = false;
       })
@@ -53,10 +54,23 @@ export class RegisterComponent implements OnInit {
     switch (propertyName) {
       case 'email':
         if (this.userForm.get(propertyName)?.hasError("required")) {
-          return 'Email is required';
+          return 'E-mail is required';
         }
         if (this.userForm.get(propertyName)?.hasError("email")) {
-          return 'Enter correct email';
+          return 'Enter correct E-mail';
+        }
+        break;
+      case 'firstName':
+        if (this.userForm.get(propertyName)?.hasError("required")) {
+          return 'First name is required';
+        }
+        if (this.userForm.get(propertyName)?.hasError("minlength")) {
+          return 'Enter correct first name';
+        }
+        break;
+      case 'lastName':
+        if (this.userForm.get(propertyName)?.hasError("minlength")) {
+          return 'Enter correct last name';
         }
         break;
       case 'password':
@@ -77,10 +91,7 @@ export class RegisterComponent implements OnInit {
     return password === confirmPassword ? null : { notEqualsPasswords: true }
   }
 
-  openMessage(text: string, action: string) {
-    this.showMessage = true;
-    this.messageClass = action;
-    this.messageText = text;
-    let timer: ReturnType<typeof setTimeout> = setTimeout(() => { this.showMessage = false; }, 10000);
+  openMessage(message: string, action: string) {
+    return this.snackBar.open(message, action);
   }
 }

@@ -46,6 +46,7 @@ namespace RiskerWorkManager
                     new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)))
                     );
                 });
+            services.AddScoped((_) => new PermissionsService());
 
             services.AddCors(options =>
             {

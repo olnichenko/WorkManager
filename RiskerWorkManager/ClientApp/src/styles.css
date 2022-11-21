@@ -32,6 +32,20 @@ mat-card {
 .mat-form-field-ripple {
   background-color: #3996C1 !important;
 }
+
 .mat-form-field.mat-focused .mat-form-field-label {
   color: #3996C1 !important;
 }
+
+.form-card {
+  min-width: 120px;
+  margin: 20px auto;
+}
+
+.full-width {
+  width: 100%;
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

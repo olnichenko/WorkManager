@@ -1,6 +1,6 @@
-<h2>Sign up</h2>
+<h2 class="text-center">Sign up</h2>
 <form [formGroup]="userForm" novalidate (ngSubmit)="register()">
-    <mat-card class="shipping-card col-xl-8" style="margin-top: 10%">
+    <mat-card class="form-card col-xl-8">
         <mat-card-header>
             <mat-card-title>Login data</mat-card-title>
         </mat-card-header>
@@ -70,9 +70,4 @@
         </mat-error>
     </mat-card>
 </form>
-<div *ngIf="showMessage" class="position-fixed top-0 end-0 p-3" style="width: 100%;">
-    <div class="alert text-center" [ngClass]="messageClass" role="alert">
-        {{messageText}}
-    </div>
-</div>
 

@@ -1,0 +1,40 @@
+<h2 class="text-center">Login</h2>
+<form [formGroup]="userForm" novalidate (ngSubmit)="login()">
+    <mat-card class="form-card col-xl-8">
+        <mat-card-header>
+            <mat-card-title>Login data</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>E-mail</mat-label>
+                        <input matInput placeholder="email@example.com" formControlName="email">
+                        <mat-error *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">{{getErrorMessage('email')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Password</mat-label>
+                        <input type="password" matInput placeholder="Password" formControlName="password">
+                        <mat-error *ngIf="userForm.get('password')?.invalid && (userForm.get('password')?.dirty || userForm.get('password')?.touched)">{{getErrorMessage('password')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button [disabled]="!userForm.valid" color="primary" type="submit">
+                Submit
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+            </button>
+            <!--<button mat-raised-button color="primary" (click)="test()" type="button">
+                test
+            </button>-->
+        </mat-card-actions>
+        <mat-error *ngIf="!isUserExist">
+            Email or Password is incorrect.
+        </mat-error>
+    </mat-card>
+</form>

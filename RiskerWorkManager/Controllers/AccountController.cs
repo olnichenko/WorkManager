@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using RiskerWorkManager.Attributes;
 using RiskerWorkManager.Services;
 using System;
 using WorkManagerDal.Models;
@@ -16,6 +18,7 @@ namespace RiskerWorkManager.Controllers
         private readonly UsersService _usersService;
         private readonly UserIdentityService _userIndentityService;
         private readonly IMapper _mapper;
+        //private readonly PermissionService _permissionService;
 
         public AccountController(UsersService usersService, UserIdentityService userIdentityService, IMapper mapper)
         {
@@ -41,6 +44,21 @@ namespace RiskerWorkManager.Controllers
             return user;
         }
 
+        [HttpPost]
+        public async Task<UserVm> RegisterAdmin(UserVm user, string password)
+        {
+            var isAdminExist = await IsAdminExist();
+            if (isAdminExist)
+            {
+                return null;
+            }
+            var userEntity = _mapper.Map<User>(user);
+            userEntity.Password = password;
+            var result = await _usersService.RegisterAdminAsync(userEntity);
+            user = _mapper.Map<UserVm>(result);
+            return user;
+        }
+
         [HttpGet]
         public async Task<bool> IsAdminExist()
         {
@@ -49,10 +67,19 @@ namespace RiskerWorkManager.Controllers
         }
 
         [HttpPost]
-        public async Task<User> Login(string email, string password)
+        public async Task<UserVm> Login(string email, string password)
         {
             var user = await _userIndentityService.LoginAsync(email, password, HttpContext);
-            return user;
+            var userVm = _mapper.Map<UserVm>(user);
+            return userVm;
+        }
+
+        [HttpPost]
+        [AuthorizePermission(PermissionsService.Test)]
+        public string Test(string testString)
+        {
+            var result = testString.Reverse().ToString();
+            return result;
         }
 
         void IDisposable.Dispose()

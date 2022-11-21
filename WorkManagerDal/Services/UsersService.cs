@@ -5,13 +5,9 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.Services
 {
-    public class UsersService : IDisposable
+    public class UsersService : BaseService
     {
-        private readonly WorkManagerUnitOfWork _unitOfWork;
-        public UsersService(WorkManagerUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+        public UsersService(WorkManagerUnitOfWork unitOfWork) : base(unitOfWork) { }
 
         public async Task<User> GetActiveUserByEmailAndPasswordAsync(string email, string password)
         {
@@ -60,24 +56,6 @@ namespace WorkManagerDal.Services
                 var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(text));
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
-        }
-
-        private bool _disposed = false;
-        public virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _unitOfWork.Dispose();
-                }
-                _disposed = true;
-            }
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

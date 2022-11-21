@@ -26,7 +26,19 @@
                         <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
                     </li>
                     <li class="nav-item" [routerLinkActive]="['link-active']">
+                        <a class="nav-link text-dark" [routerLink]="['/login']">Login</a>
+                    </li>
+                    <li class="nav-item" [routerLinkActive]="['link-active']">
                         <a class="nav-link text-dark" [routerLink]="['/register']">Sign up</a>
+                    </li>
+                    <li *ngIf="accountService.isUserHaveAccess(accountService.testPermission)" class="nav-item" [routerLinkActive]="['link-active']">
+                        <a class="nav-link text-dark" [routerLink]="['/register']">test permission</a>
+                    </li>
+                    <li *ngIf="accountService.user?.isAdmin" class="nav-item" [routerLinkActive]="['link-active']">
+                        <a class="nav-link text-dark" [routerLink]="['/administration']">Administration</a>
+                    </li>
+                    <li *ngIf="accountService.isLoggedIn()" class="nav-item" [routerLinkActive]="['link-active']">
+                        <a class="nav-link text-dark" [routerLink]="['/profile']">{{accountService.user?.email}}</a>
                     </li>
                 </ul>
             </div>
