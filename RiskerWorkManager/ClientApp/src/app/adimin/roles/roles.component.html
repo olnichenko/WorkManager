@@ -1,1 +1,10 @@
-<p>roles works!</p>
+<button mat-raised-button color="primary" (click)="openAddDialog()" type="button">
+    Add role
+</button>
+<ag-grid-angular style="width: 100%; margin-top: 10px;" [style.height.px]="sheight"
+                 class="ag-theme-alpine"
+                 [rowData]="roles"
+                 [columnDefs]="columnDefs"
+                 (gridReady)="onGridReady($event)"
+                 [animateRows]="true"></ag-grid-angular>
+

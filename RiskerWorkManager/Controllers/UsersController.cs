@@ -7,13 +7,13 @@ using WorkManagerDal.ViewModels;
 
 namespace RiskerWorkManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         [HttpGet]
         [AuthorizePermission(PermissionsService.Users_List)]
-        public async Task<List<UserVm>> List()
+        public async Task<List<UserVm>> UsersList()
         {
             return null;
         }

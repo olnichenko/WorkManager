@@ -1,31 +1,26 @@
-<ul class="nav nav-pills flex-column mb-auto">
+<ul class="nav nav-pills flex-column mb-auto text-noworap">
     <li class="nav-item">
-        <a href="#" class="nav-link" [routerLink]="['users']" [routerLinkActive]="['active']">
+        <a href="#" class="nav-link link-admin" [routerLink]="['users']" [routerLinkActive]="['active']">
             <i class="fs-4 bi-people-fill"></i>
             <span class="d-none d-lg-inline m-3">Users</span>
         </a>
     </li>
     <li>
-        <a href="#" class="nav-link" [routerLink]="['roles']" [routerLinkActive]="['active']">
+        <a href="#" class="nav-link link-admin" [routerLink]="['roles']" [routerLinkActive]="['active']">
             <i class="fs-4 bi-person-vcard-fill"></i>
             <span class="d-none d-lg-inline m-3">Roles</span>
         </a>
     </li>
     <li>
-        <a href="#" class="nav-link" [routerLink]="['settings']" [routerLinkActive]="['active']">
+        <a href="#" class="nav-link link-admin" [routerLink]="['permissions']" [routerLinkActive]="['active']">
+            <i class="fs-4 bi-file-lock-fill"></i>
+            <span class="d-none d-lg-inline m-3">Perimissions</span>
+        </a>
+    </li>
+    <li>
+        <a href="#" class="nav-link link-admin" [routerLink]="['settings']" [routerLinkActive]="['active']">
             <i class="fs-4 bi-gear-fill"></i>
             <span class="d-none d-lg-inline m-3">Settings</span>
         </a>
     </li>
 </ul>
-
-        <style>
-            ul li {
-                display: block;
-                width: 100%;
-                text-align: left;
-                height: 60px;
-                font-size: large;
-                border-bottom: 1px sold gray;
-            }
-        </style>

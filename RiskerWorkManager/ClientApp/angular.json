@@ -32,6 +32,8 @@
             "tsConfig": "tsconfig.app.json",
             "scripts": [],
             "styles": [
+              "ag-grid-community/styles/ag-grid.css",
+              "ag-grid-community/styles/ag-theme-alpine.css",
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "node_modules/bootstrap-icons/font/bootstrap-icons.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",

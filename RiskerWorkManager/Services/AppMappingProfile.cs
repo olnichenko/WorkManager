@@ -7,7 +7,7 @@ namespace RiskerWorkManager.Services
     public class AppMappingProfile : Profile
     {
         public AppMappingProfile() {
-            CreateMap<Role, RoleVm>();
+            CreateMap<Role, RoleVm>().ReverseMap();
             CreateMap<User, UserVm>().ReverseMap();
         }
     }

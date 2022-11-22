@@ -1,8 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+a.link-admin {
+  color: #3996C1 !important;
+}
+a.active {
+  color: white !important;
+  background-color: #3996C1 !important;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -29,6 +33,10 @@ mat-card {
   background-color: floralwhite !important;
 }
 
+/*.mat-mdc-dialog-surface{
+    background-color: transparent !important;
+}*/
+
 .mat-form-field-ripple {
   background-color: #3996C1 !important;
 }
@@ -51,7 +59,12 @@ mat-card {
   font-weight: bold;
 }
 
-html, body {
+.text-noworap {
+  white-space: nowrap;
+}
+
+html, body, app-root, app-administration {
   height: 100%;
+  padding: 0;
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

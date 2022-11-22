@@ -15,6 +15,8 @@ export class AccountService {
     let storageData = this.getCurrentUser();
     if (storageData?.token != null) {
       this.loingByToken(storageData.token);
+    } else {
+      localStorage.clear();
     }
   }
 
@@ -45,7 +47,7 @@ export class AccountService {
 
   public logout() {
     this.apiClient.logout().subscribe();
-    localStorage.removeItem(this._userKeyInStorage);
+    localStorage.clear();
     this.user.next(null);
     this.router.navigate([''])
   }

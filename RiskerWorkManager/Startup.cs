@@ -15,8 +15,6 @@ namespace RiskerWorkManager
         
         public static void ConfigureServices(this IServiceCollection services)
         {
-            //services.AddAutoMapper(typeof(Program));
-            //services.AddControllersWithViews();
         }
         public static void MapSettings(this IServiceCollection services, IConfiguration configuration)
         {
@@ -25,8 +23,6 @@ namespace RiskerWorkManager
         }
         public static void MapRepositories(this IServiceCollection services)
         {
-            //services.AddScoped<IUserRepository<User, long>, UserRepository>();
-            //services.AddScoped<IResetPasswordKeyRepository<ResetPasswordKey, Guid>, ResetPasswordKeyRepository>();
         }
         public static void MapServices(this IServiceCollection services, IConfiguration configuration)
         {
@@ -36,12 +32,11 @@ namespace RiskerWorkManager
             var corsSettings = configuration.GetSection(CORSSettings.SectionName).Get<CORSSettings>();
             var tokenSettings = configuration.GetSection(JWTTokenSettings.SectionName).Get<JWTTokenSettings>();
 
-            // var context = new WorkManagerDbContext(dbSettings.ConnectionString);
-            // var unitOfWork = new WorkManagerUnitOfWork(context);
             services.AddScoped((_) => new TokenService(tokenSettings));
             services.AddScoped((_) => new WorkManagerDbContext(dbSettings.ConnectionString));
             services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
             services.AddScoped((_) => new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))));
+            services.AddScoped((_) => new RolesService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))));
             services.AddScoped((_) => {
                 return new UserIdentityService(
                     new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))),
@@ -54,14 +49,6 @@ namespace RiskerWorkManager
             {
                 options.AddPolicy("AllowAllOrigins", GenerateCorsPolicy(corsSettings));
             });
-
-            //services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
-            //services.AddScoped<IValidator<User>, UserValidator>();
-
-            //services.AddScoped<ITokenService, TokenService>();
-            //services.AddScoped<IUserService, UserService>();
-            //services.AddScoped<IResetPasswordKeyService, ResetPasswordKeyService>();
-            //services.AddScoped<IMailService, SmtpMailService>();
         }
 
         public static CorsPolicy GenerateCorsPolicy(CORSSettings settings)

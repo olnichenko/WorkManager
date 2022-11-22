@@ -20,6 +20,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RolesComponent } from './adimin/roles/roles.component';
 import { AdministrationComponent } from './adimin/administration/administration.component';
 import { AdminNavMenuComponent } from './adimin/admin-nav-menu/admin-nav-menu.component';
+import { AddRoleComponent } from './adimin/add-role/add-role.component';
 
 const adminRoutes: Routes = [
   { path: 'roles', component: RolesComponent },
@@ -43,7 +44,8 @@ const appRoutes: Routes = [
     LoginComponent,
     RolesComponent,
     AdministrationComponent,
-    AdminNavMenuComponent
+    AdminNavMenuComponent,
+    AddRoleComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

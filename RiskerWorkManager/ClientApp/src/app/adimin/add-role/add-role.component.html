@@ -1,0 +1,36 @@
+<form [formGroup]="roleForm" novalidate (ngSubmit)="create()">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Add new role</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Name</mat-label>
+                        <input matInput formControlName="name">
+                        <mat-error *ngIf="roleForm.get('name')?.invalid && (roleForm.get('name')?.dirty || roleForm.get('name')?.touched)">{{getErrorMessage('name')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput rows="6" formControlName="description"></textarea>
+                        <mat-error *ngIf="roleForm.get('description')?.invalid && (roleForm.get('description')?.dirty || roleForm.get('description')?.touched)">{{getErrorMessage('description')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button [disabled]="!roleForm.valid" color="primary" type="submit">
+                Save
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+            </button>
+        </mat-card-actions>
+        <mat-error *ngIf="isRoleExist">
+            This role exist
+        </mat-error>
+    </mat-card>
+</form>
