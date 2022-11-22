@@ -46,6 +46,12 @@ mat-card {
   width: 100%;
 }
 
+.link-active
+{
+  font-weight: bold;
+}
 
-html, body { height: 100%; }
+html, body {
+  height: 100%;
+}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

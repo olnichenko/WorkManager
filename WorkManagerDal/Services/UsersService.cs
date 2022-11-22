@@ -16,6 +16,12 @@ namespace WorkManagerDal.Services
             return user;
         }
 
+        public async Task<User> GetActiveUserByEmailAsync(string email)
+        {
+            var user = await _unitOfWork.Users.FindByCondition(x => !x.IsBlocked && x.Email == email).SingleOrDefaultAsync();
+            return user;
+        }
+
         public async Task<bool> IsEmailUseAsync(string email)
         {
             var existUser = await _unitOfWork.Users.FindByCondition(x => x.Email == email).AnyAsync();

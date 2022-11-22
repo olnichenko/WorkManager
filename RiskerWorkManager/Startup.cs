@@ -33,24 +33,26 @@ namespace RiskerWorkManager
             services.AddAutoMapper(typeof(AppMappingProfile));
 
             var dbSettings = configuration.GetSection(DbSettings.SectionName).Get<DbSettings>();
-            var corsSettgins = configuration.GetSection(CORSSettings.SectionName).Get<CORSSettings>();
+            var corsSettings = configuration.GetSection(CORSSettings.SectionName).Get<CORSSettings>();
+            var tokenSettings = configuration.GetSection(JWTTokenSettings.SectionName).Get<JWTTokenSettings>();
 
             // var context = new WorkManagerDbContext(dbSettings.ConnectionString);
             // var unitOfWork = new WorkManagerUnitOfWork(context);
-
+            services.AddScoped((_) => new TokenService(tokenSettings));
             services.AddScoped((_) => new WorkManagerDbContext(dbSettings.ConnectionString));
             services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
             services.AddScoped((_) => new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))));
             services.AddScoped((_) => {
                 return new UserIdentityService(
-                    new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)))
+                    new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))),
+                    new TokenService(tokenSettings)
                     );
                 });
             services.AddScoped((_) => new PermissionsService());
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAllOrigins", GenerateCorsPolicy(corsSettgins));
+                options.AddPolicy("AllowAllOrigins", GenerateCorsPolicy(corsSettings));
             });
 
             //services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));

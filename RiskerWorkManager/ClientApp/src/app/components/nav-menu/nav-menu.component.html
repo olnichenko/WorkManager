@@ -1,7 +1,7 @@
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: #3996C1;">
-        <div class="container">
-            <a class="navbar-brand" [routerLink]="['/']">Risker Work Manager</a>
+    <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light border-bottom box-shadow mb-3" style="background-color: #3996C1; white-space: nowrap;">
+        <div class="container m-0">
+            <a class="navbar-brand" style="white-space: nowrap;" [routerLink]="['/']">Risker Work Manager</a>
             <button class="navbar-toggler"
                     type="button"
                     data-toggle="collapse"
@@ -11,34 +11,29 @@
                     (click)="toggle()">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
+            <div class="navbar-collapse collapse d-md-inline-flex justify-content-end w-100"
                  [ngClass]="{ show: isExpanded }">
                 <ul class="navbar-nav flex-grow">
-                    <li class="nav-item"
-                        [routerLinkActive]="['link-active']"
-                        [routerLinkActiveOptions]="{ exact: true }">
-                        <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" [routerLinkActiveOptions]="{ exact: true }" [routerLinkActive]="['link-active']" [routerLink]="['/']">Home</a>
                     </li>
-                    <li class="nav-item" [routerLinkActive]="['link-active']">
-                        <a class="nav-link text-dark" [routerLink]="['/counter']">Counter</a>
+                    <li *ngIf="user == null" class="nav-item">
+                        <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/login']">Login</a>
                     </li>
-                    <li class="nav-item" [routerLinkActive]="['link-active']">
-                        <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
+                    <li *ngIf="user == null" class="nav-item">
+                        <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/register']">Sign up</a>
                     </li>
-                    <li class="nav-item" [routerLinkActive]="['link-active']">
-                        <a class="nav-link text-dark" [routerLink]="['/login']">Login</a>
+                    <li *ngIf="accountService.isUserHaveAccess(accountService.testPermission)" class="nav-item">
+                        <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/register']">test permission</a>
                     </li>
-                    <li class="nav-item" [routerLinkActive]="['link-active']">
-                        <a class="nav-link text-dark" [routerLink]="['/register']">Sign up</a>
+                    <li *ngIf="user?.isAdmin" class="nav-item">
+                        <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/administration']">Administration</a>
                     </li>
-                    <li *ngIf="accountService.isUserHaveAccess(accountService.testPermission)" class="nav-item" [routerLinkActive]="['link-active']">
-                        <a class="nav-link text-dark" [routerLink]="['/register']">test permission</a>
+                    <li *ngIf="user != null" class="nav-item">
+                        <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/profile']">{{accountService.getCurrentUser()?.email}}</a>
                     </li>
-                    <li *ngIf="accountService.user?.isAdmin" class="nav-item" [routerLinkActive]="['link-active']">
-                        <a class="nav-link text-dark" [routerLink]="['/administration']">Administration</a>
-                    </li>
-                    <li *ngIf="accountService.isLoggedIn()" class="nav-item" [routerLinkActive]="['link-active']">
-                        <a class="nav-link text-dark" [routerLink]="['/profile']">{{accountService.user?.email}}</a>
+                    <li *ngIf="user != null" class="nav-item">
+                        <a class="nav-link text-dark" href="#" (click)="logout()">Logout</a>
                     </li>
                 </ul>
             </div>

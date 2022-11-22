@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ApiClient, UserVm } from '../../api-clients/api-client';
 import { AccountService } from '../../services/account.service';
 
@@ -9,43 +11,36 @@ import { AccountService } from '../../services/account.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   public showLoader: boolean = false;
-  public user: UserVm = new UserVm();
+  public user: UserVm | null = new UserVm();
   userForm!: FormGroup;
   isUserExist: boolean = true;
+  isTryLoggedIn: boolean = false;
+  private subscriptions: Subscription[] = [];
 
-  constructor(protected apiClient: ApiClient, protected formBuilder: FormBuilder, protected snackBar: MatSnackBar, protected accountService: AccountService) { }
+  constructor(protected formBuilder: FormBuilder, protected snackBar: MatSnackBar, protected accountService: AccountService, protected router: Router) { }
+  ngOnDestroy(): void {
+    this.unsubscribe();
+  }
 
   ngOnInit(): void {
+    if (this.accountService.getCurrentUser() != null) {
+      this.router.navigate([""]);
+    }
+    this.addSubscriptions()
+
     this.userForm = this.formBuilder.group({
       email: ["", [Validators.email, Validators.required]],
       password: ["", [Validators.required, Validators.minLength(6)]],
     })
   }
 
-  public test(): void {
-    let str = "1234567890";
-    this.apiClient.test(str).subscribe((data) => {
-      this.openMessage(data, "test result");
-    })
-  }
-
   public login(): void {
+    this.isTryLoggedIn = true;
     this.showLoader = true;
     this.user = this.userForm.getRawValue();
-    this.apiClient.login(this.user.email!, this.userForm.get('password')?.value).subscribe((data) => {
-      console.log(data);
-      if (data == null) {
-        this.isUserExist = false;
-        this.openMessage("Email or Password is incorrect.", "Error");
-      } else {
-        this.isUserExist = true;
-        this.accountService.user = data;
-        this.openMessage("You have successfully logged in", "Success");
-      }
-      this.showLoader = false;
-    });
+    this.accountService.login(this.user?.email!, this.userForm.get('password')?.value);
   }
 
   getErrorMessage(propertyName: string): string | void {
@@ -71,5 +66,26 @@ export class LoginComponent implements OnInit {
 
   openMessage(message: string, action: string) {
     this.snackBar.open(message, action);
+  }
+
+  private addSubscriptions() {
+    const userSubs = this.accountService.user.subscribe((data) => {
+      if (!this.isTryLoggedIn) {
+        return;
+      }
+      if (data == null) {
+        this.openMessage("Email or Password is incorrect.", "Error");
+      } else {
+        this.user = data;
+        this.openMessage("You have successfully logged in", "Success");
+      }
+      this.showLoader = false;
+    });
+    this.subscriptions.push(userSubs);
+  }
+
+  private unsubscribe() {
+    this.subscriptions
+      .forEach(s => s.unsubscribe());
   }
 }

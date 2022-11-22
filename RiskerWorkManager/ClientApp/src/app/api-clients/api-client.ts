@@ -324,6 +324,111 @@ export class ApiClient {
     }
 
     /**
+     * @param token (optional) 
+     * @return Success
+     */
+    loginByToken(token: string | undefined): Observable<UserVm> {
+        let url_ = this.baseUrl + "/Account/LoginByToken?";
+        if (token === null)
+            throw new Error("The parameter 'token' cannot be null.");
+        else if (token !== undefined)
+            url_ += "token=" + encodeURIComponent("" + token) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLoginByToken(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLoginByToken(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserVm>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UserVm>;
+        }));
+    }
+
+    protected processLoginByToken(response: HttpResponseBase): Observable<UserVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    logout(): Observable<void> {
+        let url_ = this.baseUrl + "/Account/Logout";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLogout(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLogout(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processLogout(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param testString (optional) 
      * @return Success
      */
@@ -371,6 +476,124 @@ export class ApiClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    roles(): Observable<Role[]> {
+        let url_ = this.baseUrl + "/api/Roles";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRoles(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRoles(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Role[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Role[]>;
+        }));
+    }
+
+    protected processRoles(response: HttpResponseBase): Observable<Role[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Role.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    users(): Observable<UserVm[]> {
+        let url_ = this.baseUrl + "/api/Users";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUsers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUsers(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<UserVm[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<UserVm[]>;
+        }));
+    }
+
+    protected processUsers(response: HttpResponseBase): Observable<UserVm[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(UserVm.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -565,6 +788,7 @@ export interface IPermission {
 export class Role implements IRole {
     id!: number;
     name!: string | null;
+    description!: string | null;
     users!: User[] | null;
     permissions!: Permission[] | null;
 
@@ -581,6 +805,7 @@ export class Role implements IRole {
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
+            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             if (Array.isArray(_data["users"])) {
                 this.users = [] as any;
                 for (let item of _data["users"])
@@ -611,6 +836,7 @@ export class Role implements IRole {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
         data["name"] = this.name !== undefined ? this.name : <any>null;
+        data["description"] = this.description !== undefined ? this.description : <any>null;
         if (Array.isArray(this.users)) {
             data["users"] = [];
             for (let item of this.users)
@@ -628,6 +854,7 @@ export class Role implements IRole {
 export interface IRole {
     id: number;
     name: string | null;
+    description: string | null;
     users: User[] | null;
     permissions: Permission[] | null;
 }
@@ -768,6 +995,7 @@ export class UserVm implements IUserVm {
     isAdmin!: boolean;
     firstName!: string | null;
     lastName!: string | null;
+    token!: string | null;
 
     constructor(data?: IUserVm) {
         if (data) {
@@ -792,6 +1020,7 @@ export class UserVm implements IUserVm {
             this.isAdmin = _data["isAdmin"] !== undefined ? _data["isAdmin"] : <any>null;
             this.firstName = _data["firstName"] !== undefined ? _data["firstName"] : <any>null;
             this.lastName = _data["lastName"] !== undefined ? _data["lastName"] : <any>null;
+            this.token = _data["token"] !== undefined ? _data["token"] : <any>null;
         }
     }
 
@@ -813,6 +1042,7 @@ export class UserVm implements IUserVm {
         data["isAdmin"] = this.isAdmin !== undefined ? this.isAdmin : <any>null;
         data["firstName"] = this.firstName !== undefined ? this.firstName : <any>null;
         data["lastName"] = this.lastName !== undefined ? this.lastName : <any>null;
+        data["token"] = this.token !== undefined ? this.token : <any>null;
         return data;
     }
 }
@@ -823,6 +1053,7 @@ export interface IUserVm {
     isAdmin: boolean;
     firstName: string | null;
     lastName: string | null;
+    token: string | null;
 }
 
 export class WeatherForecast implements IWeatherForecast {

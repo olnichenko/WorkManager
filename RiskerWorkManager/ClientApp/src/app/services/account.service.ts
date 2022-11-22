@@ -1,31 +1,73 @@
 import { Injectable } from '@angular/core';
-import { UserVm } from '../api-clients/api-client';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ApiClient, UserVm } from '../api-clients/api-client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  public testPermission: string = "Test permission";
-  public user : UserVm | undefined;
-  constructor() { }
+  public readonly testPermission: string = "Test permission";
+
+  private readonly _userKeyInStorage: string = "userKeyInStorage";
+  public user: BehaviorSubject<UserVm | null> = new BehaviorSubject<UserVm | null>(null);
+  constructor(private apiClient: ApiClient, protected router: Router) {
+    let storageData = this.getCurrentUser();
+    if (storageData != null) {
+      this.loingByToken(storageData.token!);
+    }
+  }
+
+  public login(email: string, passwrod: string): void {
+    this.apiClient.login(email, passwrod).subscribe((data) => {
+      this.setCurrentUser(data);
+      this.user.next(data);
+    })
+  }
+
+  private loingByToken(token: string) {
+    this.apiClient.loginByToken(token).subscribe((data) => {
+      this.setCurrentUser(data);
+      this.user.next(data);
+    })
+  }
+
+  public getCurrentUser(): UserVm | undefined | null{
+    if (this.user.getValue() == null) {
+      let userStr = localStorage.getItem(this._userKeyInStorage);
+      if (userStr != null) {
+        let userData = JSON.parse(userStr);
+        // this.user.next(userData);
+        return userData;
+      }
+    }
+    return this.user.getValue()
+  }
+
+  public logout() {
+    this.apiClient.logout().subscribe();
+    localStorage.removeItem(this._userKeyInStorage);
+    this.user.next(null);
+    this.router.navigate([''])
+  }
+
+  private setCurrentUser(user: UserVm): void {
+    localStorage.setItem(this._userKeyInStorage, JSON.stringify(user))
+  }
 
   public isUserHaveAccess(permission: string): boolean {
-    if (this.user == null) {
+    if (this.getCurrentUser() == null) {
       return false;
     }
-    if (this.user.isAdmin) {
+    if (this.getCurrentUser()?.isAdmin) {
       return true;
     }
-    var result = this.user?.roles?.find(x => {
+    var result = this.getCurrentUser()?.roles?.find(x => {
       return x.permissions?.find(y => y.name == permission);
     })
     if (result != null) {
       return true;
     }
     return false;
-  }
-
-  public isLoggedIn(): boolean {
-    return this.user != null;
   }
 }

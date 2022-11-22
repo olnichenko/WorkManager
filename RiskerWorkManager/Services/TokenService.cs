@@ -11,9 +11,9 @@ namespace RiskerWorkManager.Services
     public class TokenService
     {
         private readonly JWTTokenSettings _tokenSettings;
-        public TokenService(IOptions<JWTTokenSettings> tokenSettings)
+        public TokenService(JWTTokenSettings tokenSettings)
         {
-            _tokenSettings = tokenSettings.Value;
+            _tokenSettings = tokenSettings;
         }
         public string GenerateToken(User user)
         {
