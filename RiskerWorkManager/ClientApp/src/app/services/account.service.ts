@@ -13,8 +13,8 @@ export class AccountService {
   public user: BehaviorSubject<UserVm | null> = new BehaviorSubject<UserVm | null>(null);
   constructor(private apiClient: ApiClient, protected router: Router) {
     let storageData = this.getCurrentUser();
-    if (storageData != null) {
-      this.loingByToken(storageData.token!);
+    if (storageData?.token != null) {
+      this.loingByToken(storageData.token);
     }
   }
 
@@ -37,7 +37,6 @@ export class AccountService {
       let userStr = localStorage.getItem(this._userKeyInStorage);
       if (userStr != null) {
         let userData = JSON.parse(userStr);
-        // this.user.next(userData);
         return userData;
       }
     }

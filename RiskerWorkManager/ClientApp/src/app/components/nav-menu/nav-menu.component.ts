@@ -33,12 +33,9 @@ export class NavMenuComponent implements OnInit, OnDestroy {
 
   private addSubscriptions() {
     const userSubs = this.accountService.user.subscribe((data) => {
-      if (data != null) {
-        this.user = data;
-        this.cd.detectChanges();
-      }
+      this.user = data;
+      this.cd.detectChanges();
     });
-
     this.subscriptions.push(userSubs);
   }
 

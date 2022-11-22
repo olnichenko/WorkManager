@@ -1,151 +1,20 @@
-<!--<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3" style="background-color: #3996C1;">
-    <div class="container">
-        <a class="navbar-brand" [routerLink]="['/administration']">Administration</a>
-        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
-             [ngClass]="{ show: isExpanded }">
-            <ul class="navbar-nav flex-grow">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['roles']">Roles</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>-->
-<!--<div class="d-flex flex-column flex-shrink-0 p-0" style="width: 280px;">
-    <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
-        <span class="fs-4">Administration</span>
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="#" class="nav-link" [routerLink]="['users']" [routerLinkActive]="['active']">
-                Users
-            </a>
-        </li>
-        <li>
-            <a href="#" class="nav-link" [routerLink]="['roles']" [routerLinkActive]="['active']">
-                Roles
-            </a>
-        </li>
-        <li>
-            <a href="#" class="nav-link" [routerLink]="['settings']" [routerLinkActive]="['active']">
-                Settings
-            </a>
-        </li>
-        <li>
-            <a href="#" class="nav-link" [routerLink]="['roles1']" [routerLinkActive]="['active']">
-                Products
-            </a>
-        </li>
-        <li>
-            <a href="#" class="nav-link" [routerLink]="['roles1']" [routerLinkActive]="['active']">
-                Customers
-            </a>
-        </li>
-    </ul>
-</div>-->
-<!--<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-    <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        <span class="fs-5 d-none d-sm-inline">Menu</span>
-    </a>
-    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-        <li class="nav-item">
-            <a href="#" class="nav-link align-middle px-0">
-                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
-            </a>
-        </li>
-        <li>
-            <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span>
-            </a>
-            <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                <li class="w-100">
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1 </a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2 </a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Orders</span>
-            </a>
-        </li>
-        <li>
-            <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
-                <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Bootstrap</span>
-            </a>
-            <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
-                <li class="w-100">
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span>
-            </a>
-            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
-                <li class="w-100">
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
-                </li>
-                <li>
-                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="#" class="nav-link px-0 align-middle">
-                <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span>
-            </a>
-        </li>
-    </ul>
-</div>-->
 <ul class="nav nav-pills flex-column mb-auto">
     <li class="nav-item">
-        <a href="#" class="nav-link">
-            <i class="fs-4 bi-house"></i>
-            Home
-        </a>
-    </li>
-    <li class="nav-item">
         <a href="#" class="nav-link" [routerLink]="['users']" [routerLinkActive]="['active']">
-            <i class="fs-4 bi-house"></i>
-            <span class="d-none d-md-inline">Users</span>
+            <i class="fs-4 bi-people-fill"></i>
+            <span class="d-none d-lg-inline m-3">Users</span>
         </a>
     </li>
     <li>
         <a href="#" class="nav-link" [routerLink]="['roles']" [routerLinkActive]="['active']">
-            <i class="fs-4 bi-house"></i>
-            Roles
+            <i class="fs-4 bi-person-vcard-fill"></i>
+            <span class="d-none d-lg-inline m-3">Roles</span>
         </a>
     </li>
     <li>
         <a href="#" class="nav-link" [routerLink]="['settings']" [routerLinkActive]="['active']">
-            <i class="fs-4 bi-house"></i>
-            Settings
-        </a>
-    </li>
-    <li>
-        <a href="#" class="nav-link" [routerLink]="['roles1']" [routerLinkActive]="['active']">
-            <i class="fs-4 bi-house"></i>
-            Products
-        </a>
-    </li>
-    <li>
-        <a href="#" class="nav-link" [routerLink]="['roles1']" [routerLinkActive]="['active']">
-            <i class="fs-4 bi-house"></i>
-            Customers
+            <i class="fs-4 bi-gear-fill"></i>
+            <span class="d-none d-lg-inline m-3">Settings</span>
         </a>
     </li>
 </ul>
@@ -156,7 +25,7 @@
                 width: 100%;
                 text-align: left;
                 height: 60px;
-                font-size: x-large;
+                font-size: large;
                 border-bottom: 1px sold gray;
             }
         </style>
