@@ -31,7 +31,6 @@ export class RolesComponent {
     var he = window.innerHeight;
     this.sheight = he - 120;
     this.agGrid.api
-    //this.agGrid.api.setDomLayout("autoHeight");
   }
 
   loadRoles() {

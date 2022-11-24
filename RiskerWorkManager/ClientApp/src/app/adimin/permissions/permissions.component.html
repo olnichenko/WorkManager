@@ -1,0 +1,22 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th *ngFor="let item of roles" scope="col">{{item.name}}<br><i>{{item.description}</i></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let permission of permissionDatas">
+            <th scope="row">
+                {{permission.name}}
+            </th>
+            <th>
+                <i>{{permission.description}}</i>
+            </th>
+            <td *ngFor="let item of roles">
+                <mat-checkbox (change)="changePermission(permission.name!, item.id, $event.checked)" [checked]="isPermissionContainRole(item, permission)"></mat-checkbox>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\material-module\" />
+    <Folder Include="ClientApp\src\app\models\" />
   </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

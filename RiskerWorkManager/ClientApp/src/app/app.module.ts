@@ -21,9 +21,13 @@ import { RolesComponent } from './adimin/roles/roles.component';
 import { AdministrationComponent } from './adimin/administration/administration.component';
 import { AdminNavMenuComponent } from './adimin/admin-nav-menu/admin-nav-menu.component';
 import { AddRoleComponent } from './adimin/add-role/add-role.component';
+import { PermissionsComponent } from './adimin/permissions/permissions.component';
+import { EditPermissionComponent } from './adimin/edit-permission/edit-permission.component';
+import { PermissionItemComponent } from './adimin/permission-item/permission-item.component';
 
 const adminRoutes: Routes = [
   { path: 'roles', component: RolesComponent },
+  { path: 'permissions', component: PermissionsComponent },
 ];
 
 const appRoutes: Routes = [
@@ -45,7 +49,10 @@ const appRoutes: Routes = [
     RolesComponent,
     AdministrationComponent,
     AdminNavMenuComponent,
-    AddRoleComponent
+    AddRoleComponent,
+    PermissionsComponent,
+    EditPermissionComponent,
+    PermissionItemComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

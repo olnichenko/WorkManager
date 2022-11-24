@@ -36,5 +36,10 @@ namespace WorkManagerDal.Services
             await _unitOfWork.SaveAsync();
             return role;
         }
+        public async Task<Role> GetRole(int id)
+        {
+            var role = await _unitOfWork.Roles.FindByCondition(x => x.Id == id).Include<Permission>.SingleOrDefaultAsync();
+            return role;
+        }
     }
 }

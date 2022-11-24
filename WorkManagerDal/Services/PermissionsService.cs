@@ -10,6 +10,7 @@ namespace WorkManagerDal.Services
 {
     public class PermissionsService
     {
+        public PermissionsService
         public const string Users_List = "Users_List";
         public const string Roles_List = "Roles_List";
         public const string Role_Edit = "Role_Edit";

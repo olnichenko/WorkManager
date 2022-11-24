@@ -32,11 +32,6 @@ mat-card {
   box-shadow: 2px 3px 6px gray !important;
   background-color: floralwhite !important;
 }
-
-/*.mat-mdc-dialog-surface{
-    background-color: transparent !important;
-}*/
-
 .mat-form-field-ripple {
   background-color: #3996C1 !important;
 }
