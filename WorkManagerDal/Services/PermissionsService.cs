@@ -13,6 +13,7 @@ namespace WorkManagerDal.Services
         public const string Users_List = "Users_List";
         public const string Roles_List = "Roles_List";
         public const string Role_Edit = "Role_Edit";
+        public const string Permission_Edit = "Permission_Edit";
         public bool IsUserHaveAcces(User user, string permissionName)
         {
             if (user == null || user.IsBlocked)
@@ -34,6 +35,7 @@ namespace WorkManagerDal.Services
             permissions.Add(new PermissionData(Users_List, "View all registered users"));
             permissions.Add(new PermissionData(Roles_List, "View all roles"));
             permissions.Add(new PermissionData(Role_Edit, "Edit role"));
+            permissions.Add(new PermissionData(Permission_Edit, "Edit roles permissions"));
 
             return permissions;
         }
