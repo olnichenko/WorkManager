@@ -104,14 +104,6 @@ namespace RiskerWorkManager.Controllers
             return Results.Ok();
         }
 
-        [HttpPost]
-        [AuthorizePermission(PermissionsService.Test)]
-        public string Test(string testString)
-        {
-            var result = testString.Reverse().ToString();
-            return result;
-        }
-
         void IDisposable.Dispose()
         {
             _usersService.Dispose();

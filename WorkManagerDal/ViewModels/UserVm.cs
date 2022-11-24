@@ -7,7 +7,7 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.ViewModels
 {
-    public class UserVm
+    public class UserVm : BaseEntity<long>
     {
         public string Email { get; set; }
         public List<RoleVm>? Roles { get; set; }

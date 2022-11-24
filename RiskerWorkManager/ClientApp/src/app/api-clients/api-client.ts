@@ -429,64 +429,6 @@ export class ApiClient {
     }
 
     /**
-     * @param testString (optional) 
-     * @return Success
-     */
-    test(testString: string | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/Account/Test?";
-        if (testString === null)
-            throw new Error("The parameter 'testString' cannot be null.");
-        else if (testString !== undefined)
-            url_ += "testString=" + encodeURIComponent("" + testString) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            withCredentials: true,
-            headers: new HttpHeaders({
-                "Accept": "text/plain"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processTest(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processTest(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<string>;
-        }));
-    }
-
-    protected processTest(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    /**
      * @return Success
      */
     rolesList(): Observable<Role[]> {
@@ -1032,6 +974,7 @@ export interface IRole {
 }
 
 export class RoleVm implements IRoleVm {
+    id!: number;
     name!: string | null;
     permissions!: Permission[] | null;
 
@@ -1046,6 +989,7 @@ export class RoleVm implements IRoleVm {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.name = _data["name"] !== undefined ? _data["name"] : <any>null;
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
@@ -1067,6 +1011,7 @@ export class RoleVm implements IRoleVm {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
         data["name"] = this.name !== undefined ? this.name : <any>null;
         if (Array.isArray(this.permissions)) {
             data["permissions"] = [];
@@ -1078,6 +1023,7 @@ export class RoleVm implements IRoleVm {
 }
 
 export interface IRoleVm {
+    id: number;
     name: string | null;
     permissions: Permission[] | null;
 }
@@ -1162,6 +1108,7 @@ export interface IUser {
 }
 
 export class UserVm implements IUserVm {
+    id!: number;
     email!: string | null;
     roles!: RoleVm[] | null;
     isAdmin!: boolean;
@@ -1180,6 +1127,7 @@ export class UserVm implements IUserVm {
 
     init(_data?: any) {
         if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.email = _data["email"] !== undefined ? _data["email"] : <any>null;
             if (Array.isArray(_data["roles"])) {
                 this.roles = [] as any;
@@ -1205,6 +1153,7 @@ export class UserVm implements IUserVm {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
         data["email"] = this.email !== undefined ? this.email : <any>null;
         if (Array.isArray(this.roles)) {
             data["roles"] = [];
@@ -1220,6 +1169,7 @@ export class UserVm implements IUserVm {
 }
 
 export interface IUserVm {
+    id: number;
     email: string | null;
     roles: RoleVm[] | null;
     isAdmin: boolean;
