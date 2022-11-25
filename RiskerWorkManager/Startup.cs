@@ -20,6 +20,7 @@ namespace RiskerWorkManager
         {
             services.Configure<DbSettings>(configuration.GetSection(DbSettings.SectionName));
             services.Configure<JWTTokenSettings>(configuration.GetSection(JWTTokenSettings.SectionName));
+            services.Configure<CORSSettings>(configuration.GetSection(CORSSettings.SectionName));
         }
         public static void MapRepositories(this IServiceCollection services)
         {
@@ -30,20 +31,14 @@ namespace RiskerWorkManager
 
             var dbSettings = configuration.GetSection(DbSettings.SectionName).Get<DbSettings>();
             var corsSettings = configuration.GetSection(CORSSettings.SectionName).Get<CORSSettings>();
-            var tokenSettings = configuration.GetSection(JWTTokenSettings.SectionName).Get<JWTTokenSettings>();
 
-            services.AddScoped((_) => new TokenService(tokenSettings));
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped((_) => new WorkManagerDbContext(dbSettings.ConnectionString));
-            services.AddScoped((_) => new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString)));
-            services.AddScoped((_) => new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))));
-            services.AddScoped((_) => new RolesService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))));
-            services.AddScoped((_) => {
-                return new UserIdentityService(
-                    new UsersService(new WorkManagerUnitOfWork(new WorkManagerDbContext(dbSettings.ConnectionString))),
-                    new TokenService(tokenSettings)
-                    );
-                });
-            services.AddScoped((_) => new PermissionsService());
+            services.AddScoped<IWorkManagerUnitOfWork, WorkManagerUnitOfWork>();
+            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IRolesService, RolesService>();
+            services.AddScoped<IPermissionsService, PermissionsService>();
+            services.AddScoped<IUserIdentityService, UserIdentityService>();
 
             services.AddCors(options =>
             {

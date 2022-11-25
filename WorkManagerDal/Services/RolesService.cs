@@ -9,9 +9,9 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.Services
 {
-    public class RolesService : BaseService
+    public class RolesService : BaseService, IRolesService
     {
-        public RolesService(WorkManagerUnitOfWork unitOfWork) : base(unitOfWork)
+        public RolesService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
         public async Task<List<Role>> GetRolesAsync()
@@ -36,9 +36,9 @@ namespace WorkManagerDal.Services
             await _unitOfWork.SaveAsync();
             return role;
         }
-        public async Task<Role> GetRole(int id)
+        public async Task<Role> GetRoleWithPermissionsAsync(int id)
         {
-            var role = await _unitOfWork.Roles.FindByCondition(x => x.Id == id).Include<Permission>.SingleOrDefaultAsync();
+            var role = await _unitOfWork.Roles.FindByCondition(x => x.Id == id).Include("Permissions").SingleOrDefaultAsync();
             return role;
         }
     }

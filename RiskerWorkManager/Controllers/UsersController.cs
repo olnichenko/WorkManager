@@ -9,13 +9,17 @@ namespace RiskerWorkManager.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : ControllerBase, IDisposable
     {
         [HttpGet]
         [AuthorizePermission(PermissionsService.Users_List)]
         public async Task<List<UserVm>> UsersList()
         {
             return null;
+        }
+        public void Dispose()
+        {
+            //_rolesService.Dispose();
         }
     }
 }

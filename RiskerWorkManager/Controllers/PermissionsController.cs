@@ -8,11 +8,11 @@ namespace RiskerWorkManager.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class PermissionsController : ControllerBase
+    public class PermissionsController : ControllerBase, IDisposable
     {
-        private readonly PermissionsService _permissionsService;
-        private readonly RolesService _rolesService;
-        public PermissionsController(PermissionsService permissionsService, RolesService rolesService)
+        private readonly IPermissionsService _permissionsService;
+        private readonly IRolesService _rolesService;
+        public PermissionsController(IPermissionsService permissionsService, IRolesService rolesService)
         {
             _permissionsService = permissionsService;
             _rolesService = rolesService;
@@ -32,12 +32,37 @@ namespace RiskerWorkManager.Controllers
         /// <returns>result status</returns>
         [HttpPost]
         [AuthorizePermission(PermissionsService.Permission_Edit)]
-        public bool ChangePermissions(Dictionary<string, int> permissionsData)
+        public async Task<bool> ChangePermission(int roleId, string permissionName, bool isEnabled)
         {
-            foreach (var item in permissionsData)
+            var role = await _rolesService.GetRoleWithPermissionsAsync(roleId);
+            var isRoleContainPermission = role.Permissions.Any(x => x.Name == permissionName);
+            if (isEnabled)
             {
-                
+                if (!isRoleContainPermission)
+                {
+                    var permission = await _permissionsService.CreateAndGetPermissionAsnyc(permissionName);
+                    // role.Permissions.Add(permission);
+                    permission.Roles.Add(role);
+                    await _rolesService.UpdateRoleAsync(role);
+                }
             }
+            else
+            {
+                if (isRoleContainPermission)
+                {
+                    var permission = await _permissionsService.CreateAndGetPermissionAsnyc(permissionName);
+                    role.Permissions.Remove(permission);
+                    // permission.Roles.Remove(role);
+                    //await _rolesService.UpdateRoleAsync(role);
+                    await _rolesService.UpdateRoleAsync(role);
+                }
+            }
+            return false;
+        }
+        void IDisposable.Dispose()
+        {
+            _permissionsService.Dispose();
+            _rolesService.Dispose();
         }
     }
 }

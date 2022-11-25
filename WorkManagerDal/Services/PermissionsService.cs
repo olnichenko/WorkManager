@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,13 +9,34 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.Services
 {
-    public class PermissionsService
+    public class PermissionsService : BaseService, IPermissionsService
     {
-        public PermissionsService
+        private readonly IWorkManagerUnitOfWork _workManagerUnitOfWork;
         public const string Users_List = "Users_List";
         public const string Roles_List = "Roles_List";
         public const string Role_Edit = "Role_Edit";
         public const string Permission_Edit = "Permission_Edit";
+
+        public PermissionsService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork)
+        {
+            _workManagerUnitOfWork = unitOfWork;
+        }
+
+        public async Task<Permission> CreateAndGetPermissionAsnyc(string permissionName)
+        {
+            var permission = await _workManagerUnitOfWork.Permissions.FindByCondition(x => x.Name == permissionName).Include("Roles").SingleOrDefaultAsync();
+            if (permission == null)
+            {
+                permission = new Permission
+                {
+                    Name = permissionName
+                };
+                _workManagerUnitOfWork.Permissions.Create(permission);
+                await _workManagerUnitOfWork.SaveAsync();
+            }
+            return permission;
+        }
+
         public bool IsUserHaveAcces(User user, string permissionName)
         {
             if (user == null || user.IsBlocked)
@@ -29,7 +51,7 @@ namespace WorkManagerDal.Services
             return result;
         }
 
-        public List<PermissionData> GetAllPermissions()
+        public IEnumerable<PermissionData> GetAllPermissions()
         {
             var permissions = new List<PermissionData>();
 

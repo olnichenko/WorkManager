@@ -488,32 +488,42 @@ export class ApiClient {
     }
 
     /**
-     * @param body (optional) 
+     * @param roleId (optional) 
+     * @param permissionName (optional) 
+     * @param isEnabled (optional) 
      * @return Success
      */
-    changePermissions(body: { [key: string]: number; } | undefined): Observable<boolean> {
-        let url_ = this.baseUrl + "/Permissions/ChangePermissions";
+    changePermission(roleId: number | undefined, permissionName: string | undefined, isEnabled: boolean | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/Permissions/ChangePermission?";
+        if (roleId === null)
+            throw new Error("The parameter 'roleId' cannot be null.");
+        else if (roleId !== undefined)
+            url_ += "roleId=" + encodeURIComponent("" + roleId) + "&";
+        if (permissionName === null)
+            throw new Error("The parameter 'permissionName' cannot be null.");
+        else if (permissionName !== undefined)
+            url_ += "permissionName=" + encodeURIComponent("" + permissionName) + "&";
+        if (isEnabled === null)
+            throw new Error("The parameter 'isEnabled' cannot be null.");
+        else if (isEnabled !== undefined)
+            url_ += "isEnabled=" + encodeURIComponent("" + isEnabled) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_ : any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             withCredentials: true,
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
                 "Accept": "text/plain"
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangePermissions(response_);
+            return this.processChangePermission(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processChangePermissions(response_ as any);
+                    return this.processChangePermission(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<boolean>;
                 }
@@ -522,7 +532,7 @@ export class ApiClient {
         }));
     }
 
-    protected processChangePermissions(response: HttpResponseBase): Observable<boolean> {
+    protected processChangePermission(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

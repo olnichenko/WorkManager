@@ -22,8 +22,8 @@ namespace RiskerWorkManager.Attributes
             if (allowAnonymous)
                 return;
 
-            var identityService = context.HttpContext.RequestServices.GetService<UserIdentityService>();
-            var permissionService = context.HttpContext.RequestServices.GetService<PermissionsService>();
+            var identityService = context.HttpContext.RequestServices.GetService<IUserIdentityService>();
+            var permissionService = context.HttpContext.RequestServices.GetService<IPermissionsService>();
                    
             var result = identityService.IsUserLoggedIn(context.HttpContext);
             if (!result)

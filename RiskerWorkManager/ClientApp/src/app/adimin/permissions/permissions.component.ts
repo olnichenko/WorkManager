@@ -12,7 +12,7 @@ import { PermissionRoles } from '../../models/permission-roles';
 export class PermissionsComponent implements OnInit {
   protected permissionDatas: PermissionData[] = [];
   protected roles: Role[] = [];
-  protected result: { [key: string]: number; } = {};
+ // protected result: { [key: string]: number; } = {};
   //protected permissionRoles: PermissionRoles[] = [];
 
   constructor(protected apiClient: ApiClient, protected snackBar: MatSnackBar, protected router: Router) {
@@ -39,20 +39,11 @@ export class PermissionsComponent implements OnInit {
   }
 
   public changePermission(permissionName: string, roleId: number, isCheked: boolean){
-    this.result[permissionName] = roleId;
+    this.apiClient.changePermission(roleId, permissionName, isCheked).subscribe((data) => {}
+    );
   }
 
-  public save(){
-    this.apiClient.changePermissions(this.result).subscribe((data) => {
-      if(data){
-        this.snackBar.open("Data saved", "Succes");
-      }else{
-        this.snackBar.open("Error save data", "Error");
-      }
-    })
-  }
-
-  public reset(){
+  public reload(){
     this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
       this.router.navigate(['permissions']);
   }); 

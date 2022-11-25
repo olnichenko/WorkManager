@@ -5,9 +5,9 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.Services
 {
-    public class UsersService : BaseService
+    public class UsersService : BaseService, IUsersService
     {
-        public UsersService(WorkManagerUnitOfWork unitOfWork) : base(unitOfWork) { }
+        public UsersService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork) { }
 
         public async Task<User> GetActiveUserByEmailAndPasswordAsync(string email, string password)
         {

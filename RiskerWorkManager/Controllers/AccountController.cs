@@ -15,13 +15,11 @@ namespace RiskerWorkManager.Controllers
     [ApiController]
     public class AccountController : ControllerBase, IDisposable
     {
-        private readonly UsersService _usersService;
-        private readonly UserIdentityService _userIndentityService;
+        private readonly IUsersService _usersService;
+        private readonly IUserIdentityService _userIndentityService;
         private readonly IMapper _mapper;
-        private readonly TokenService _tokenService;
-        //private readonly PermissionService _permissionService;
-
-        public AccountController(UsersService usersService, UserIdentityService userIdentityService, IMapper mapper, TokenService tokenService)
+        private readonly ITokenService _tokenService;
+        public AccountController(IUsersService usersService, IUserIdentityService userIdentityService, IMapper mapper, ITokenService tokenService)
         {
             _usersService = usersService;
             _userIndentityService = userIdentityService;

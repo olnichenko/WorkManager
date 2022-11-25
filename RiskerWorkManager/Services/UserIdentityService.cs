@@ -4,12 +4,12 @@ using RiskerWorkManager.Extensions;
 
 namespace RiskerWorkManager.Services
 {
-    public class UserIdentityService
+    public class UserIdentityService : IUserIdentityService
     {
         private const string _userSessionKey = "_userSessionKey";
-        private readonly UsersService _usersService;
-        private readonly TokenService _tokenService;
-        public UserIdentityService(UsersService usersService, TokenService tokenService)
+        private readonly IUsersService _usersService;
+        private readonly ITokenService _tokenService;
+        public UserIdentityService(IUsersService usersService, ITokenService tokenService)
         {
             _usersService = usersService;
             _tokenService = tokenService;

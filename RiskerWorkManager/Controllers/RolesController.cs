@@ -10,8 +10,8 @@ namespace RiskerWorkManager.Controllers
     [ApiController]
     public class RolesController : ControllerBase, IDisposable
     {
-        private readonly RolesService _rolesService;
-        public RolesController(RolesService rolesService)
+        private readonly IRolesService _rolesService;
+        public RolesController(IRolesService rolesService)
         {
             _rolesService = rolesService;
         }

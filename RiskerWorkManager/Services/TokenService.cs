@@ -8,12 +8,12 @@ using WorkManagerDal.Models;
 
 namespace RiskerWorkManager.Services
 {
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly JWTTokenSettings _tokenSettings;
-        public TokenService(JWTTokenSettings tokenSettings)
+        public TokenService(IOptions<JWTTokenSettings> tokenSettings)
         {
-            _tokenSettings = tokenSettings;
+            _tokenSettings = tokenSettings.Value;
         }
         public string GenerateToken(User user)
         {

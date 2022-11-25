@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace WorkManagerDal.Services
 {
-    public abstract class BaseService : IDisposable
+    public abstract class BaseService : IBaseService
     {
-        protected readonly WorkManagerUnitOfWork _unitOfWork;
-        public BaseService(WorkManagerUnitOfWork unitOfWork)
+        protected readonly IWorkManagerUnitOfWork _unitOfWork;
+        public BaseService(IWorkManagerUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
