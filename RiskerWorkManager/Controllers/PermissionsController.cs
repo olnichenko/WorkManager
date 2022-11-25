@@ -36,14 +36,13 @@ namespace RiskerWorkManager.Controllers
         {
             var role = await _rolesService.GetRoleWithPermissionsAsync(roleId);
             var isRoleContainPermission = role.Permissions.Any(x => x.Name == permissionName);
+
             if (isEnabled)
             {
                 if (!isRoleContainPermission)
                 {
                     var permission = await _permissionsService.CreateAndGetPermissionAsnyc(permissionName);
-                    // role.Permissions.Add(permission);
-                    permission.Roles.Add(role);
-                    await _rolesService.UpdateRoleAsync(role);
+                    await _rolesService.AddRoleToPermissionAsync(role.Id, permissionName);
                 }
             }
             else
@@ -51,13 +50,10 @@ namespace RiskerWorkManager.Controllers
                 if (isRoleContainPermission)
                 {
                     var permission = await _permissionsService.CreateAndGetPermissionAsnyc(permissionName);
-                    role.Permissions.Remove(permission);
-                    // permission.Roles.Remove(role);
-                    //await _rolesService.UpdateRoleAsync(role);
-                    await _rolesService.UpdateRoleAsync(role);
+                    await _rolesService.DeleteRoleToPemissionAsync(role.Id, permissionName);
                 }
             }
-            return false;
+            return true;
         }
         void IDisposable.Dispose()
         {

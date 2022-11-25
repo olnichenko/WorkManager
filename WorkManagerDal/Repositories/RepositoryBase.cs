@@ -18,6 +18,8 @@ namespace WorkManagerDal.Repositories
         public IQueryable<T> FindAll() => _workManagerDbContext.Set<T>().AsNoTracking();
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) =>
             _workManagerDbContext.Set<T>().Where(expression).AsNoTracking();
+        public IQueryable<T> FindByConditionWithTracking(Expression<Func<T, bool>> expression) =>
+            _workManagerDbContext.Set<T>().Where(expression);
         public void Create(T entity) => _workManagerDbContext.Set<T>().Add(entity);
         public void Update(T entity) => _workManagerDbContext.Set<T>().Update(entity);
         public void Delete(T entity) => _workManagerDbContext.Set<T>().Remove(entity);

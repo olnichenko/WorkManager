@@ -28,6 +28,11 @@ button.mat-primary {
   color: black !important;
 }
 
+button.mat-primary:disabled {
+  background-color: grey !important;
+  color: black !important;
+}
+
 mat-card {
   box-shadow: 2px 3px 6px gray !important;
   background-color: floralwhite !important;

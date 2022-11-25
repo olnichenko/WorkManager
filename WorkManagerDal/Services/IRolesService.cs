@@ -9,5 +9,7 @@ namespace WorkManagerDal.Services
         Task<Role> CreateRoleAsync(Role role);
         Task<Role> UpdateRoleAsync(Role role);
         Task<Role> GetRoleWithPermissionsAsync(int id);
+        Task DeleteRoleToPemissionAsync(int roleId, string permissionName);
+        Task AddRoleToPermissionAsync(int roleId, string permissionName);
     }
 }

@@ -12,13 +12,19 @@ namespace WorkManagerDal.Services
         public async Task<User> GetActiveUserByEmailAndPasswordAsync(string email, string password)
         {
             password = GetHash(password);
-            var user = await _unitOfWork.Users.FindByCondition(x => !x.IsBlocked && x.Email == email && x.Password == password).SingleOrDefaultAsync();
+            var user = await _unitOfWork.Users
+                .FindByCondition(x => !x.IsBlocked && x.Email == email && x.Password == password)
+                .Include("Roles.Permissions")
+                .SingleOrDefaultAsync();
             return user;
         }
 
         public async Task<User> GetActiveUserByEmailAsync(string email)
         {
-            var user = await _unitOfWork.Users.FindByCondition(x => !x.IsBlocked && x.Email == email).SingleOrDefaultAsync();
+            var user = await _unitOfWork.Users
+                .FindByCondition(x => !x.IsBlocked && x.Email == email)
+                .Include("Roles.Permissions")
+                .SingleOrDefaultAsync();
             return user;
         }
 

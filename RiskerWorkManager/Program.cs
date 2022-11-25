@@ -1,4 +1,5 @@
 using RiskerWorkManager;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,8 @@ if (builder.Environment.EnvironmentName == "Development")
 }
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();

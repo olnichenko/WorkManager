@@ -12,17 +12,18 @@ import { PermissionRoles } from '../../models/permission-roles';
 export class PermissionsComponent implements OnInit {
   protected permissionDatas: PermissionData[] = [];
   protected roles: Role[] = [];
- // protected result: { [key: string]: number; } = {};
-  //protected permissionRoles: PermissionRoles[] = [];
+  public showLoader: boolean = false;
 
   constructor(protected apiClient: ApiClient, protected snackBar: MatSnackBar, protected router: Router) {
   }
 
   ngOnInit(): void {
+    this.showLoader = true;
     this.apiClient.permissionDataList().subscribe((data) => {
       this.permissionDatas = data;
       this.apiClient.rolesList().subscribe((rolesData) => {
         this.roles = rolesData;
+        this.showLoader = false;
       })
     })
   }
@@ -39,14 +40,18 @@ export class PermissionsComponent implements OnInit {
   }
 
   public changePermission(permissionName: string, roleId: number, isCheked: boolean){
-    this.apiClient.changePermission(roleId, permissionName, isCheked).subscribe((data) => {}
-    );
+    this.showLoader = true;
+    this.apiClient.changePermission(roleId, permissionName, isCheked).subscribe((data) => {
+      this.showLoader = false;
+      if (data){
+        this.snackBar.open("Role updated", "Succes");
+      }
+      this.reload();
+    });
   }
 
   public reload(){
-    this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['permissions']);
-  }); 
+    this.ngOnInit(); 
   }
 }
 

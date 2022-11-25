@@ -5,6 +5,9 @@
                  class="ag-theme-alpine"
                  [rowData]="roles"
                  [columnDefs]="columnDefs"
+                 [defaultColDef]="defaultColDef"
                  (gridReady)="onGridReady($event)"
+                 [editType]="editType"
+                 (rowValueChanged)="onRowValueChanged($event)"
                  [animateRows]="true"></ag-grid-angular>
 

@@ -16,7 +16,7 @@ namespace WorkManagerDal.Services
         }
         public async Task<List<Role>> GetRolesAsync()
         {
-            var roles = await _unitOfWork.Roles.FindAll().ToListAsync();
+            var roles = await _unitOfWork.Roles.FindAll().Include("Permissions").ToListAsync();
             return roles;
         }
         public async Task<bool> IsRoleExistAsync(string name)
@@ -29,6 +29,23 @@ namespace WorkManagerDal.Services
             _unitOfWork.Roles.Create(role);
             await _unitOfWork.SaveAsync();
             return role;
+        }
+        public async Task DeleteRoleToPemissionAsync(int roleId, string permissionName)
+        {
+            var role = await _unitOfWork.Roles.FindByConditionWithTracking(x => x.Id == roleId).Include(x => x.Permissions).SingleOrDefaultAsync();
+            var permission = await _unitOfWork.Permissions.FindByConditionWithTracking(x => x.Name == permissionName).Include(x => x.Roles).SingleOrDefaultAsync();
+            role.Permissions.Remove(permission);
+
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task AddRoleToPermissionAsync(int roleId, string permissionName)
+        {
+            var role = await _unitOfWork.Roles.FindByConditionWithTracking(x => x.Id == roleId).Include(x => x.Permissions).SingleOrDefaultAsync();
+            var permission = await _unitOfWork.Permissions.FindByConditionWithTracking(x => x.Name == permissionName).Include(x => x.Roles).SingleOrDefaultAsync();
+            role.Permissions.Add(permission);
+
+            await _unitOfWork.SaveAsync();
         }
         public async Task<Role> UpdateRoleAsync(Role role)
         {

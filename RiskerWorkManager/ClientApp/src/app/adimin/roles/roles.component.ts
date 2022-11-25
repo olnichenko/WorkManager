@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, RowValueChangedEvent } from 'ag-grid-community';
 import { Observable } from 'rxjs';
 import { ApiClient, Role, RoleVm } from '../../api-clients/api-client';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -20,10 +20,28 @@ export class RolesComponent {
     { field: 'name' },
     { field: 'description' }
   ];
-  private gridApi!: GridApi;
+  public defaultColDef: ColDef = {
+    editable: true,
+  };
+  public editType: 'fullRow' = 'fullRow';
 
   constructor(protected apiClient: ApiClient, public dialog: MatDialog, protected snackBar: MatSnackBar) {
 
+  }
+
+  onRowValueChanged(event: RowValueChangedEvent) {
+    var data = event.data;
+    console.log(
+      'onRowValueChanged: (' +
+        data.make +
+        ', ' +
+        data.model +
+        ', ' +
+        data.price +
+        ', ' +
+        data.field5 +
+        ')'
+    );
   }
 
   onGridReady(params: GridReadyEvent) {

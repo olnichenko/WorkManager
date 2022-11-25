@@ -24,7 +24,7 @@ namespace WorkManagerDal.Services
 
         public async Task<Permission> CreateAndGetPermissionAsnyc(string permissionName)
         {
-            var permission = await _workManagerUnitOfWork.Permissions.FindByCondition(x => x.Name == permissionName).Include("Roles").SingleOrDefaultAsync();
+            var permission = await _workManagerUnitOfWork.Permissions.FindByConditionWithTracking(x => x.Name == permissionName).Include("Roles").SingleOrDefaultAsync();
             if (permission == null)
             {
                 permission = new Permission
