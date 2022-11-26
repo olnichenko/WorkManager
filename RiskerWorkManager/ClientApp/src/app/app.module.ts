@@ -23,7 +23,6 @@ import { AdminNavMenuComponent } from './adimin/admin-nav-menu/admin-nav-menu.co
 import { AddRoleComponent } from './adimin/add-role/add-role.component';
 import { PermissionsComponent } from './adimin/permissions/permissions.component';
 import { EditPermissionComponent } from './adimin/edit-permission/edit-permission.component';
-import { AuthGuardServiceAuthGuardServiceGuard } from './auth-guard-service-auth-guard-service.guard';
 import { AuthGuardServiceChildGuard } from './auth-guard-service-child.guard';
 
 const adminRoutes: Routes = [

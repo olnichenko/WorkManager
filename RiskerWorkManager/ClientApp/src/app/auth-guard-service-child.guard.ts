@@ -12,15 +12,16 @@ export class AuthGuardServiceChildGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
   {
+    let result: boolean = false;
     switch (route.routeConfig?.path) {
       case "roles":
-        var result = this.accountService.isUserHaveAccess("test");
+        result = this.accountService.isUserHaveAccess(this.accountService.Roles_List);
         break;
-    
-      default:
+      case "permissions":
+        result = this.accountService.isUserHaveAccess(this.accountService.Permission_Edit);
         break;
     }
-    return true;
+    return result;
   }
   
 }

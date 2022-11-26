@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RiskerWorkManager.ConfigurationSettings;
+using RiskerWorkManager.Models;
 using RiskerWorkManager.Services;
 using System;
+using System.Net;
 using WorkManagerDal;
 using WorkManagerDal.Services;
 
@@ -21,9 +24,6 @@ namespace RiskerWorkManager
             services.Configure<DbSettings>(configuration.GetSection(DbSettings.SectionName));
             services.Configure<JWTTokenSettings>(configuration.GetSection(JWTTokenSettings.SectionName));
             services.Configure<CORSSettings>(configuration.GetSection(CORSSettings.SectionName));
-        }
-        public static void MapRepositories(this IServiceCollection services)
-        {
         }
         public static void MapServices(this IServiceCollection services, IConfiguration configuration)
         {
@@ -55,6 +55,31 @@ namespace RiskerWorkManager
             corsBuilder.WithOrigins(settings.AllowOrigins); // for a specific url. Don't add a forward slash on the end!
             corsBuilder.AllowCredentials();
             return corsBuilder.Build();
+        }
+        public static void ConfigureLoggerService(this IServiceCollection services)
+        {
+            services.AddSingleton<ILoggerManager, LoggerManager>();
+        }
+        public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILoggerManager logger)
+        {
+            app.UseExceptionHandler(appError =>
+            {
+                appError.Run(async context =>
+                {
+                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    context.Response.ContentType = "application/json";
+                    var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+                    if (contextFeature != null)
+                    {
+                        logger.LogError($"{contextFeature.Error}");
+                        await context.Response.WriteAsync(new ErrorDetails()
+                        {
+                            StatusCode = context.Response.StatusCode,
+                            Message = "Internal Server Error."
+                        }.ToString());
+                    }
+                });
+            });
         }
     }
 }

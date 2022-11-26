@@ -7,7 +7,10 @@ import { ApiClient, UserVm } from '../api-clients/api-client';
   providedIn: 'root'
 })
 export class AccountService {
-  public readonly testPermission: string = "Test permission";
+  public readonly Users_List: string = "Users_List";
+  public readonly Roles_List: string = "Roles_List";
+  public readonly Role_Edit: string = "Role_Edit";
+  public readonly Permission_Edit: string = "Permission_Edit";
 
   private readonly _userKeyInStorage: string = "userKeyInStorage";
   public user: BehaviorSubject<UserVm | null> = new BehaviorSubject<UserVm | null>(null);
