@@ -13,5 +13,10 @@ namespace WorkManagerDal.Models
         public bool IsBlocked { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public List<Project>? Projects { get; set; } = new List<Project>();
+        public List<Note>? Notes { get; set; } = new List<Note>();
+        public List<Version>? Versions { get; set; } = new List<Version>();
+        public List<Bug>? Bugs { get; set; } = new List<Bug>();
+        public List<Feature>? Features { get; set; } = new List<Feature>();
     }
 }
