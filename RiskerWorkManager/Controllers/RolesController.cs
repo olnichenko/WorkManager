@@ -21,10 +21,18 @@ namespace RiskerWorkManager.Controllers
             _rolesService.Dispose();
         }
 
+        [HttpPost]
+        [AuthorizePermission(PermissionsService.Role_Edit)]
+        public async Task RoleDelete([FromBody] Role role)
+        {
+            await _rolesService.DeleteRoleAsync(role);
+        }
+
         [HttpGet]
         [AuthorizePermission(PermissionsService.Roles_List)]
         public async Task<IEnumerable<Role>> RolesList()
         {
+            //throw new Exception("test custom error");
             var roles = await _rolesService.GetRolesAsync();
             return roles;
         }
@@ -47,7 +55,7 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission(PermissionsService.Role_Edit)]
-        public async Task<Role> UpdateRole(Role role)
+        public async Task<Role> UpdateRole([FromBody]Role role)
         {
             var result = await _rolesService.UpdateRoleAsync(role);
             return result;

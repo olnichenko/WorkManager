@@ -1,13 +1,19 @@
 <button mat-raised-button color="primary" (click)="openAddDialog()" type="button">
     Add role
 </button>
-<ag-grid-angular style="width: 100%; margin-top: 10px;" [style.height.px]="sheight"
+&nbsp;
+<button mat-raised-button color="primary"[disabled]="isDisableDelete" (click)="deleteRole()" type="button">
+    Delete role
+</button>
+<ag-grid-angular style="width: 100%; margin-top: 10px;" [style.height.px]="gridHeight"
                  class="ag-theme-alpine"
                  [rowData]="roles"
+                 rowSelection="single"
                  [columnDefs]="columnDefs"
                  [defaultColDef]="defaultColDef"
                  (gridReady)="onGridReady($event)"
                  [editType]="editType"
                  (rowValueChanged)="onRowValueChanged($event)"
+                 (selectionChanged)="onSelectionChanged($event)"
                  [animateRows]="true"></ag-grid-angular>
 

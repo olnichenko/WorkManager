@@ -24,12 +24,18 @@ import { AddRoleComponent } from './adimin/add-role/add-role.component';
 import { PermissionsComponent } from './adimin/permissions/permissions.component';
 import { EditPermissionComponent } from './adimin/edit-permission/edit-permission.component';
 import { AuthGuardServiceChildGuard } from './auth-guard-service-child.guard';
+import { LogsComponent } from './adimin/logs/logs.component';
+import { UsersComponent } from './adimin/users/users.component';
 
 const adminRoutes: Routes = [
+  { path: 'users', component: UsersComponent,
+  canActivate: [AuthGuardServiceChildGuard]  },
   { path: 'roles', component: RolesComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
   { path: 'permissions', component: PermissionsComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
+  { path: 'logs', component: LogsComponent,
+  canActivate: [AuthGuardServiceChildGuard] },
 ];
 
 const appRoutes: Routes = [
@@ -53,7 +59,9 @@ const appRoutes: Routes = [
     AdminNavMenuComponent,
     AddRoleComponent,
     PermissionsComponent,
-    EditPermissionComponent
+    EditPermissionComponent,
+    LogsComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

@@ -20,6 +20,12 @@ export class AuthGuardServiceChildGuard implements CanActivate {
       case "permissions":
         result = this.accountService.isUserHaveAccess(this.accountService.Permission_Edit);
         break;
+      case "logs":
+        result = this.accountService.isUserHaveAccess(this.accountService.Logs_View);
+        break;
+      case "users":
+        result = this.accountService.isUserHaveAccess(this.accountService.Users_List);
+        break;
     }
     return result;
   }

@@ -24,6 +24,10 @@ namespace WorkManagerDal.Services
             var result = await _unitOfWork.Roles.FindByCondition(x => x.Name == name).AnyAsync();
             return result;
         }
+        public async Task DeleteRoleAsync(Role role) {
+            _unitOfWork.Roles.Delete(role);
+            await _unitOfWork.SaveAsync();
+        }
         public async Task<Role> CreateRoleAsync(Role role)
         {
             _unitOfWork.Roles.Create(role);

@@ -1,0 +1,14 @@
+<button mat-raised-button color="primary"[disabled]="isDisableEdit" type="button">
+    Change user role
+</button>&nbsp;
+<button mat-raised-button color="primary"[disabled]="isDisableEdit" type="button">
+    Block user
+</button>
+<ag-grid-angular style="width: 100%; margin-top: 10px;" [style.height.px]="gridHeight"
+                 class="ag-theme-alpine"
+                 [rowData]="users"
+                 rowSelection="single"
+                 [columnDefs]="columnDefs"
+                 (gridReady)="onGridReady($event)"
+                 (selectionChanged)="onSelectionChanged($event)"
+                 [animateRows]="true"></ag-grid-angular>

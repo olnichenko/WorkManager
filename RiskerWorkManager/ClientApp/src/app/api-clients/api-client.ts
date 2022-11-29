@@ -431,6 +431,59 @@ export class ApiClient {
     /**
      * @return Success
      */
+    getLogFilesList(): Observable<string> {
+        let url_ = this.baseUrl + "/Logs/GetLogFilesList";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetLogFilesList(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetLogFilesList(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processGetLogFilesList(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
     permissionDataList(): Observable<PermissionData[]> {
         let url_ = this.baseUrl + "/Permissions/PermissionDataList";
         url_ = url_.replace(/[?&]$/, "");
@@ -546,6 +599,59 @@ export class ApiClient {
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
             return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    roleDelete(body: Role | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/Roles/RoleDelete";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRoleDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRoleDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processRoleDelete(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -787,10 +893,25 @@ export class ApiClient {
     }
 
     /**
+     * @param page (optional) 
+     * @param pageSize (optional) 
+     * @param email (optional) 
      * @return Success
      */
-    usersList(): Observable<UserVm[]> {
-        let url_ = this.baseUrl + "/Users/UsersList";
+    usersList(page: number | undefined, pageSize: number | undefined, email: string | undefined): Observable<UserVm[]> {
+        let url_ = this.baseUrl + "/Users/UsersList?";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (pageSize === null)
+            throw new Error("The parameter 'pageSize' cannot be null.");
+        else if (pageSize !== undefined)
+            url_ += "pageSize=" + encodeURIComponent("" + pageSize) + "&";
+        if (email === null)
+            throw new Error("The parameter 'email' cannot be null.");
+        else if (email !== undefined)
+            url_ += "email=" + encodeURIComponent("" + email) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -846,10 +967,15 @@ export class ApiClient {
     }
 
     /**
+     * @param email (optional) 
      * @return Success
      */
-    weatherForecast(): Observable<WeatherForecast[]> {
-        let url_ = this.baseUrl + "/WeatherForecast";
+    getUsersCount(email: string | undefined): Observable<number> {
+        let url_ = this.baseUrl + "/Users/GetUsersCount?";
+        if (email === null)
+            throw new Error("The parameter 'email' cannot be null.");
+        else if (email !== undefined)
+            url_ += "email=" + encodeURIComponent("" + email) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -862,20 +988,20 @@ export class ApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processWeatherForecast(response_);
+            return this.processGetUsersCount(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processWeatherForecast(response_ as any);
+                    return this.processGetUsersCount(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<WeatherForecast[]>;
+                    return _observableThrow(e) as any as Observable<number>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<WeatherForecast[]>;
+                return _observableThrow(response_) as any as Observable<number>;
         }));
     }
 
-    protected processWeatherForecast(response: HttpResponseBase): Observable<WeatherForecast[]> {
+    protected processGetUsersCount(response: HttpResponseBase): Observable<number> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -886,14 +1012,8 @@ export class ApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(WeatherForecast.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -903,72 +1023,6 @@ export class ApiClient {
         }
         return _observableOf(null as any);
     }
-}
-
-export class DateOnly implements IDateOnly {
-    year!: number;
-    month!: number;
-    day!: number;
-    dayOfWeek!: DayOfWeek;
-    readonly dayOfYear!: number;
-    readonly dayNumber!: number;
-
-    constructor(data?: IDateOnly) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.year = _data["year"] !== undefined ? _data["year"] : <any>null;
-            this.month = _data["month"] !== undefined ? _data["month"] : <any>null;
-            this.day = _data["day"] !== undefined ? _data["day"] : <any>null;
-            this.dayOfWeek = _data["dayOfWeek"] !== undefined ? _data["dayOfWeek"] : <any>null;
-            (<any>this).dayOfYear = _data["dayOfYear"] !== undefined ? _data["dayOfYear"] : <any>null;
-            (<any>this).dayNumber = _data["dayNumber"] !== undefined ? _data["dayNumber"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): DateOnly {
-        data = typeof data === 'object' ? data : {};
-        let result = new DateOnly();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["year"] = this.year !== undefined ? this.year : <any>null;
-        data["month"] = this.month !== undefined ? this.month : <any>null;
-        data["day"] = this.day !== undefined ? this.day : <any>null;
-        data["dayOfWeek"] = this.dayOfWeek !== undefined ? this.dayOfWeek : <any>null;
-        data["dayOfYear"] = this.dayOfYear !== undefined ? this.dayOfYear : <any>null;
-        data["dayNumber"] = this.dayNumber !== undefined ? this.dayNumber : <any>null;
-        return data;
-    }
-}
-
-export interface IDateOnly {
-    year: number;
-    month: number;
-    day: number;
-    dayOfWeek: DayOfWeek;
-    dayOfYear: number;
-    dayNumber: number;
-}
-
-export enum DayOfWeek {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
-    _5 = 5,
-    _6 = 6,
 }
 
 export class Permission implements IPermission {
@@ -1199,7 +1253,7 @@ export class User implements IUser {
     id!: number;
     email!: string | null;
     password!: string | null;
-    roles!: Role[] | null;
+    role!: Role;
     isAdmin!: boolean;
     dateRegistration!: Date;
     isBlocked!: boolean;
@@ -1220,14 +1274,7 @@ export class User implements IUser {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.email = _data["email"] !== undefined ? _data["email"] : <any>null;
             this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(Role.fromJS(item));
-            }
-            else {
-                this.roles = <any>null;
-            }
+            this.role = _data["role"] ? Role.fromJS(_data["role"]) : <any>null;
             this.isAdmin = _data["isAdmin"] !== undefined ? _data["isAdmin"] : <any>null;
             this.dateRegistration = _data["dateRegistration"] ? new Date(_data["dateRegistration"].toString()) : <any>null;
             this.isBlocked = _data["isBlocked"] !== undefined ? _data["isBlocked"] : <any>null;
@@ -1248,11 +1295,7 @@ export class User implements IUser {
         data["id"] = this.id !== undefined ? this.id : <any>null;
         data["email"] = this.email !== undefined ? this.email : <any>null;
         data["password"] = this.password !== undefined ? this.password : <any>null;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
+        data["role"] = this.role ? this.role.toJSON() : <any>null;
         data["isAdmin"] = this.isAdmin !== undefined ? this.isAdmin : <any>null;
         data["dateRegistration"] = this.dateRegistration ? this.dateRegistration.toISOString() : <any>null;
         data["isBlocked"] = this.isBlocked !== undefined ? this.isBlocked : <any>null;
@@ -1266,7 +1309,7 @@ export interface IUser {
     id: number;
     email: string | null;
     password: string | null;
-    roles: Role[] | null;
+    role: Role;
     isAdmin: boolean;
     dateRegistration: Date;
     isBlocked: boolean;
@@ -1343,54 +1386,6 @@ export interface IUserVm {
     firstName: string | null;
     lastName: string | null;
     token: string | null;
-}
-
-export class WeatherForecast implements IWeatherForecast {
-    date!: DateOnly;
-    temperatureC!: number;
-    readonly temperatureF!: number;
-    summary!: string | null;
-
-    constructor(data?: IWeatherForecast) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.date = _data["date"] ? DateOnly.fromJS(_data["date"]) : <any>null;
-            this.temperatureC = _data["temperatureC"] !== undefined ? _data["temperatureC"] : <any>null;
-            (<any>this).temperatureF = _data["temperatureF"] !== undefined ? _data["temperatureF"] : <any>null;
-            this.summary = _data["summary"] !== undefined ? _data["summary"] : <any>null;
-        }
-    }
-
-    static fromJS(data: any): WeatherForecast {
-        data = typeof data === 'object' ? data : {};
-        let result = new WeatherForecast();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["date"] = this.date ? this.date.toJSON() : <any>null;
-        data["temperatureC"] = this.temperatureC !== undefined ? this.temperatureC : <any>null;
-        data["temperatureF"] = this.temperatureF !== undefined ? this.temperatureF : <any>null;
-        data["summary"] = this.summary !== undefined ? this.summary : <any>null;
-        return data;
-    }
-}
-
-export interface IWeatherForecast {
-    date: DateOnly;
-    temperatureC: number;
-    temperatureF: number;
-    summary: string | null;
 }
 
 export class ApiException extends Error {

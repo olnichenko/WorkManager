@@ -9,12 +9,41 @@ namespace WorkManagerDal.Services
     {
         public UsersService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork) { }
 
+        public async Task<List<User>> GetUsersPageAsync(int page, int pageSize, string email = null)
+        {
+            IQueryable<User> users;
+            if (string.IsNullOrEmpty(email))
+            {
+                users = _unitOfWork.Users.FindAll();
+            }
+            else
+            {
+                users = _unitOfWork.Users.FindByCondition(x => x.Email.Contains(email));
+            }
+            
+            return await users.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<int> GetUsersCountAsync(string email = null)
+        {
+            IQueryable<User> users;
+            if (string.IsNullOrEmpty(email))
+            {
+                users = _unitOfWork.Users.FindAll();
+            }
+            else
+            {
+                users = _unitOfWork.Users.FindByCondition(x => x.Email.Contains(email));
+            }
+            return await users.CountAsync();
+        }
+
         public async Task<User> GetActiveUserByEmailAndPasswordAsync(string email, string password)
         {
             password = GetHash(password);
             var user = await _unitOfWork.Users
                 .FindByCondition(x => !x.IsBlocked && x.Email == email && x.Password == password)
-                .Include("Roles.Permissions")
+                .Include("Role.Permissions")
                 .SingleOrDefaultAsync();
             return user;
         }
@@ -23,7 +52,7 @@ namespace WorkManagerDal.Services
         {
             var user = await _unitOfWork.Users
                 .FindByCondition(x => !x.IsBlocked && x.Email == email)
-                .Include("Roles.Permissions")
+                .Include("Role.Permissions")
                 .SingleOrDefaultAsync();
             return user;
         }

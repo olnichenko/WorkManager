@@ -15,10 +15,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class RolesComponent {
   public roles!: Role[];
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
-  sheight: number = 600;
+  gridHeight: number = 600;
+  isDisableDelete: boolean = true;
   public columnDefs: ColDef[] = [
-    { field: 'name' },
-    { field: 'description' }
+    { field: 'name' , resizable: true },
+    { field: 'description' , resizable: true, minWidth: 400}
   ];
   public defaultColDef: ColDef = {
     editable: true,
@@ -32,22 +33,34 @@ export class RolesComponent {
   onRowValueChanged(event: RowValueChangedEvent) {
     var data = event.data;
     console.log(
-      'onRowValueChanged: (' +
-        data.make +
-        ', ' +
-        data.model +
-        ', ' +
-        data.price +
-        ', ' +
-        data.field5 +
-        ')'
+      data
     );
+    this.apiClient.updateRole(data as Role).subscribe((data) => {
+      this.openMessage("Role changed", "Succes");
+      this.loadRoles();
+    })
+  }
+
+  onSelectionChanged($event: any) {
+    const selectedRows = this.agGrid.api.getSelectedRows();
+    this.isDisableDelete = selectedRows.length == 0;
+  }
+
+  deleteRole(){
+    const selectedRows = this.agGrid.api.getSelectedRows();
+    if (selectedRows.length > 0) {
+      let role = selectedRows[0] as Role;
+      this.apiClient.roleDelete(role).subscribe((data) => {
+        this.openMessage("Role deleted", "Succes");
+        this.loadRoles();
+      })
+    }
   }
 
   onGridReady(params: GridReadyEvent) {
     this.loadRoles();
     var he = window.innerHeight;
-    this.sheight = he - 120;
+    this.gridHeight = he - 120;
     this.agGrid.api
   }
 

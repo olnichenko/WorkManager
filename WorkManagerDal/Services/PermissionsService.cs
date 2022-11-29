@@ -16,6 +16,7 @@ namespace WorkManagerDal.Services
         public const string Roles_List = "Roles_List";
         public const string Role_Edit = "Role_Edit";
         public const string Permission_Edit = "Permission_Edit";
+        public const string Logs_View = "Logs_View";
 
         public PermissionsService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork)
         {
@@ -47,8 +48,8 @@ namespace WorkManagerDal.Services
             {
                 return true;
             }
-            var result = user.Roles.Any(x => x.Permissions.Any(y => y.Name == permissionName));
-            return result;
+            var result = user.Role?.Permissions.Any(x => x.Name == permissionName);
+            return result.HasValue ? result.Value : false;
         }
 
         public IEnumerable<PermissionData> GetAllPermissions()
@@ -59,6 +60,7 @@ namespace WorkManagerDal.Services
             permissions.Add(new PermissionData(Roles_List, "View all roles"));
             permissions.Add(new PermissionData(Role_Edit, "Edit role"));
             permissions.Add(new PermissionData(Permission_Edit, "Edit roles permissions"));
+            permissions.Add(new PermissionData(Logs_View, "Logs_View"));
 
             return permissions;
         }

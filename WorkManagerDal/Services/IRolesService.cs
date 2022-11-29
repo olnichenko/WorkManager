@@ -11,5 +11,6 @@ namespace WorkManagerDal.Services
         Task<Role> GetRoleWithPermissionsAsync(int id);
         Task DeleteRoleToPemissionAsync(int roleId, string permissionName);
         Task AddRoleToPermissionAsync(int roleId, string permissionName);
+        Task DeleteRoleAsync(Role role);
     }
 }

@@ -39,6 +39,8 @@ namespace RiskerWorkManager
             services.AddScoped<IRolesService, RolesService>();
             services.AddScoped<IPermissionsService, PermissionsService>();
             services.AddScoped<IUserIdentityService, UserIdentityService>();
+            services.AddScoped<ILogReaderService, LogReaderService>();
+            services.AddScoped<IUsersService, UsersService>();
 
             services.AddCors(options =>
             {

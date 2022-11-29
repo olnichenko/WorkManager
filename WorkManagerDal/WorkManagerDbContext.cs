@@ -23,8 +23,8 @@ namespace WorkManagerDal
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(_connectionString)
-                .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
+            optionsBuilder.UseSqlite(_connectionString);
+                //.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
         }
 
         public DbSet<Role> Roles { get; set; }

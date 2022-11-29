@@ -7,7 +7,7 @@ namespace WorkManagerDal.Models
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public List<Role> Roles { get; set; } = new();
+        public Role? Role { get; set; }
         public bool IsAdmin { get; set; }
         public DateTime DateRegistration { get; set; }
         public bool IsBlocked { get; set; }

@@ -11,6 +11,7 @@ export class AccountService {
   public readonly Roles_List: string = "Roles_List";
   public readonly Role_Edit: string = "Role_Edit";
   public readonly Permission_Edit: string = "Permission_Edit";
+  public readonly Logs_View: string = "Logs_View";
 
   private readonly _userKeyInStorage: string = "userKeyInStorage";
   public user: BehaviorSubject<UserVm | null> = new BehaviorSubject<UserVm | null>(null);
