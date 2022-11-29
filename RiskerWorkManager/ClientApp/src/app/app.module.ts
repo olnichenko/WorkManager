@@ -26,6 +26,7 @@ import { EditPermissionComponent } from './adimin/edit-permission/edit-permissio
 import { AuthGuardServiceChildGuard } from './auth-guard-service-child.guard';
 import { LogsComponent } from './adimin/logs/logs.component';
 import { UsersComponent } from './adimin/users/users.component';
+import { EditUserRoleComponent } from './adimin/edit-user-role/edit-user-role.component';
 
 const adminRoutes: Routes = [
   { path: 'users', component: UsersComponent,
@@ -61,7 +62,8 @@ const appRoutes: Routes = [
     PermissionsComponent,
     EditPermissionComponent,
     LogsComponent,
-    UsersComponent
+    UsersComponent,
+    EditUserRoleComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

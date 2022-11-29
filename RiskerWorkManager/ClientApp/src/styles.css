@@ -5,8 +5,10 @@ a.link-admin {
   color: #3996C1 !important;
 }
 a.active {
-  color: white !important;
-  background-color: #3996C1 !important;
+  /* color: white !important; */
+  background-color: white !important;
+  border-left: #3996C1 solid 3px !important;
+  border-radius: 0 !important;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {

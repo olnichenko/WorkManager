@@ -13,6 +13,7 @@ namespace WorkManagerDal.Services
     {
         private readonly IWorkManagerUnitOfWork _workManagerUnitOfWork;
         public const string Users_List = "Users_List";
+        public const string Users_Edit = "Users_Edit";
         public const string Roles_List = "Roles_List";
         public const string Role_Edit = "Role_Edit";
         public const string Permission_Edit = "Permission_Edit";
@@ -60,7 +61,8 @@ namespace WorkManagerDal.Services
             permissions.Add(new PermissionData(Roles_List, "View all roles"));
             permissions.Add(new PermissionData(Role_Edit, "Edit role"));
             permissions.Add(new PermissionData(Permission_Edit, "Edit roles permissions"));
-            permissions.Add(new PermissionData(Logs_View, "Logs_View"));
+            permissions.Add(new PermissionData(Logs_View, "Access to view logs"));
+            permissions.Add(new PermissionData(Users_Edit, "Acces to edit users"));
 
             return permissions;
         }

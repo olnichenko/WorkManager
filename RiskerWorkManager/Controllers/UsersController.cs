@@ -35,9 +35,30 @@ namespace RiskerWorkManager.Controllers
             return result;
         }
 
+        [HttpPost]
+        [AuthorizePermission(PermissionsService.Users_Edit)]
+        public async Task ChangeUserRole(long userId, int roleId)
+        {
+            await _usersService.ChangeUserRoleAsync(userId, roleId);
+        }
+
+        [HttpPost]
+        [AuthorizePermission(PermissionsService.Users_Edit)]
+        public async Task SetUserAdminRights(long userId, bool isAdmin)
+        {
+            await _usersService.SetUserAdminRightsAsync(userId, isAdmin);
+        }
+
+        [HttpPost]
+        [AuthorizePermission(PermissionsService.Users_Edit)]
+        public async Task ChangeUserBlockStatus(long userId, bool isBlocked)
+        {
+            await _usersService.ChangeUserBlockStatusAsync(userId, isBlocked);
+        }
+
         public void Dispose()
         {
-            //_rolesService.Dispose();
+            _usersService.Dispose();
         }
     }
 }

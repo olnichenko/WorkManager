@@ -67,9 +67,7 @@ export class AccountService {
     if (this.getCurrentUser()?.isAdmin) {
       return true;
     }
-    var result = this.getCurrentUser()?.roles?.find(x => {
-      return x.permissions?.find(y => y.name == permission);
-    })
+    var result = this.getCurrentUser()?.role?.permissions?.find(x => x.name == permission);
     if (result != null) {
       return true;
     }

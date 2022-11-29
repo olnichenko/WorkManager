@@ -1023,6 +1023,180 @@ export class ApiClient {
         }
         return _observableOf(null as any);
     }
+
+    /**
+     * @param userId (optional) 
+     * @param roleId (optional) 
+     * @return Success
+     */
+    changeUserRole(userId: number | undefined, roleId: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/Users/ChangeUserRole?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (roleId === null)
+            throw new Error("The parameter 'roleId' cannot be null.");
+        else if (roleId !== undefined)
+            url_ += "roleId=" + encodeURIComponent("" + roleId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeUserRole(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeUserRole(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processChangeUserRole(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param isAdmin (optional) 
+     * @return Success
+     */
+    setUserAdminRights(userId: number | undefined, isAdmin: boolean | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/Users/SetUserAdminRights?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (isAdmin === null)
+            throw new Error("The parameter 'isAdmin' cannot be null.");
+        else if (isAdmin !== undefined)
+            url_ += "isAdmin=" + encodeURIComponent("" + isAdmin) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetUserAdminRights(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetUserAdminRights(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSetUserAdminRights(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param userId (optional) 
+     * @param isBlocked (optional) 
+     * @return Success
+     */
+    changeUserBlockStatus(userId: number | undefined, isBlocked: boolean | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/Users/ChangeUserBlockStatus?";
+        if (userId === null)
+            throw new Error("The parameter 'userId' cannot be null.");
+        else if (userId !== undefined)
+            url_ += "userId=" + encodeURIComponent("" + userId) + "&";
+        if (isBlocked === null)
+            throw new Error("The parameter 'isBlocked' cannot be null.");
+        else if (isBlocked !== undefined)
+            url_ += "isBlocked=" + encodeURIComponent("" + isBlocked) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processChangeUserBlockStatus(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processChangeUserBlockStatus(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processChangeUserBlockStatus(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 export class Permission implements IPermission {
@@ -1319,8 +1493,11 @@ export interface IUser {
 
 export class UserVm implements IUserVm {
     id!: number;
+    dateRegistration!: Date;
+    isBlocked!: boolean;
     email!: string | null;
-    roles!: RoleVm[] | null;
+    role!: RoleVm;
+    roleName!: string | null;
     isAdmin!: boolean;
     firstName!: string | null;
     lastName!: string | null;
@@ -1338,15 +1515,11 @@ export class UserVm implements IUserVm {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.dateRegistration = _data["dateRegistration"] ? new Date(_data["dateRegistration"].toString()) : <any>null;
+            this.isBlocked = _data["isBlocked"] !== undefined ? _data["isBlocked"] : <any>null;
             this.email = _data["email"] !== undefined ? _data["email"] : <any>null;
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(RoleVm.fromJS(item));
-            }
-            else {
-                this.roles = <any>null;
-            }
+            this.role = _data["role"] ? RoleVm.fromJS(_data["role"]) : <any>null;
+            this.roleName = _data["roleName"] !== undefined ? _data["roleName"] : <any>null;
             this.isAdmin = _data["isAdmin"] !== undefined ? _data["isAdmin"] : <any>null;
             this.firstName = _data["firstName"] !== undefined ? _data["firstName"] : <any>null;
             this.lastName = _data["lastName"] !== undefined ? _data["lastName"] : <any>null;
@@ -1364,12 +1537,11 @@ export class UserVm implements IUserVm {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["dateRegistration"] = this.dateRegistration ? this.dateRegistration.toISOString() : <any>null;
+        data["isBlocked"] = this.isBlocked !== undefined ? this.isBlocked : <any>null;
         data["email"] = this.email !== undefined ? this.email : <any>null;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item.toJSON());
-        }
+        data["role"] = this.role ? this.role.toJSON() : <any>null;
+        data["roleName"] = this.roleName !== undefined ? this.roleName : <any>null;
         data["isAdmin"] = this.isAdmin !== undefined ? this.isAdmin : <any>null;
         data["firstName"] = this.firstName !== undefined ? this.firstName : <any>null;
         data["lastName"] = this.lastName !== undefined ? this.lastName : <any>null;
@@ -1380,8 +1552,11 @@ export class UserVm implements IUserVm {
 
 export interface IUserVm {
     id: number;
+    dateRegistration: Date;
+    isBlocked: boolean;
     email: string | null;
-    roles: RoleVm[] | null;
+    role: RoleVm;
+    roleName: string | null;
     isAdmin: boolean;
     firstName: string | null;
     lastName: string | null;

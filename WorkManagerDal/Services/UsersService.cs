@@ -2,12 +2,52 @@
 using System.Security.Cryptography;
 using System.Text;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
     public class UsersService : BaseService, IUsersService
     {
         public UsersService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork) { }
+
+        public async Task SetUserAdminRightsAsync(long userId, bool isAdmin)
+        {
+            var user = await GetUserByIdAsync(userId);
+            if (user != null)
+            {
+                user.IsAdmin = isAdmin;
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        public async Task ChangeUserRoleAsync(long userId, int roleId)
+        {
+            var user = await GetUserByIdAsync(userId);
+            var role = await _unitOfWork.Roles.FindByConditionWithTracking(x => x.Id == roleId).SingleOrDefaultAsync();
+            if (role != null && user != null)
+            {
+                user.Role = role;
+                //role.Users.Add(user);
+                //_unitOfWork.Roles.Update(role);
+                //_unitOfWork.Users.Update(user);
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        public async Task ChangeUserBlockStatusAsync(long userId, bool isBlocked)
+        {
+            var user = await GetUserByIdAsync(userId);
+            if (user != null)
+            {
+                user.IsBlocked = isBlocked;
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        private async Task<User> GetUserByIdAsync(long id)
+        {
+            return await _unitOfWork.Users.FindByConditionWithTracking(x => x.Id == id).Include("Role.Permissions").SingleOrDefaultAsync();
+        }
 
         public async Task<List<User>> GetUsersPageAsync(int page, int pageSize, string email = null)
         {
@@ -20,8 +60,8 @@ namespace WorkManagerDal.Services
             {
                 users = _unitOfWork.Users.FindByCondition(x => x.Email.Contains(email));
             }
-            
-            return await users.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return await users.Include("Role.Permissions").Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<int> GetUsersCountAsync(string email = null)
