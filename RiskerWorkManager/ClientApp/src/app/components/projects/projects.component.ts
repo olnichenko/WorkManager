@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { ApiClient, Project } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { AddProjectComponent } from './add-project/add-project.component';
@@ -13,7 +14,11 @@ import { AddProjectComponent } from './add-project/add-project.component';
 export class ProjectsComponent implements OnInit {
 
   myProjects: Project[] = [];
-  constructor(protected apiClient: ApiClient, public accountService: AccountService, public dialog: MatDialog, protected snackBar: MatSnackBar){}
+  constructor(protected apiClient: ApiClient, 
+    public accountService: AccountService, 
+    public dialog: MatDialog, 
+    protected snackBar: MatSnackBar,
+    private router: Router){}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -25,8 +30,8 @@ export class ProjectsComponent implements OnInit {
     })
   }
 
-  projectSelect(name: string){
-    alert(name);
+  navigateTo(projectId: number){
+    this.router.navigate(['/project', projectId]);
   }
 
   openAddDialog(): void {

@@ -32,6 +32,10 @@ import { AuthGuardServiceGuard } from './auth-guard-service.guard';
 import { AddProjectComponent } from './components/projects/add-project/add-project.component';
 import { ProjectComponent } from './components/projects/project/project.component';
 
+const projectRoutes: Routes = [
+
+]
+
 const adminRoutes: Routes = [
   { path: 'users', component: UsersComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
@@ -48,9 +52,8 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-admin', component: RegisterAdminComponent },
-
   { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuardServiceGuard] },
-  
+  { path: 'project/:id', component: ProjectComponent, canActivate: [AuthGuardServiceGuard], children: projectRoutes },
   { path: 'administration', component: AdministrationComponent, children: adminRoutes},
 ];
 

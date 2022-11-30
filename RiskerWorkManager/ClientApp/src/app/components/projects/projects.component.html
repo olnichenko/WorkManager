@@ -1,12 +1,4 @@
 <div class="container">
-    <!-- <div class="row">
-        <div class="col-12">
-            <button mat-raised-button color="primary" (click)="openAddDialog()"
-                *ngIf="accountService.isUserHaveAccess(accountService.Add_Project)" type="button">
-                Add new project
-            </button>&nbsp;
-        </div>
-    </div> -->
     <mat-toolbar>
         <button mat-raised-button (click)="openAddDialog()"
             *ngIf="accountService.isUserHaveAccess(accountService.Add_Project)" type="button">
@@ -16,7 +8,7 @@
     </mat-toolbar>
     <mat-list>
         <div *ngIf="myProjects.length > 0" mat-subheader>My projects</div>
-        <mat-list-item class="pointer" *ngFor="let myProject of myProjects" (click)="projectSelect(myProject.title!)">
+        <mat-list-item class="pointer" *ngFor="let myProject of myProjects" (click)="navigateTo(myProject.id)">
             <mat-icon matListItemIcon>calendar_month</mat-icon>
             <div matListItemTitle>{{myProject.title}}</div>
             <div matListItemLine>{{myProject.content}}</div>
