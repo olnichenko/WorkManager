@@ -38,7 +38,6 @@ namespace RiskerWorkManager.Controllers
         public async Task<UserVm> Register(UserVm user, string password)
         {
             var userEntity = _mapper.Map<User>(user);
-            userEntity.Role = null;
             userEntity.Password = password;
             var result = await _usersService.RegisterAsync(userEntity);
             user = _mapper.Map<UserVm>(result);

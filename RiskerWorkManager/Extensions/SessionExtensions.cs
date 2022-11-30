@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RiskerWorkManager.Extensions
 {
@@ -6,7 +7,13 @@ namespace RiskerWorkManager.Extensions
     {
         public static void Set<T>(this ISession session, string key, T value)
         {
-            session.SetString(key, JsonSerializer.Serialize<T>(value));
+            var options = new JsonSerializerOptions()
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                WriteIndented = true
+            };
+
+            session.SetString(key, JsonSerializer.Serialize<T>(value, options));
         }
 
         public static T? Get<T>(this ISession session, string key)

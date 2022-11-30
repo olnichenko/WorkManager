@@ -12,16 +12,30 @@ namespace WorkManagerDal.Services
     public class PermissionsService : BaseService, IPermissionsService
     {
         private readonly IWorkManagerUnitOfWork _workManagerUnitOfWork;
+        private readonly List<PermissionData> _allPermissions;
+
         public const string Users_List = "Users_List";
         public const string Users_Edit = "Users_Edit";
         public const string Roles_List = "Roles_List";
         public const string Role_Edit = "Role_Edit";
         public const string Permission_Edit = "Permission_Edit";
         public const string Logs_View = "Logs_View";
+        public const string Add_Project = "Add_Project";
 
         public PermissionsService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _workManagerUnitOfWork = unitOfWork;
+
+            _allPermissions = new List<PermissionData>
+            {
+                new PermissionData(Users_List, "View all registered users"),
+                new PermissionData(Roles_List, "View all roles"),
+                new PermissionData(Role_Edit, "Edit role"),
+                new PermissionData(Permission_Edit, "Edit roles permissions"),
+                new PermissionData(Logs_View, "Access to view logs"),
+                new PermissionData(Users_Edit, "Acces to edit users"),
+                new PermissionData(Add_Project, "Create new projects")
+            };
         }
 
         public async Task<Permission> CreateAndGetPermissionAsnyc(string permissionName)
@@ -55,16 +69,7 @@ namespace WorkManagerDal.Services
 
         public IEnumerable<PermissionData> GetAllPermissions()
         {
-            var permissions = new List<PermissionData>();
-
-            permissions.Add(new PermissionData(Users_List, "View all registered users"));
-            permissions.Add(new PermissionData(Roles_List, "View all roles"));
-            permissions.Add(new PermissionData(Role_Edit, "Edit role"));
-            permissions.Add(new PermissionData(Permission_Edit, "Edit roles permissions"));
-            permissions.Add(new PermissionData(Logs_View, "Access to view logs"));
-            permissions.Add(new PermissionData(Users_Edit, "Acces to edit users"));
-
-            return permissions;
+            return _allPermissions;
         }
     }
 }

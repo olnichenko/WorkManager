@@ -431,7 +431,7 @@ export class ApiClient {
     /**
      * @return Success
      */
-    getLogFilesList(): Observable<string> {
+    getLogFilesList(): Observable<FileResponse> {
         let url_ = this.baseUrl + "/Logs/GetLogFilesList";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -451,28 +451,25 @@ export class ApiClient {
                 try {
                     return this.processGetLogFilesList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
+                    return _observableThrow(e) as any as Observable<FileResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<string>;
+                return _observableThrow(response_) as any as Observable<FileResponse>;
         }));
     }
 
-    protected processGetLogFilesList(response: HttpResponseBase): Observable<string> {
+    protected processGetLogFilesList(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
             (response as any).error instanceof Blob ? (response as any).error : undefined;
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return _observableOf(result200);
-            }));
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            const fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+            const fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -598,6 +595,122 @@ export class ApiClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = resultData200 !== undefined ? resultData200 : <any>null;
     
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    createProject(body: Project | undefined): Observable<Project> {
+        let url_ = this.baseUrl + "/Projects/CreateProject";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateProject(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateProject(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Project>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Project>;
+        }));
+    }
+
+    protected processCreateProject(response: HttpResponseBase): Observable<Project> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Project.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getMyProjects(): Observable<Project[]> {
+        let url_ = this.baseUrl + "/Projects/GetMyProjects";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMyProjects(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMyProjects(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Project[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Project[]>;
+        }));
+    }
+
+    protected processGetMyProjects(response: HttpResponseBase): Observable<Project[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Project.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1199,6 +1312,182 @@ export class ApiClient {
     }
 }
 
+export class Bug implements IBug {
+    id!: number;
+    title!: string | null;
+    content!: string | null;
+    project!: Project;
+    userCreated!: User;
+    dateCreated!: Date;
+    solvedInVersion!: Version;
+
+    constructor(data?: IBug) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.title = _data["title"] !== undefined ? _data["title"] : <any>null;
+            this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
+            this.project = _data["project"] ? Project.fromJS(_data["project"]) : <any>null;
+            this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
+            this.solvedInVersion = _data["solvedInVersion"] ? Version.fromJS(_data["solvedInVersion"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Bug {
+        data = typeof data === 'object' ? data : {};
+        let result = new Bug();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["title"] = this.title !== undefined ? this.title : <any>null;
+        data["content"] = this.content !== undefined ? this.content : <any>null;
+        data["project"] = this.project ? this.project.toJSON() : <any>null;
+        data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
+        data["solvedInVersion"] = this.solvedInVersion ? this.solvedInVersion.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface IBug {
+    id: number;
+    title: string | null;
+    content: string | null;
+    project: Project;
+    userCreated: User;
+    dateCreated: Date;
+    solvedInVersion: Version;
+}
+
+export class Feature implements IFeature {
+    id!: number;
+    title!: string | null;
+    content!: string | null;
+    project!: Project;
+    userCreated!: User;
+    dateCreated!: Date;
+    solvedInVersion!: Version;
+
+    constructor(data?: IFeature) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.title = _data["title"] !== undefined ? _data["title"] : <any>null;
+            this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
+            this.project = _data["project"] ? Project.fromJS(_data["project"]) : <any>null;
+            this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
+            this.solvedInVersion = _data["solvedInVersion"] ? Version.fromJS(_data["solvedInVersion"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Feature {
+        data = typeof data === 'object' ? data : {};
+        let result = new Feature();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["title"] = this.title !== undefined ? this.title : <any>null;
+        data["content"] = this.content !== undefined ? this.content : <any>null;
+        data["project"] = this.project ? this.project.toJSON() : <any>null;
+        data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
+        data["solvedInVersion"] = this.solvedInVersion ? this.solvedInVersion.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface IFeature {
+    id: number;
+    title: string | null;
+    content: string | null;
+    project: Project;
+    userCreated: User;
+    dateCreated: Date;
+    solvedInVersion: Version;
+}
+
+export class Note implements INote {
+    id!: number;
+    title!: string | null;
+    content!: string | null;
+    project!: Project;
+    userCreated!: User;
+    dateCreated!: Date;
+
+    constructor(data?: INote) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.title = _data["title"] !== undefined ? _data["title"] : <any>null;
+            this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
+            this.project = _data["project"] ? Project.fromJS(_data["project"]) : <any>null;
+            this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Note {
+        data = typeof data === 'object' ? data : {};
+        let result = new Note();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["title"] = this.title !== undefined ? this.title : <any>null;
+        data["content"] = this.content !== undefined ? this.content : <any>null;
+        data["project"] = this.project ? this.project.toJSON() : <any>null;
+        data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
+        return data;
+    }
+}
+
+export interface INote {
+    id: number;
+    title: string | null;
+    content: string | null;
+    project: Project;
+    userCreated: User;
+    dateCreated: Date;
+}
+
 export class Permission implements IPermission {
     id!: number;
     name!: string | null;
@@ -1292,6 +1581,177 @@ export class PermissionData implements IPermissionData {
 export interface IPermissionData {
     name: string | null;
     description: string | null;
+}
+
+export class Project implements IProject {
+    id!: number;
+    title!: string | null;
+    content!: string | null;
+    userCreated!: User;
+    dateCreated!: Date;
+    usersHasAccess!: ProjectsToUsers[] | null;
+    notes!: Note[] | null;
+    versions!: Version[] | null;
+    bugs!: Bug[] | null;
+    features!: Feature[] | null;
+
+    constructor(data?: IProject) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.title = _data["title"] !== undefined ? _data["title"] : <any>null;
+            this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
+            this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
+            if (Array.isArray(_data["usersHasAccess"])) {
+                this.usersHasAccess = [] as any;
+                for (let item of _data["usersHasAccess"])
+                    this.usersHasAccess!.push(ProjectsToUsers.fromJS(item));
+            }
+            else {
+                this.usersHasAccess = <any>null;
+            }
+            if (Array.isArray(_data["notes"])) {
+                this.notes = [] as any;
+                for (let item of _data["notes"])
+                    this.notes!.push(Note.fromJS(item));
+            }
+            else {
+                this.notes = <any>null;
+            }
+            if (Array.isArray(_data["versions"])) {
+                this.versions = [] as any;
+                for (let item of _data["versions"])
+                    this.versions!.push(Version.fromJS(item));
+            }
+            else {
+                this.versions = <any>null;
+            }
+            if (Array.isArray(_data["bugs"])) {
+                this.bugs = [] as any;
+                for (let item of _data["bugs"])
+                    this.bugs!.push(Bug.fromJS(item));
+            }
+            else {
+                this.bugs = <any>null;
+            }
+            if (Array.isArray(_data["features"])) {
+                this.features = [] as any;
+                for (let item of _data["features"])
+                    this.features!.push(Feature.fromJS(item));
+            }
+            else {
+                this.features = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): Project {
+        data = typeof data === 'object' ? data : {};
+        let result = new Project();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["title"] = this.title !== undefined ? this.title : <any>null;
+        data["content"] = this.content !== undefined ? this.content : <any>null;
+        data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
+        if (Array.isArray(this.usersHasAccess)) {
+            data["usersHasAccess"] = [];
+            for (let item of this.usersHasAccess)
+                data["usersHasAccess"].push(item.toJSON());
+        }
+        if (Array.isArray(this.notes)) {
+            data["notes"] = [];
+            for (let item of this.notes)
+                data["notes"].push(item.toJSON());
+        }
+        if (Array.isArray(this.versions)) {
+            data["versions"] = [];
+            for (let item of this.versions)
+                data["versions"].push(item.toJSON());
+        }
+        if (Array.isArray(this.bugs)) {
+            data["bugs"] = [];
+            for (let item of this.bugs)
+                data["bugs"].push(item.toJSON());
+        }
+        if (Array.isArray(this.features)) {
+            data["features"] = [];
+            for (let item of this.features)
+                data["features"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IProject {
+    id: number;
+    title: string | null;
+    content: string | null;
+    userCreated: User;
+    dateCreated: Date;
+    usersHasAccess: ProjectsToUsers[] | null;
+    notes: Note[] | null;
+    versions: Version[] | null;
+    bugs: Bug[] | null;
+    features: Feature[] | null;
+}
+
+export class ProjectsToUsers implements IProjectsToUsers {
+    id!: number;
+    user!: User;
+    project!: Project;
+
+    constructor(data?: IProjectsToUsers) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.user = _data["user"] ? User.fromJS(_data["user"]) : <any>null;
+            this.project = _data["project"] ? Project.fromJS(_data["project"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): ProjectsToUsers {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectsToUsers();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["user"] = this.user ? this.user.toJSON() : <any>null;
+        data["project"] = this.project ? this.project.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface IProjectsToUsers {
+    id: number;
+    user: User;
+    project: Project;
 }
 
 export class Role implements IRole {
@@ -1433,6 +1893,12 @@ export class User implements IUser {
     isBlocked!: boolean;
     firstName!: string | null;
     lastName!: string | null;
+    projects!: Project[] | null;
+    projectsHasAccess!: ProjectsToUsers[] | null;
+    notes!: Note[] | null;
+    versions!: Version[] | null;
+    bugs!: Bug[] | null;
+    features!: Feature[] | null;
 
     constructor(data?: IUser) {
         if (data) {
@@ -1454,6 +1920,54 @@ export class User implements IUser {
             this.isBlocked = _data["isBlocked"] !== undefined ? _data["isBlocked"] : <any>null;
             this.firstName = _data["firstName"] !== undefined ? _data["firstName"] : <any>null;
             this.lastName = _data["lastName"] !== undefined ? _data["lastName"] : <any>null;
+            if (Array.isArray(_data["projects"])) {
+                this.projects = [] as any;
+                for (let item of _data["projects"])
+                    this.projects!.push(Project.fromJS(item));
+            }
+            else {
+                this.projects = <any>null;
+            }
+            if (Array.isArray(_data["projectsHasAccess"])) {
+                this.projectsHasAccess = [] as any;
+                for (let item of _data["projectsHasAccess"])
+                    this.projectsHasAccess!.push(ProjectsToUsers.fromJS(item));
+            }
+            else {
+                this.projectsHasAccess = <any>null;
+            }
+            if (Array.isArray(_data["notes"])) {
+                this.notes = [] as any;
+                for (let item of _data["notes"])
+                    this.notes!.push(Note.fromJS(item));
+            }
+            else {
+                this.notes = <any>null;
+            }
+            if (Array.isArray(_data["versions"])) {
+                this.versions = [] as any;
+                for (let item of _data["versions"])
+                    this.versions!.push(Version.fromJS(item));
+            }
+            else {
+                this.versions = <any>null;
+            }
+            if (Array.isArray(_data["bugs"])) {
+                this.bugs = [] as any;
+                for (let item of _data["bugs"])
+                    this.bugs!.push(Bug.fromJS(item));
+            }
+            else {
+                this.bugs = <any>null;
+            }
+            if (Array.isArray(_data["features"])) {
+                this.features = [] as any;
+                for (let item of _data["features"])
+                    this.features!.push(Feature.fromJS(item));
+            }
+            else {
+                this.features = <any>null;
+            }
         }
     }
 
@@ -1475,6 +1989,36 @@ export class User implements IUser {
         data["isBlocked"] = this.isBlocked !== undefined ? this.isBlocked : <any>null;
         data["firstName"] = this.firstName !== undefined ? this.firstName : <any>null;
         data["lastName"] = this.lastName !== undefined ? this.lastName : <any>null;
+        if (Array.isArray(this.projects)) {
+            data["projects"] = [];
+            for (let item of this.projects)
+                data["projects"].push(item.toJSON());
+        }
+        if (Array.isArray(this.projectsHasAccess)) {
+            data["projectsHasAccess"] = [];
+            for (let item of this.projectsHasAccess)
+                data["projectsHasAccess"].push(item.toJSON());
+        }
+        if (Array.isArray(this.notes)) {
+            data["notes"] = [];
+            for (let item of this.notes)
+                data["notes"].push(item.toJSON());
+        }
+        if (Array.isArray(this.versions)) {
+            data["versions"] = [];
+            for (let item of this.versions)
+                data["versions"].push(item.toJSON());
+        }
+        if (Array.isArray(this.bugs)) {
+            data["bugs"] = [];
+            for (let item of this.bugs)
+                data["bugs"].push(item.toJSON());
+        }
+        if (Array.isArray(this.features)) {
+            data["features"] = [];
+            for (let item of this.features)
+                data["features"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -1489,6 +2033,12 @@ export interface IUser {
     isBlocked: boolean;
     firstName: string | null;
     lastName: string | null;
+    projects: Project[] | null;
+    projectsHasAccess: ProjectsToUsers[] | null;
+    notes: Note[] | null;
+    versions: Version[] | null;
+    bugs: Bug[] | null;
+    features: Feature[] | null;
 }
 
 export class UserVm implements IUserVm {
@@ -1561,6 +2111,99 @@ export interface IUserVm {
     firstName: string | null;
     lastName: string | null;
     token: string | null;
+}
+
+export class Version implements IVersion {
+    id!: number;
+    title!: string | null;
+    content!: string | null;
+    project!: Project;
+    userCreated!: User;
+    dateCreated!: Date;
+    bugs!: Bug[] | null;
+    features!: Feature[] | null;
+
+    constructor(data?: IVersion) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.title = _data["title"] !== undefined ? _data["title"] : <any>null;
+            this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
+            this.project = _data["project"] ? Project.fromJS(_data["project"]) : <any>null;
+            this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
+            if (Array.isArray(_data["bugs"])) {
+                this.bugs = [] as any;
+                for (let item of _data["bugs"])
+                    this.bugs!.push(Bug.fromJS(item));
+            }
+            else {
+                this.bugs = <any>null;
+            }
+            if (Array.isArray(_data["features"])) {
+                this.features = [] as any;
+                for (let item of _data["features"])
+                    this.features!.push(Feature.fromJS(item));
+            }
+            else {
+                this.features = <any>null;
+            }
+        }
+    }
+
+    static fromJS(data: any): Version {
+        data = typeof data === 'object' ? data : {};
+        let result = new Version();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["title"] = this.title !== undefined ? this.title : <any>null;
+        data["content"] = this.content !== undefined ? this.content : <any>null;
+        data["project"] = this.project ? this.project.toJSON() : <any>null;
+        data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
+        if (Array.isArray(this.bugs)) {
+            data["bugs"] = [];
+            for (let item of this.bugs)
+                data["bugs"].push(item.toJSON());
+        }
+        if (Array.isArray(this.features)) {
+            data["features"] = [];
+            for (let item of this.features)
+                data["features"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IVersion {
+    id: number;
+    title: string | null;
+    content: string | null;
+    project: Project;
+    userCreated: User;
+    dateCreated: Date;
+    bugs: Bug[] | null;
+    features: Feature[] | null;
+}
+
+export interface FileResponse {
+    data: Blob;
+    status: number;
+    fileName?: string;
+    headers?: { [name: string]: any };
 }
 
 export class ApiException extends Error {

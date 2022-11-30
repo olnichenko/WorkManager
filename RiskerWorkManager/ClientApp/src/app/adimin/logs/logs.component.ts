@@ -9,7 +9,7 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./logs.component.css']
 })
 export class LogsComponent implements OnInit {
-  logFile!: string;
+  logFile: string[] = [];
 
   constructor(protected apiClient: ApiClient, private http: HttpClient){}
   ngOnInit(): void {
@@ -17,7 +17,9 @@ export class LogsComponent implements OnInit {
     //   this.logFile = data.toString();
     // })
     this.apiClient.getLogFilesList().subscribe((data) => {
-      this.logFile = data;
-    })
+      data.data.text().then(text => {
+        this.logFile = text.split("--------------");
+      });
+    });
   }
 }

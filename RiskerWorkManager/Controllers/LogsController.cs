@@ -20,6 +20,7 @@ namespace RiskerWorkManager.Controllers
 
         [HttpGet]
         [AuthorizePermission(PermissionsService.Logs_View)]
+        [ProducesResponseType(typeof(FileResult), 200)]
         public string GetLogFilesList()
         {
             var result = _logReaderService.ReadFiles();

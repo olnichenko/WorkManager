@@ -31,8 +31,16 @@ if (builder.Environment.EnvironmentName == "Development")
 }
 // Add services to the container.
 
+//builder.Services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+//builder.Services.AddControllers().AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+//});
+//builder.Services.AddControllers().AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.ReferenceLoopHandling = ReferenceLoopHandling.IgnoreCycles;
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagerDal;
 
@@ -10,9 +11,11 @@ using WorkManagerDal;
 namespace WorkManagerDal.Migrations
 {
     [DbContext(typeof(WorkManagerDbContext))]
-    partial class WorkManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221130162519_Added_project_models666sdfasdfsa")]
+    partial class Addedprojectmodels666sdfasdfsa
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -169,7 +172,7 @@ namespace WorkManagerDal.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("UserCreatedId")
+                    b.Property<long>("UserCreatedId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -376,7 +379,9 @@ namespace WorkManagerDal.Migrations
                 {
                     b.HasOne("WorkManagerDal.Models.User", "UserCreated")
                         .WithMany("Projects")
-                        .HasForeignKey("UserCreatedId");
+                        .HasForeignKey("UserCreatedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UserCreated");
                 });

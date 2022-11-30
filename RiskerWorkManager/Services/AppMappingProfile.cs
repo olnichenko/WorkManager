@@ -10,7 +10,8 @@ namespace RiskerWorkManager.Services
             CreateMap<Role, RoleVm>().ReverseMap();
             CreateMap<User, UserVm>()
                 .ForMember(x => x.RoleName, o => o.MapFrom(s => s.Role == null ? "" : s.Role.Name))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(x => x.Role, o => o.Ignore());
         }
     }
 }

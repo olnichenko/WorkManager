@@ -12,12 +12,12 @@ namespace WorkManagerDal.Models
     {
         public string Title { get; set; }
         public string? Content { get; set; }
-        public User UserCreated { get; set; }
+        public User? UserCreated { get; set; }
         public DateTime DateCreated { get; set; }
-        public List<User>? Developers { get; set; } = new List<User> { };
+        public List<ProjectsToUsers>? UsersHasAccess { get; set; } = new List<ProjectsToUsers> { };
         public List<Note>? Notes { get; set; } = new List<Note> { };
         public List<Version>? Versions { get; set; } = new List<Version> { };
-        public List<Bug> Bugs { get; set; } = new List<Bug>();
-        public List<Feature> Features { get; set; } = new List<Feature>();
+        public List<Bug>? Bugs { get; set; } = new List<Bug>();
+        public List<Feature>? Features { get; set; } = new List<Feature>();
     }
 }

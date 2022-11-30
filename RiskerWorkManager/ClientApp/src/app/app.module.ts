@@ -27,6 +27,10 @@ import { AuthGuardServiceChildGuard } from './auth-guard-service-child.guard';
 import { LogsComponent } from './adimin/logs/logs.component';
 import { UsersComponent } from './adimin/users/users.component';
 import { EditUserRoleComponent } from './adimin/edit-user-role/edit-user-role.component';
+import { ProjectsComponent } from './components/projects/projects.component';
+import { AuthGuardServiceGuard } from './auth-guard-service.guard';
+import { AddProjectComponent } from './components/projects/add-project/add-project.component';
+import { ProjectComponent } from './components/projects/project/project.component';
 
 const adminRoutes: Routes = [
   { path: 'users', component: UsersComponent,
@@ -44,6 +48,9 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-admin', component: RegisterAdminComponent },
+
+  { path: 'projects', component: ProjectsComponent, canActivate: [AuthGuardServiceGuard] },
+  
   { path: 'administration', component: AdministrationComponent, children: adminRoutes},
 ];
 
@@ -63,7 +70,10 @@ const appRoutes: Routes = [
     EditPermissionComponent,
     LogsComponent,
     UsersComponent,
-    EditUserRoleComponent
+    EditUserRoleComponent,
+    ProjectsComponent,
+    AddProjectComponent,
+    ProjectComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

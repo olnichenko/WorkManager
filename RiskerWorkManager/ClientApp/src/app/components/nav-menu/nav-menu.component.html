@@ -23,6 +23,9 @@
                     <li *ngIf="user == null" class="nav-item">
                         <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/register']">Sign up</a>
                     </li>
+                    <li *ngIf="user != null" class="nav-item">
+                        <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/projects']">Projects</a>
+                    </li>
                     <li *ngIf="accountService.isUserHaveAccess(accountService.Roles_List)" class="nav-item">
                         <a class="nav-link text-dark" [routerLinkActive]="['link-active']" [routerLink]="['/register']">test permission</a>
                     </li>

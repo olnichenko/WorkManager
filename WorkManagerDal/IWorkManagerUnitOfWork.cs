@@ -6,6 +6,7 @@ namespace WorkManagerDal
     {
         UsersRepository Users { get; }
         RolesRepository Roles { get; }
+        ProjectsRepository Projects { get; }
         PermissionsRepository Permissions { get; }
         Task SaveAsync();
     }

@@ -1,5 +1,4 @@
 <div class="row">
-    <div class="col-12">
-        {{logFile}}
+    <div class="col-12 p-3 m-3" *ngFor="let text of logFile" [innerHTML]="text">
     </div>
 </div>

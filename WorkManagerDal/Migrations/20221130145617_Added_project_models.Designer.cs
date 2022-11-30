@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagerDal;
 
@@ -10,9 +11,11 @@ using WorkManagerDal;
 namespace WorkManagerDal.Migrations
 {
     [DbContext(typeof(WorkManagerDbContext))]
-    partial class WorkManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221130145617_Added_project_models")]
+    partial class Addedprojectmodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -169,7 +172,7 @@ namespace WorkManagerDal.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("UserCreatedId")
+                    b.Property<long>("UserCreatedId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -177,27 +180,6 @@ namespace WorkManagerDal.Migrations
                     b.HasIndex("UserCreatedId");
 
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("WorkManagerDal.Models.ProjectsToUsers", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("ProjectId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProjectsToUsers");
                 });
 
             modelBuilder.Entity("WorkManagerDal.Models.Role", b =>
@@ -376,28 +358,11 @@ namespace WorkManagerDal.Migrations
                 {
                     b.HasOne("WorkManagerDal.Models.User", "UserCreated")
                         .WithMany("Projects")
-                        .HasForeignKey("UserCreatedId");
+                        .HasForeignKey("UserCreatedId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("UserCreated");
-                });
-
-            modelBuilder.Entity("WorkManagerDal.Models.ProjectsToUsers", b =>
-                {
-                    b.HasOne("WorkManagerDal.Models.Project", "Project")
-                        .WithMany("UsersHasAccess")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WorkManagerDal.Models.User", "User")
-                        .WithMany("ProjectsHasAccess")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("WorkManagerDal.Models.User", b =>
@@ -434,8 +399,6 @@ namespace WorkManagerDal.Migrations
 
                     b.Navigation("Notes");
 
-                    b.Navigation("UsersHasAccess");
-
                     b.Navigation("Versions");
                 });
 
@@ -453,8 +416,6 @@ namespace WorkManagerDal.Migrations
                     b.Navigation("Notes");
 
                     b.Navigation("Projects");
-
-                    b.Navigation("ProjectsHasAccess");
 
                     b.Navigation("Versions");
                 });

@@ -4,7 +4,7 @@ using RiskerWorkManager.Extensions;
 
 namespace RiskerWorkManager.Services
 {
-    public class UserIdentityService : IUserIdentityService
+    public class UserIdentityService : IUserIdentityService, IDisposable
     {
         private const string _userSessionKey = "_userSessionKey";
         private readonly IUsersService _usersService;
@@ -56,6 +56,11 @@ namespace RiskerWorkManager.Services
         public User GetCurrentUser(HttpContext context)
         {
             return context.Session.Get<User>(_userSessionKey);
+        }
+
+        public void Dispose()
+        {
+            _usersService.Dispose();
         }
     }
 }

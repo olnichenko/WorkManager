@@ -13,24 +13,14 @@ namespace RiskerWorkManager.Services
             var fileInfo = directory.GetFiles()
              .OrderByDescending(f => f.LastWriteTime)
              .First();
-            // FileInfo fi = new FileInfo(@"D:\DummyFile.txt");
-
-            //Open file for Read\Write
-            FileStream fs = fileInfo.Open(FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read);
-
-            //Create object of StreamReader by passing FileStream object on which it needs to operates on
-            StreamReader sr = new StreamReader(fs);
-
-            //Use ReadToEnd method to read all the content from file
-            string fileContent = sr.ReadToEnd();
-
-            //Close StreamReader object after operation
-            sr.Close();
-            fs.Close();
-            // var result = myFile.Re
-            //var files = Directory.GetFiles(path);
-            //return files;
-            return fileContent;
+            using (var fs = fileInfo.Open(FileMode.OpenOrCreate, FileAccess.Read, FileShare.Read))
+            {
+                using (var sr = new StreamReader(fs))
+                {
+                    var fileContent = sr.ReadToEnd();
+                    return fileContent;
+                }
+            }
         }
     }
 }

@@ -27,8 +27,18 @@ namespace WorkManagerDal
                 //.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        }
+
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<Bug> Bugs { get; set; }
+        public DbSet<Feature> Features { get; set; }
+        public DbSet<Note> Notes { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Models.Version> Versions { get; set; }
+        public DbSet<ProjectsToUsers> ProjectsToUsers { get; set; }
     }
 }
