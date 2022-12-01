@@ -11,5 +11,6 @@ namespace WorkManagerDal.Services
     {
         Task<Project> CreateProjectAsync(Project project, long userId);
         Task<List<Project>> GetUserProjectsAsync(long userId);
+        Task<Project> GetProjectByIdAsync(long id);
     }
 }

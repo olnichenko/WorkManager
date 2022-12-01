@@ -1,0 +1,8 @@
+<mat-toolbar *ngIf="isEnableEdit">
+    <button mat-raised-button type="button" (click)="navigateToEdit()">
+        <mat-icon>edit_square</mat-icon>
+        Edit project
+    </button>&nbsp;
+</mat-toolbar>
+<h3>{{project.description}}</h3>
+<p>{{project.content}}</p>

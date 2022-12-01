@@ -722,6 +722,63 @@ export class ApiClient {
     }
 
     /**
+     * @param id (optional) 
+     * @return Success
+     */
+    getProject(id: number | undefined): Observable<Project> {
+        let url_ = this.baseUrl + "/Projects/GetProject?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetProject(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetProject(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Project>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Project>;
+        }));
+    }
+
+    protected processGetProject(response: HttpResponseBase): Observable<Project> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Project.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -1587,6 +1644,7 @@ export class Project implements IProject {
     id!: number;
     title!: string | null;
     content!: string | null;
+    description!: string | null;
     userCreated!: User;
     dateCreated!: Date;
     usersHasAccess!: ProjectsToUsers[] | null;
@@ -1609,6 +1667,7 @@ export class Project implements IProject {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.title = _data["title"] !== undefined ? _data["title"] : <any>null;
             this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
+            this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
             if (Array.isArray(_data["usersHasAccess"])) {
@@ -1666,6 +1725,7 @@ export class Project implements IProject {
         data["id"] = this.id !== undefined ? this.id : <any>null;
         data["title"] = this.title !== undefined ? this.title : <any>null;
         data["content"] = this.content !== undefined ? this.content : <any>null;
+        data["description"] = this.description !== undefined ? this.description : <any>null;
         data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
         if (Array.isArray(this.usersHasAccess)) {
@@ -1701,6 +1761,7 @@ export interface IProject {
     id: number;
     title: string | null;
     content: string | null;
+    description: string | null;
     userCreated: User;
     dateCreated: Date;
     usersHasAccess: ProjectsToUsers[] | null;

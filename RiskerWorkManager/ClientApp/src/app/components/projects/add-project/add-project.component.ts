@@ -17,7 +17,7 @@ export class AddProjectComponent implements OnInit {
   ngOnInit(): void {
     this.projectForm = this.formBuilder.group({
       title: ["", [Validators.required, Validators.minLength(3)]],
-      content: [""],
+      description: [""],
     })
   }
 

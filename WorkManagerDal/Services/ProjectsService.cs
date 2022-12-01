@@ -14,6 +14,15 @@ namespace WorkManagerDal.Services
         {
         }
 
+        public async Task<Project> GetProjectByIdAsync(long id)
+        {
+            var project = await _unitOfWork.Projects.FindByCondition(x => x.Id == id)
+                .Include(x => x.UserCreated)
+                .Include(x => x.UsersHasAccess)
+                .SingleOrDefaultAsync();
+            return project;
+        }
+
         public async Task<Project> CreateProjectAsync(Project project, long userId)
         {
             _unitOfWork.Projects.Create(project);

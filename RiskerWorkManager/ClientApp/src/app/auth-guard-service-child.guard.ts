@@ -7,11 +7,10 @@ import { AccountService } from './services/account.service';
   providedIn: 'root'
 })
 export class AuthGuardServiceChildGuard implements CanActivate {
-  constructor (protected accountService: AccountService){}
+  constructor(protected accountService: AccountService) { }
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree
-  {
+    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     let result: boolean = false;
     switch (route.routeConfig?.path) {
       case "roles":
@@ -26,8 +25,14 @@ export class AuthGuardServiceChildGuard implements CanActivate {
       case "users":
         result = this.accountService.isUserHaveAccess(this.accountService.Users_List);
         break;
+      case "edit":
+        result = this.accountService.getCurrentUser() != null;
+        break;
+      case "":
+        result = this.accountService.getCurrentUser() != null;
+        break;
     }
     return result;
   }
-  
+
 }

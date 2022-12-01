@@ -16,9 +16,9 @@
             <div class="row">
                 <div class="col">
                     <mat-form-field class="full-width">
-                        <mat-label>Content</mat-label>
-                        <textarea matInput rows="6" formControlName="content"></textarea>
-                        <mat-error *ngIf="projectForm.get('content')?.invalid && (projectForm.get('content')?.dirty || projectForm.get('content')?.touched)">{{getErrorMessage('content')}}</mat-error>
+                        <mat-label>Description</mat-label>
+                        <textarea matInput rows="6" formControlName="description"></textarea>
+                        <mat-error *ngIf="projectForm.get('description')?.invalid && (projectForm.get('description')?.dirty || projectForm.get('description')?.touched)">{{getErrorMessage('description')}}</mat-error>
                     </mat-form-field>
                 </div>
             </div>

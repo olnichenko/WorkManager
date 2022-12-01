@@ -4,6 +4,7 @@ using RiskerWorkManager.Attributes;
 using RiskerWorkManager.Services;
 using System.Formats.Asn1;
 using WorkManagerDal.Models;
+using WorkManagerDal.Repositories;
 using WorkManagerDal.Services;
 
 namespace RiskerWorkManager.Controllers
@@ -37,6 +38,23 @@ namespace RiskerWorkManager.Controllers
             var userId = _userIdentityService.GetCurrentUser(HttpContext).Id;
             var projects = await _projectsService.GetUserProjectsAsync(userId);
             return projects;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public async Task<Project> GetProject(long id)
+        {
+            var user = _userIdentityService.GetCurrentUser(HttpContext);
+            var project = await _projectsService.GetProjectByIdAsync(id);
+            if (project == null || project.UserCreated == null || project.UsersHasAccess == null)
+            {
+                return null;
+            }
+            if (project.UserCreated.Id != user.Id && project.UsersHasAccess.All(x => x.Id != user.Id))
+            {
+                return null;
+            }
+            return project;
         }
 
         public void Dispose()

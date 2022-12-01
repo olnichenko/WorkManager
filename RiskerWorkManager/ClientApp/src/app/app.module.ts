@@ -32,9 +32,14 @@ import { AuthGuardServiceGuard } from './auth-guard-service.guard';
 import { AddProjectComponent } from './components/projects/add-project/add-project.component';
 import { ProjectComponent } from './components/projects/project/project.component';
 import { ProjectNavMenuComponent } from './components/projects/project-nav-menu/project-nav-menu.component';
+import { ProjectViewComponent } from './components/projects/project-view/project-view.component';
+import { ProjectEditComponent } from './components/projects/project-edit/project-edit.component';
 
 const projectRoutes: Routes = [
-
+  { path: '', component: ProjectViewComponent,
+  canActivate: [AuthGuardServiceChildGuard]  },
+  { path: 'edit', component: ProjectEditComponent,
+  canActivate: [AuthGuardServiceChildGuard]  },
 ]
 
 const adminRoutes: Routes = [
@@ -78,7 +83,9 @@ const appRoutes: Routes = [
     ProjectsComponent,
     AddProjectComponent,
     ProjectComponent,
-    ProjectNavMenuComponent
+    ProjectNavMenuComponent,
+    ProjectViewComponent,
+    ProjectEditComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

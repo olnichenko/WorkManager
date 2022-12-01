@@ -11,7 +11,7 @@
         <mat-list-item class="pointer" *ngFor="let myProject of myProjects" (click)="navigateTo(myProject.id)">
             <mat-icon matListItemIcon>calendar_month</mat-icon>
             <div matListItemTitle>{{myProject.title}}</div>
-            <div matListItemLine>{{myProject.content}}</div>
+            <div matListItemLine>{{myProject.description}}</div>
         </mat-list-item>
         <!-- <mat-divider></mat-divider>
     <div mat-subheader>Notes</div>
