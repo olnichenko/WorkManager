@@ -63,6 +63,7 @@ mat-card {
 .link-active
 {
   font-weight: bold;
+  color: green !important;
 }
 
 .text-noworap {

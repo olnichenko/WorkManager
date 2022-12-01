@@ -31,6 +31,7 @@ import { ProjectsComponent } from './components/projects/projects.component';
 import { AuthGuardServiceGuard } from './auth-guard-service.guard';
 import { AddProjectComponent } from './components/projects/add-project/add-project.component';
 import { ProjectComponent } from './components/projects/project/project.component';
+import { ProjectNavMenuComponent } from './components/projects/project-nav-menu/project-nav-menu.component';
 
 const projectRoutes: Routes = [
 
@@ -76,7 +77,8 @@ const appRoutes: Routes = [
     EditUserRoleComponent,
     ProjectsComponent,
     AddProjectComponent,
-    ProjectComponent
+    ProjectComponent,
+    ProjectNavMenuComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
