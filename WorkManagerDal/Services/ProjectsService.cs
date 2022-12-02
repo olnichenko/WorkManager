@@ -14,11 +14,35 @@ namespace WorkManagerDal.Services
         {
         }
 
+        public async Task<Project> EditProjectAsync(Project project)
+        {
+            _unitOfWork.Projects.Update(project);
+            await _unitOfWork.SaveAsync();
+            return project;
+        }
+
+        public async Task<bool> AddUserToProjectAsync(Project project, string email)
+        {
+            var user = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Email == email).Include(x => x.ProjectsHasAccess).SingleOrDefaultAsync();
+            if (user == null)
+            {
+                return false;
+            }
+            var projectsToUser = new ProjectsToUsers
+            {
+                Project = project,
+                User = user
+            };
+            user.ProjectsHasAccess.Add(projectsToUser);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
         public async Task<Project> GetProjectByIdAsync(long id)
         {
             var project = await _unitOfWork.Projects.FindByCondition(x => x.Id == id)
                 .Include(x => x.UserCreated)
-                .Include(x => x.UsersHasAccess)
+                .Include("UsersHasAccess.User")
                 .SingleOrDefaultAsync();
             return project;
         }
@@ -36,6 +60,12 @@ namespace WorkManagerDal.Services
         {
             var projects = await _unitOfWork.Projects.FindByCondition(x => x.UserCreated.Id == userId).ToListAsync();
             return projects;
+        }
+
+        public async Task<List<Project>> GetUserHaveAccessProjectsAsync(long userId)
+        {
+            var project = await _unitOfWork.Projects.FindByCondition(x => x.UsersHasAccess.Any(y => y.User.Id == userId)).ToListAsync();
+            return project;
         }
     }
 }

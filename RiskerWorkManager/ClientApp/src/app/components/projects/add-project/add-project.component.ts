@@ -43,18 +43,5 @@ export class AddProjectComponent implements OnInit {
         this.dialogRef.close(data);
       }
     })
-    // this.apiClient.isRoleExist(role.name!).subscribe((data) => {
-    //   if (data) {
-    //     this.isRoleExist = true;
-    //     this.showLoader = false;
-    //     return;
-    //   }
-    //   this.apiClient.createRole(role).subscribe((data) => {
-    //     this.showLoader = false;
-    //     if (data.id > 0) {
-    //       this.dialogRef.close(data);
-    //     }
-    //   })
-    // })
   }
 }

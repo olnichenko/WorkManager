@@ -33,6 +33,37 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission]
+        public async Task<bool> AddUserToProject(string email, long projectId)
+        {
+            var user = _userIdentityService.GetCurrentUser(HttpContext);
+            var editedProject = await _projectsService.GetProjectByIdAsync(projectId);
+
+            if (!ValidateProjectPermission(editedProject, user))
+            {
+                return false;
+            }
+            var result = await _projectsService.AddUserToProjectAsync(editedProject, email);
+            return result;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public async Task<Project> EditProject(Project project)
+        {
+            var user = _userIdentityService.GetCurrentUser(HttpContext);
+            var editedProject = await _projectsService.GetProjectByIdAsync(project.Id);
+
+            if (!ValidateProjectPermission(editedProject, user))
+            {
+                return null;
+            }
+
+            var result = await _projectsService.EditProjectAsync(project);
+            return result;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
         public async Task<List<Project>> GetMyProjects()
         {
             var userId = _userIdentityService.GetCurrentUser(HttpContext).Id;
@@ -42,19 +73,37 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission]
+        public async Task<List<Project>> GetMyAccessProjects()
+        {
+            var userId = _userIdentityService.GetCurrentUser(HttpContext).Id;
+            var projects = await _projectsService.GetUserHaveAccessProjectsAsync(userId);
+            return projects;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
         public async Task<Project> GetProject(long id)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var project = await _projectsService.GetProjectByIdAsync(id);
-            if (project == null || project.UserCreated == null || project.UsersHasAccess == null)
-            {
-                return null;
-            }
-            if (project.UserCreated.Id != user.Id && project.UsersHasAccess.All(x => x.Id != user.Id))
+            if (!ValidateProjectPermission(project, user))
             {
                 return null;
             }
             return project;
+        }
+
+        private bool ValidateProjectPermission(Project project, User user)
+        {
+            if (project == null || project.UserCreated == null || project.UsersHasAccess == null)
+            {
+                return false;
+            }
+            if (project.UserCreated.Id != user.Id && project.UsersHasAccess.All(x => x.User.Id != user.Id))
+            {
+                return false;
+            }
+            return true;
         }
 
         public void Dispose()

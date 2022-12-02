@@ -14,6 +14,8 @@ import { AddProjectComponent } from './add-project/add-project.component';
 export class ProjectsComponent implements OnInit {
 
   myProjects: Project[] = [];
+  myAccessProjects: Project[] = [];
+
   constructor(protected apiClient: ApiClient, 
     public accountService: AccountService, 
     public dialog: MatDialog, 
@@ -27,6 +29,9 @@ export class ProjectsComponent implements OnInit {
   loadProjects(){
     this.apiClient.getMyProjects().subscribe((data) => {
       this.myProjects = data;
+    });
+    this.apiClient.getMyAccessProjects().subscribe((data) => {
+      this.myAccessProjects = data;
     })
   }
 

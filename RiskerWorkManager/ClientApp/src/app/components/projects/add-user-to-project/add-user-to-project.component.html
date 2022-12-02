@@ -1,0 +1,27 @@
+<form [formGroup]="userForm" novalidate (ngSubmit)="save()">
+    <mat-card class="form-card col-xl-8">
+        <mat-card-header>
+            <mat-card-title>Add user to project</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>E-mail</mat-label>
+                        <input matInput placeholder="email@example.com" formControlName="email">
+                        <mat-error *ngIf="userForm.get('email')?.invalid && (userForm.get('email')?.dirty || userForm.get('email')?.touched)">{{getErrorMessage('email')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button [disabled]="!userForm.valid" color="primary" type="submit">
+                Save
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+            </button>
+        </mat-card-actions>
+        <mat-error *ngIf="!isUserExist">
+            User not found
+        </mat-error>
+    </mat-card>
+</form>

@@ -1,7 +1,6 @@
 <div class="container">
-    <mat-toolbar>
-        <button mat-raised-button (click)="openAddDialog()"
-            *ngIf="accountService.isUserHaveAccess(accountService.Add_Project)" type="button">
+    <mat-toolbar *ngIf="accountService.isUserHaveAccess(accountService.Add_Project)">
+        <button mat-raised-button (click)="openAddDialog()" type="button">
             <mat-icon>add</mat-icon>
             Add new project
         </button>
@@ -13,13 +12,13 @@
             <div matListItemTitle>{{myProject.title}}</div>
             <div matListItemLine>{{myProject.description}}</div>
         </mat-list-item>
-        <!-- <mat-divider></mat-divider>
-    <div mat-subheader>Notes</div>
-    <mat-list-item *ngFor="let note of notes">
-      <mat-icon matListItemIcon>note</mat-icon>
-      <div matListItemTitle>{{note.name}}</div>
-      <div matListItemLine>{{note.updated | date}}</div>
-    </mat-list-item> -->
+        <mat-divider></mat-divider>
+        <div *ngIf="myAccessProjects.length > 0" mat-subheader>My work projects</div>
+        <mat-list-item class="pointer" *ngFor="let myProject of myAccessProjects" (click)="navigateTo(myProject.id)">
+            <mat-icon matListItemIcon>calendar_month</mat-icon>
+            <div matListItemTitle>{{myProject.title}}</div>
+            <div matListItemLine>{{myProject.description}}</div>
+        </mat-list-item>
     </mat-list>
 
 </div>

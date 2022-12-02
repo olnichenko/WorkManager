@@ -34,6 +34,7 @@ import { ProjectComponent } from './components/projects/project/project.componen
 import { ProjectNavMenuComponent } from './components/projects/project-nav-menu/project-nav-menu.component';
 import { ProjectViewComponent } from './components/projects/project-view/project-view.component';
 import { ProjectEditComponent } from './components/projects/project-edit/project-edit.component';
+import { AddUserToProjectComponent } from './components/projects/add-user-to-project/add-user-to-project.component';
 
 const projectRoutes: Routes = [
   { path: '', component: ProjectViewComponent,
@@ -85,7 +86,8 @@ const appRoutes: Routes = [
     ProjectComponent,
     ProjectNavMenuComponent,
     ProjectViewComponent,
-    ProjectEditComponent
+    ProjectEditComponent,
+    AddUserToProjectComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
