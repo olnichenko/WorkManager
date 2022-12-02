@@ -35,11 +35,14 @@ import { ProjectNavMenuComponent } from './components/projects/project-nav-menu/
 import { ProjectViewComponent } from './components/projects/project-view/project-view.component';
 import { ProjectEditComponent } from './components/projects/project-edit/project-edit.component';
 import { AddUserToProjectComponent } from './components/projects/add-user-to-project/add-user-to-project.component';
+import { FeaturesComponent } from './components/features/features.component';
 
 const projectRoutes: Routes = [
   { path: '', component: ProjectViewComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
   { path: 'edit', component: ProjectEditComponent,
+  canActivate: [AuthGuardServiceChildGuard]  },
+  { path: 'features', component: FeaturesComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
 ]
 
@@ -87,7 +90,8 @@ const appRoutes: Routes = [
     ProjectNavMenuComponent,
     ProjectViewComponent,
     ProjectEditComponent,
-    AddUserToProjectComponent
+    AddUserToProjectComponent,
+    FeaturesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

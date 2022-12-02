@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RiskerWorkManager.Attributes;
+using RiskerWorkManager.PermissionValidators;
 using RiskerWorkManager.Services;
 using System.Formats.Asn1;
 using WorkManagerDal.Models;
@@ -38,7 +39,7 @@ namespace RiskerWorkManager.Controllers
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var editedProject = await _projectsService.GetProjectByIdAsync(projectId);
 
-            if (!ValidateProjectPermission(editedProject, user))
+            if (!editedProject.ValidateUserViewPermission(user))
             {
                 return false;
             }
@@ -53,7 +54,7 @@ namespace RiskerWorkManager.Controllers
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var editedProject = await _projectsService.GetProjectByIdAsync(project.Id);
 
-            if (!ValidateProjectPermission(editedProject, user))
+            if (!editedProject.ValidateUserViewPermission(user))
             {
                 return null;
             }
@@ -86,25 +87,14 @@ namespace RiskerWorkManager.Controllers
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var project = await _projectsService.GetProjectByIdAsync(id);
-            if (!ValidateProjectPermission(project, user))
+            if (!project.ValidateUserViewPermission(user))
             {
                 return null;
             }
             return project;
         }
 
-        private bool ValidateProjectPermission(Project project, User user)
-        {
-            if (project == null || project.UserCreated == null || project.UsersHasAccess == null)
-            {
-                return false;
-            }
-            if (project.UserCreated.Id != user.Id && project.UsersHasAccess.All(x => x.User.Id != user.Id))
-            {
-                return false;
-            }
-            return true;
-        }
+        
 
         public void Dispose()
         {

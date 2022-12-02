@@ -8,6 +8,7 @@ namespace WorkManagerDal
         RolesRepository Roles { get; }
         ProjectsRepository Projects { get; }
         PermissionsRepository Permissions { get; }
+        FeaturesRepository Features { get; }
         Task SaveAsync();
     }
 }

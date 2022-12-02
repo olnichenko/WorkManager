@@ -19,7 +19,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   isTryLoggedIn: boolean = false;
   private subscriptions: Subscription[] = [];
 
-  constructor(protected formBuilder: FormBuilder, protected snackBar: MatSnackBar, protected accountService: AccountService, protected router: Router) { }
+  constructor(protected formBuilder: FormBuilder,
+     protected snackBar: MatSnackBar, 
+     protected accountService: AccountService, 
+     protected router: Router) { }
   ngOnDestroy(): void {
     this.unsubscribe();
   }
@@ -78,6 +81,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       } else {
         this.user = data;
         this.openMessage("You have successfully logged in", "Success");
+        this.router.navigate(["projects"]);
       }
       this.showLoader = false;
     });

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { NavigationCancellationCode, Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-nav-menu',
@@ -7,4 +8,12 @@ import { Component } from '@angular/core';
 })
 export class ProjectNavMenuComponent {
 
+  @Input()projectId!: number;
+  constructor(private router: Router){}
+
+  navigateTo(path: string){
+    this.router.navigate(['project', this.projectId, path]);
+  }
 }
+
+

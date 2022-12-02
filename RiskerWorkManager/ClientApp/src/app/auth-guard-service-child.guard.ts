@@ -31,6 +31,9 @@ export class AuthGuardServiceChildGuard implements CanActivate {
       case "":
         result = this.accountService.getCurrentUser() != null;
         break;
+      case "features":
+        result = this.accountService.getCurrentUser() != null;
+        break;
     }
     return result;
   }
