@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using RiskerWorkManager.Attributes;
 using RiskerWorkManager.PermissionValidators;
 using RiskerWorkManager.Services;
+using System.Runtime.InteropServices;
 using WorkManagerDal.Models;
 using WorkManagerDal.Services;
 
 namespace RiskerWorkManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class FeaturesController : ControllerBase, IDisposable
     {
@@ -25,7 +26,23 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission]
-        public async Task<Feature> CreateFeature(long projectId, Feature feature)
+        public async Task<List<Feature>> GetFeaturesByProject(long projectId)
+        {
+            var user = _userIdentityService.GetCurrentUser(HttpContext);
+            var project = await _projectsService.GetProjectByIdAsync(projectId);
+
+            if (!project.ValidateUserViewPermission(user))
+            {
+                return null;
+            }
+
+            var features = await _featuresService.GetFeaturesByProjectAsync(projectId);
+            return features;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public async Task<Feature> CreateOrUpdateFeature(Feature feature, long projectId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var editedProject = await _projectsService.GetProjectByIdAsync(projectId);
@@ -34,9 +51,13 @@ namespace RiskerWorkManager.Controllers
             {
                 return null;
             }
-
-            feature.Project = editedProject;
-            await _featuresService.CreateFeatureAsync(feature);
+            if (feature.Id == 0)
+            {
+                feature.Project = editedProject;
+                feature.UserCreated = user;
+                feature.DateCreated = DateTime.Now;
+            }
+            await _featuresService.CreateOrUpdateFeatureAsync(feature);
             return feature;
         }
 

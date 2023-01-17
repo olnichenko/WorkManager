@@ -1,1 +1,6 @@
-<p>features works!</p>
+<mat-toolbar *ngIf="accountService.isUserHaveAccess(accountService.Add_Project)">
+    <button mat-raised-button (click)="openEditDialog()" type="button">
+        <mat-icon>add</mat-icon>
+        Add new feature
+    </button>
+</mat-toolbar>

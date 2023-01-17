@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,9 +14,23 @@ namespace WorkManagerDal.Services
         {
         }
 
-        public async Task CreateFeatureAsync(Feature feature)
+        public async Task<List<Feature>> GetFeaturesByProjectAsync(long projectId)
         {
-            _unitOfWork.Features.Create(feature);
+            var features = await _unitOfWork.Features.FindByCondition(x => x.Project.Id == projectId).ToListAsync();
+            return features;
+        }
+
+        public async Task CreateOrUpdateFeatureAsync(Feature feature)
+        {
+            if (feature.Id != 0)
+            {
+                _unitOfWork.Features.Create(feature);
+            }
+            else
+            {
+                _unitOfWork.Features.Update(feature);
+            }
+            
             await _unitOfWork.SaveAsync();
         }
     }

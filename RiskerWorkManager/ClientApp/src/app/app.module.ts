@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
@@ -36,6 +36,8 @@ import { ProjectViewComponent } from './components/projects/project-view/project
 import { ProjectEditComponent } from './components/projects/project-edit/project-edit.component';
 import { AddUserToProjectComponent } from './components/projects/add-user-to-project/add-user-to-project.component';
 import { FeaturesComponent } from './components/features/features.component';
+import { AddFeatureComponent } from './components/features/add-feature/add-feature.component';
+import { RiskErrorHandler } from './services/error-handler';
 
 const projectRoutes: Routes = [
   { path: '', component: ProjectViewComponent,
@@ -91,7 +93,8 @@ const appRoutes: Routes = [
     ProjectViewComponent,
     ProjectEditComponent,
     AddUserToProjectComponent,
-    FeaturesComponent
+    FeaturesComponent,
+    AddFeatureComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -108,6 +111,7 @@ const appRoutes: Routes = [
       provide: BASE_URL,
       useValue: environment.apiUrl
     },
+    {provide: ErrorHandler, useClass: RiskErrorHandler},
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 10000, horizontalPosition: "right" } },
     ApiClient
   ],
