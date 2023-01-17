@@ -17,7 +17,9 @@ export class FeaturesComponent implements OnInit {
 
   selectedFeature : Feature = new Feature();
   project: Project = new Project();
-  features: Feature[] = []
+  features: Feature[] = [];
+  displayedColumns: string[] = ['title', 'userCreated', 'dateCreated', 'solvedInVersion'];
+  isEnableEdit = false;
 
   constructor(protected apiClient: ApiClient, 
     public accountService: AccountService, 
@@ -25,13 +27,22 @@ export class FeaturesComponent implements OnInit {
     public projectSevice: ProjectService,
     protected snackBar: MatSnackBar){}
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    this.isEnableEdit = this.projectSevice.isUserCanEditProject();
     this.projectSevice.project.subscribe((data) => {
       this.project = data;
-      this.apiClient.getFeaturesByProject(data.id).subscribe((features) => {
-        this.features = features;
-      })
+      this.loadFeatures();
     });
+  }
+  
+  rowSelected(row: Feature){
+    this.selectedFeature = row;
+  }
+
+  loadFeatures(): void{
+    this.apiClient.getFeaturesByProject(this.project.id).subscribe((features) => {
+      this.features = features;
+    })
   }
 
   openEditDialog(): void {
@@ -44,6 +55,7 @@ export class FeaturesComponent implements OnInit {
       let project = result;
       if (project != null) {
         this.snackBar.open("Feature saved", "Succes");
+        this.loadFeatures();
       }
     });
   }
