@@ -42,7 +42,7 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission]
-        public async Task<Feature> CreateOrUpdateFeature(Feature feature, long projectId)
+        public async Task<Feature> CreateOrUpdateFeature(Feature feature, long projectId, long solvedInversionId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var editedProject = await _projectsService.GetProjectByIdAsync(projectId);
@@ -51,7 +51,7 @@ namespace RiskerWorkManager.Controllers
             {
                 return null;
             }
-            await _featuresService.CreateOrUpdateFeatureAsync(feature, user.Id, editedProject.Id);
+            await _featuresService.CreateOrUpdateFeatureAsync(feature, user.Id, editedProject.Id, solvedInversionId);
             return feature;
         }
 

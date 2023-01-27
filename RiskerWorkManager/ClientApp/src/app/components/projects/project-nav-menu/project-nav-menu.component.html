@@ -14,8 +14,8 @@
         <div matListItemTitle>Notes</div>
     </mat-list-item>
     <mat-divider></mat-divider>
-    <mat-list-item>
+    <mat-list-item class="pointer" (click)="navigateTo('versions')">
         <mat-icon matBadge="2" matBadgeSize="small" matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Versions</div>
+        <div matListItemTitle [routerLinkActive]="['link-active']" [routerLink]="['/project', projectId, 'versions']">Versions</div>
     </mat-list-item>
 </mat-list>

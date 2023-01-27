@@ -1,7 +1,7 @@
 <form [formGroup]="featureForm" novalidate (ngSubmit)="save()" autocomplete="off">
     <mat-card>
         <mat-card-header>
-            <mat-card-title>Add new feature</mat-card-title>
+            <mat-card-title>{{title}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <div class="row">
@@ -9,7 +9,9 @@
                     <mat-form-field class="full-width">
                         <mat-label>Name</mat-label>
                         <input matInput formControlName="title">
-                        <mat-error *ngIf="featureForm.get('name')?.invalid && (featureForm.get('name')?.dirty || featureForm.get('name')?.touched)">{{getErrorMessage('title')}}</mat-error>
+                        <mat-error
+                            *ngIf="featureForm.get('name')?.invalid && (featureForm.get('name')?.dirty || featureForm.get('name')?.touched)">
+                            {{getErrorMessage('title')}}</mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -18,7 +20,22 @@
                     <mat-form-field class="full-width">
                         <mat-label>Description</mat-label>
                         <textarea matInput rows="6" formControlName="content"></textarea>
-                        <mat-error *ngIf="featureForm.get('content')?.invalid && (featureForm.get('content')?.dirty || featureForm.get('content')?.touched)">{{getErrorMessage('content')}}</mat-error>
+                        <mat-error
+                            *ngIf="featureForm.get('content')?.invalid && (featureForm.get('content')?.dirty || featureForm.get('content')?.touched)">
+                            {{getErrorMessage('content')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Resolved in version</mat-label>
+                        <mat-select [(ngModel)]="selectedVersion" formControlName="version">
+                            <mat-option>--</mat-option>
+                            <mat-option *ngFor="let item of versions" [value]="item.id">
+                                {{item.title}}
+                            </mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
             </div>
@@ -26,9 +43,9 @@
         <mat-card-actions>
             <button mat-raised-button [disabled]="!featureForm.valid" color="primary" type="submit">
                 Save
-                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status"
+                    aria-hidden="true"></span>
             </button>
         </mat-card-actions>
     </mat-card>
 </form>
-

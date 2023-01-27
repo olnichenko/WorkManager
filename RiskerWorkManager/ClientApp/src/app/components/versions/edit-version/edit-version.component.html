@@ -1,0 +1,35 @@
+<form [formGroup]="versionForm" novalidate (ngSubmit)="save()" autocomplete="off">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Name</mat-label>
+                        <input matInput formControlName="title">
+                        <mat-error *ngIf="versionForm.get('name')?.invalid && (versionForm.get('name')?.dirty || versionForm.get('name')?.touched)">{{getErrorMessage('title')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput rows="6" formControlName="content"></textarea>
+                        <mat-error *ngIf="versionForm.get('content')?.invalid && (versionForm.get('content')?.dirty || versionForm.get('content')?.touched)">{{getErrorMessage('content')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button [disabled]="!versionForm.valid" color="primary" type="submit">
+                Save
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</form>
+
+

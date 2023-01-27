@@ -1,15 +1,15 @@
 table {
-  width: 100%;
+    width: 100%;
 }
 
 .selected-row td {
-  color: green;
+    color: green;
 }
 
 .mat-mdc-row .mat-mdc-cell {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
-  background-color: lightgrey;
+    background-color: lightgrey;
 }

@@ -15,9 +15,22 @@ namespace WorkManagerDal
         private PermissionsRepository _permissionsRepository;
         private ProjectsRepository _projectsRepository;
         private FeaturesRepository _featuresRepository;
+        private VersionsRepository _versionsRepository;
         public WorkManagerUnitOfWork(WorkManagerDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public VersionsRepository Versions
+        {
+            get
+            {
+                if (_versionsRepository == null)
+                {
+                    _versionsRepository = new VersionsRepository(_dbContext);
+                }
+                return _versionsRepository;
+            }
         }
 
         public FeaturesRepository Features

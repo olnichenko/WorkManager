@@ -494,15 +494,20 @@ export class ApiClient {
 
     /**
      * @param projectId (optional) 
+     * @param solvedInversionId (optional) 
      * @param body (optional) 
      * @return Success
      */
-    createOrUpdateFeature(projectId: number | undefined, body: Feature | undefined): Observable<Feature> {
+    createOrUpdateFeature(projectId: number | undefined, solvedInversionId: number | undefined, body: Feature | undefined): Observable<Feature> {
         let url_ = this.baseUrl + "/Features/CreateOrUpdateFeature?";
         if (projectId === null)
             throw new Error("The parameter 'projectId' cannot be null.");
         else if (projectId !== undefined)
             url_ += "projectId=" + encodeURIComponent("" + projectId) + "&";
+        if (solvedInversionId === null)
+            throw new Error("The parameter 'solvedInversionId' cannot be null.");
+        else if (solvedInversionId !== undefined)
+            url_ += "solvedInversionId=" + encodeURIComponent("" + solvedInversionId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -1664,6 +1669,132 @@ export class ApiClient {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param projectId (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrUpdateVersion(projectId: number | undefined, body: Version | undefined): Observable<Version> {
+        let url_ = this.baseUrl + "/Versions/CreateOrUpdateVersion?";
+        if (projectId === null)
+            throw new Error("The parameter 'projectId' cannot be null.");
+        else if (projectId !== undefined)
+            url_ += "projectId=" + encodeURIComponent("" + projectId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOrUpdateVersion(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOrUpdateVersion(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Version>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Version>;
+        }));
+    }
+
+    protected processCreateOrUpdateVersion(response: HttpResponseBase): Observable<Version> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Version.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param projectId (optional) 
+     * @return Success
+     */
+    getVersionsByProject(projectId: number | undefined): Observable<Version[]> {
+        let url_ = this.baseUrl + "/Versions/GetVersionsByProject?";
+        if (projectId === null)
+            throw new Error("The parameter 'projectId' cannot be null.");
+        else if (projectId !== undefined)
+            url_ += "projectId=" + encodeURIComponent("" + projectId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetVersionsByProject(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetVersionsByProject(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Version[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Version[]>;
+        }));
+    }
+
+    protected processGetVersionsByProject(response: HttpResponseBase): Observable<Version[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Version.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {

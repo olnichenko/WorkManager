@@ -2,8 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { timeStamp } from 'console';
-import { ApiClient, Feature } from 'src/app/api-clients/api-client';
+import { ApiClient, Feature, Version } from 'src/app/api-clients/api-client';
 
 @Component({
   selector: 'app-add-feature',
@@ -13,9 +12,12 @@ import { ApiClient, Feature } from 'src/app/api-clients/api-client';
 export class AddFeatureComponent implements OnInit {
 
   featureForm!: FormGroup;
+  title: string = "";
   public showLoader: boolean = false;
   @Input() feature: Feature | null = null;
   @Input() projectId!: number;
+  versions: Version[] = [];
+  selectedVersion!: number;
   
   constructor(protected formBuilder: FormBuilder, 
     protected snackBar: MatSnackBar, 
@@ -26,11 +28,18 @@ export class AddFeatureComponent implements OnInit {
   ngOnInit(): void {
     this.feature = this.data.feature;
     this.projectId = this.data.projectId;
+    this.title = this.feature == null ? "Add new feature" : "Edit feature";
+    this.selectedVersion = this.feature.solvedInVersion?.id;
+
+    this.apiClient.getVersionsByProject(this.projectId).subscribe(data => {
+      this.versions = data;
+    })
 
     this.featureForm = this.formBuilder.group({
       title: [this.feature?.title, [Validators.required, Validators.minLength(3)]],
       content: [this.feature?.content],
-      id:[this.feature == null ? 0 : this.feature.id]
+      id:[this.feature == null ? 0 : this.feature.id],
+      version: [this.selectedVersion]
     })
   }
 
@@ -51,7 +60,7 @@ export class AddFeatureComponent implements OnInit {
     this.showLoader = true;
     let feature: Feature = this.featureForm.getRawValue();
     feature.id = this.feature == null ? 0 : this.feature.id;
-    this.apiClient.createOrUpdateFeature(this.projectId, feature).subscribe((data) => {
+    this.apiClient.createOrUpdateFeature(this.projectId, this.selectedVersion, feature).subscribe((data) => {
       this.showLoader = false;
       if(data){
         this.dialogRef.close(data);
@@ -60,6 +69,5 @@ export class AddFeatureComponent implements OnInit {
       }
       
     });
-
   }
 }

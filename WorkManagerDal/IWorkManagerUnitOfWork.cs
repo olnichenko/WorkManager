@@ -9,6 +9,7 @@ namespace WorkManagerDal
         ProjectsRepository Projects { get; }
         PermissionsRepository Permissions { get; }
         FeaturesRepository Features { get; }
+        VersionsRepository Versions { get; }
         Task SaveAsync();
     }
 }

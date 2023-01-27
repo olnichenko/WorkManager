@@ -9,7 +9,7 @@ namespace WorkManagerDal.Services
 {
     public interface IFeaturesService : IBaseService
     {
-        Task CreateOrUpdateFeatureAsync(Feature feature, long userId, long projectId);
+        Task CreateOrUpdateFeatureAsync(Feature feature, long userId, long projectId, long solvedInversion);
         Task<List<Feature>> GetFeaturesByProjectAsync(long projectId);
     }
 }

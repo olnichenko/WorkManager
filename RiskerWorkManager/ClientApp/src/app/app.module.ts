@@ -38,6 +38,8 @@ import { AddUserToProjectComponent } from './components/projects/add-user-to-pro
 import { FeaturesComponent } from './components/features/features.component';
 import { AddFeatureComponent } from './components/features/add-feature/add-feature.component';
 import { RiskErrorHandler } from './services/error-handler';
+import { VersionsComponent } from './components/versions/versions.component';
+import { EditVersionComponent } from './components/versions/edit-version/edit-version.component';
 
 const projectRoutes: Routes = [
   { path: '', component: ProjectViewComponent,
@@ -45,6 +47,8 @@ const projectRoutes: Routes = [
   { path: 'edit', component: ProjectEditComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
   { path: 'features', component: FeaturesComponent,
+  canActivate: [AuthGuardServiceChildGuard]  },
+  { path: 'versions', component: VersionsComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
 ]
 
@@ -94,7 +98,9 @@ const appRoutes: Routes = [
     ProjectEditComponent,
     AddUserToProjectComponent,
     FeaturesComponent,
-    AddFeatureComponent
+    AddFeatureComponent,
+    VersionsComponent,
+    EditVersionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
