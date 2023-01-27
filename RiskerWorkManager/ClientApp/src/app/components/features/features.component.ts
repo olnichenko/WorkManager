@@ -15,7 +15,7 @@ import { AddFeatureComponent } from './add-feature/add-feature.component';
 })
 export class FeaturesComponent implements OnInit {
 
-  selectedFeature : Feature = new Feature();
+  selectedFeature!: Feature;
   project: Project = new Project();
   features: Feature[] = [];
   displayedColumns: string[] = ['title', 'userCreated', 'dateCreated', 'solvedInVersion'];
@@ -45,7 +45,25 @@ export class FeaturesComponent implements OnInit {
     })
   }
 
+  openNewDialog(): void {
+    const dialogRef = this.dialog.open(AddFeatureComponent, {
+      width: '800px',
+      data:{feature: null, projectId: this.project.id}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      let project = result;
+      if (project != null) {
+        this.snackBar.open("Feature saved", "Succes");
+        this.loadFeatures();
+      }
+    });
+  }
+
   openEditDialog(): void {
+    if (this.selectedFeature == null){
+      return;
+    }
     const dialogRef = this.dialog.open(AddFeatureComponent, {
       width: '800px',
       data:{feature: this.selectedFeature, projectId: this.project.id}

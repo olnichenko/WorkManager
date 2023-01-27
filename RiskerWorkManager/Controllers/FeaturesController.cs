@@ -51,13 +51,7 @@ namespace RiskerWorkManager.Controllers
             {
                 return null;
             }
-            if (feature.Id == 0)
-            {
-                feature.Project = editedProject;
-                feature.UserCreated = user;
-                feature.DateCreated = DateTime.Now;
-            }
-            await _featuresService.CreateOrUpdateFeatureAsync(feature);
+            await _featuresService.CreateOrUpdateFeatureAsync(feature, user.Id, editedProject.Id);
             return feature;
         }
 

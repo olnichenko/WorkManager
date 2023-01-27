@@ -1,8 +1,12 @@
 <mat-toolbar *ngIf="isEnableEdit">
-    <button mat-raised-button (click)="openEditDialog()" type="button">
+    <button mat-raised-button (click)="openNewDialog()" type="button">
         <mat-icon>add</mat-icon>
         Add new feature
-    </button>
+    </button>&nbsp;
+    <button mat-raised-button type="button" (click)="openEditDialog()">
+      <mat-icon>edit_square</mat-icon>
+      Edit feature
+  </button>
 </mat-toolbar>
 <table mat-table [dataSource]="features" class="mat-elevation-z8">
     <ng-container matColumnDef="title">
