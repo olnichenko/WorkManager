@@ -22,15 +22,6 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <mat-form-field class="full-width">
-                        <mat-label>Content</mat-label>
-                        <textarea matInput rows="6" formControlName="content"></textarea>
-                        <mat-error *ngIf="projectForm.get('content')?.invalid && (projectForm.get('content')?.dirty || projectForm.get('content')?.touched)">{{getErrorMessage('content')}}</mat-error>
-                    </mat-form-field>
-                </div>
-            </div>
         </mat-card-content>
         <mat-card-actions>
             <button mat-raised-button [disabled]="!projectForm.valid" color="primary" type="submit">

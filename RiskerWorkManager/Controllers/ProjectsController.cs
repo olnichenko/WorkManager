@@ -7,6 +7,7 @@ using System.Formats.Asn1;
 using WorkManagerDal.Models;
 using WorkManagerDal.Repositories;
 using WorkManagerDal.Services;
+using WorkManagerDal.ViewModels;
 
 namespace RiskerWorkManager.Controllers
 {
@@ -20,6 +21,14 @@ namespace RiskerWorkManager.Controllers
         {
             _projectsService = projectsService;
             _userIdentityService = userIdentityService;
+        }
+
+        [HttpGet]
+        [AuthorizePermission]
+        public async Task<MenuVm> GetMenu(long projectId)
+        {
+            var menu = await _projectsService.GetProjectMenuVmAsync(projectId);
+            return menu;
         }
 
         [HttpPost]

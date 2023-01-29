@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RiskerWorkManager.Attributes;
 using RiskerWorkManager.Services;
@@ -23,8 +24,15 @@ namespace RiskerWorkManager.Controllers
         [ProducesResponseType(typeof(FileResult), 200)]
         public string GetLogFilesList()
         {
-            var result = _logReaderService.ReadFiles();
-            return result;
+            try
+            {
+                var result = _logReaderService.ReadFiles();
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 }

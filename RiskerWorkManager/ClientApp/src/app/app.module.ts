@@ -45,6 +45,8 @@ import { NotesComponent } from './components/notes/notes.component';
 import { TimeSheetsComponent } from './components/time-sheets/time-sheets.component';
 import { EditBugComponent } from './components/bugs/edit-bug/edit-bug.component';
 import { EditNoteComponent } from './components/notes/edit-note/edit-note.component';
+import { FeatureViewComponent } from './components/features/feature-view/feature-view.component';
+import { EditTimeSpentComponent } from './components/time-sheets/edit-time-spent/edit-time-spent.component';
 
 const projectRoutes: Routes = [
   { path: '', component: ProjectViewComponent,
@@ -116,7 +118,9 @@ const appRoutes: Routes = [
     NotesComponent,
     TimeSheetsComponent,
     EditBugComponent,
-    EditNoteComponent
+    EditNoteComponent,
+    FeatureViewComponent,
+    EditTimeSpentComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

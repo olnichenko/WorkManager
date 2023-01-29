@@ -46,6 +46,7 @@ namespace RiskerWorkManager
             services.AddScoped<IVersionsService, VersionsService>();
             services.AddScoped<IBugsService, BugsService>();
             services.AddScoped<INotesService, NotesService>();
+            services.AddScoped<ITimeSpentService, TimeSepentService>();
 
             services.AddCors(options =>
             {

@@ -5,6 +5,7 @@ namespace WorkManagerDal.Models
     [Index(nameof(Email), IsUnique = true)]
     public class User : BaseEntity
     {
+        public List<TimeSpent>? TimeSpents { get; set; } = new List<TimeSpent>();
         public string Email { get; set; }
         public string Password { get; set; }
         public Role? Role { get; set; }

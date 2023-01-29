@@ -1,0 +1,17 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{feature.title}}</mat-card-title>
+        <mat-card-subtitle>Created: {{feature.userCreated.email}}<br>{{feature.dateCreated | date:'shortDate'}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        {{feature.content}}
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button color="primary">
+            Track time
+            <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status"
+                aria-hidden="true"></span>
+            <mat-icon class='color-active'>av_timer</mat-icon>
+        </button>
+    </mat-card-actions>
+</mat-card>

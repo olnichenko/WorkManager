@@ -1168,6 +1168,63 @@ export class ApiClient {
     }
 
     /**
+     * @param projectId (optional) 
+     * @return Success
+     */
+    getMenu(projectId: number | undefined): Observable<MenuVm> {
+        let url_ = this.baseUrl + "/Projects/GetMenu?";
+        if (projectId === null)
+            throw new Error("The parameter 'projectId' cannot be null.");
+        else if (projectId !== undefined)
+            url_ += "projectId=" + encodeURIComponent("" + projectId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetMenu(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetMenu(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MenuVm>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MenuVm>;
+        }));
+    }
+
+    protected processGetMenu(response: HttpResponseBase): Observable<MenuVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = MenuVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -2245,6 +2302,7 @@ export class Bug implements IBug {
     dateCreated!: Date | null;
     solvedInVersion!: Version;
     isDeleted!: boolean | null;
+    timeSpents!: TimeSpent[] | null;
 
     constructor(data?: IBug) {
         if (data) {
@@ -2265,6 +2323,14 @@ export class Bug implements IBug {
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
             this.solvedInVersion = _data["solvedInVersion"] ? Version.fromJS(_data["solvedInVersion"]) : <any>null;
             this.isDeleted = _data["isDeleted"] !== undefined ? _data["isDeleted"] : <any>null;
+            if (Array.isArray(_data["timeSpents"])) {
+                this.timeSpents = [] as any;
+                for (let item of _data["timeSpents"])
+                    this.timeSpents!.push(TimeSpent.fromJS(item));
+            }
+            else {
+                this.timeSpents = <any>null;
+            }
         }
     }
 
@@ -2285,6 +2351,11 @@ export class Bug implements IBug {
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
         data["solvedInVersion"] = this.solvedInVersion ? this.solvedInVersion.toJSON() : <any>null;
         data["isDeleted"] = this.isDeleted !== undefined ? this.isDeleted : <any>null;
+        if (Array.isArray(this.timeSpents)) {
+            data["timeSpents"] = [];
+            for (let item of this.timeSpents)
+                data["timeSpents"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -2298,6 +2369,7 @@ export interface IBug {
     dateCreated: Date | null;
     solvedInVersion: Version;
     isDeleted: boolean | null;
+    timeSpents: TimeSpent[] | null;
 }
 
 export class Feature implements IFeature {
@@ -2309,6 +2381,7 @@ export class Feature implements IFeature {
     dateCreated!: Date | null;
     solvedInVersion!: Version;
     isDeleted!: boolean | null;
+    timeSpents!: TimeSpent[] | null;
 
     constructor(data?: IFeature) {
         if (data) {
@@ -2329,6 +2402,14 @@ export class Feature implements IFeature {
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
             this.solvedInVersion = _data["solvedInVersion"] ? Version.fromJS(_data["solvedInVersion"]) : <any>null;
             this.isDeleted = _data["isDeleted"] !== undefined ? _data["isDeleted"] : <any>null;
+            if (Array.isArray(_data["timeSpents"])) {
+                this.timeSpents = [] as any;
+                for (let item of _data["timeSpents"])
+                    this.timeSpents!.push(TimeSpent.fromJS(item));
+            }
+            else {
+                this.timeSpents = <any>null;
+            }
         }
     }
 
@@ -2349,6 +2430,11 @@ export class Feature implements IFeature {
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
         data["solvedInVersion"] = this.solvedInVersion ? this.solvedInVersion.toJSON() : <any>null;
         data["isDeleted"] = this.isDeleted !== undefined ? this.isDeleted : <any>null;
+        if (Array.isArray(this.timeSpents)) {
+            data["timeSpents"] = [];
+            for (let item of this.timeSpents)
+                data["timeSpents"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -2362,6 +2448,47 @@ export interface IFeature {
     dateCreated: Date | null;
     solvedInVersion: Version;
     isDeleted: boolean | null;
+    timeSpents: TimeSpent[] | null;
+}
+
+export class MenuVm implements IMenuVm {
+    unSolvedFeatures!: number;
+    unSolvedBugs!: number;
+
+    constructor(data?: IMenuVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.unSolvedFeatures = _data["unSolvedFeatures"] !== undefined ? _data["unSolvedFeatures"] : <any>null;
+            this.unSolvedBugs = _data["unSolvedBugs"] !== undefined ? _data["unSolvedBugs"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): MenuVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new MenuVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["unSolvedFeatures"] = this.unSolvedFeatures !== undefined ? this.unSolvedFeatures : <any>null;
+        data["unSolvedBugs"] = this.unSolvedBugs !== undefined ? this.unSolvedBugs : <any>null;
+        return data;
+    }
+}
+
+export interface IMenuVm {
+    unSolvedFeatures: number;
+    unSolvedBugs: number;
 }
 
 export class Note implements INote {
@@ -2518,7 +2645,6 @@ export interface IPermissionData {
 export class Project implements IProject {
     id!: number;
     title!: string | null;
-    content!: string | null;
     description!: string | null;
     userCreated!: User;
     dateCreated!: Date;
@@ -2542,7 +2668,6 @@ export class Project implements IProject {
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
             this.title = _data["title"] !== undefined ? _data["title"] : <any>null;
-            this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
             this.description = _data["description"] !== undefined ? _data["description"] : <any>null;
             this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
             this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
@@ -2601,7 +2726,6 @@ export class Project implements IProject {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
         data["title"] = this.title !== undefined ? this.title : <any>null;
-        data["content"] = this.content !== undefined ? this.content : <any>null;
         data["description"] = this.description !== undefined ? this.description : <any>null;
         data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
         data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
@@ -2638,7 +2762,6 @@ export class Project implements IProject {
 export interface IProject {
     id: number;
     title: string | null;
-    content: string | null;
     description: string | null;
     userCreated: User;
     dateCreated: Date;
@@ -2823,8 +2946,73 @@ export interface IRoleVm {
     permissions: Permission[] | null;
 }
 
+export class TimeSpent implements ITimeSpent {
+    id!: number;
+    userCreated!: User;
+    dateCreated!: Date | null;
+    comment!: string | null;
+    dateFrom!: Date | null;
+    hoursCount!: number;
+    feature!: Feature;
+    bug!: Bug;
+
+    constructor(data?: ITimeSpent) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
+            this.comment = _data["comment"] !== undefined ? _data["comment"] : <any>null;
+            this.dateFrom = _data["dateFrom"] ? new Date(_data["dateFrom"].toString()) : <any>null;
+            this.hoursCount = _data["hoursCount"] !== undefined ? _data["hoursCount"] : <any>null;
+            this.feature = _data["feature"] ? Feature.fromJS(_data["feature"]) : <any>null;
+            this.bug = _data["bug"] ? Bug.fromJS(_data["bug"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): TimeSpent {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimeSpent();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
+        data["comment"] = this.comment !== undefined ? this.comment : <any>null;
+        data["dateFrom"] = this.dateFrom ? this.dateFrom.toISOString() : <any>null;
+        data["hoursCount"] = this.hoursCount !== undefined ? this.hoursCount : <any>null;
+        data["feature"] = this.feature ? this.feature.toJSON() : <any>null;
+        data["bug"] = this.bug ? this.bug.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface ITimeSpent {
+    id: number;
+    userCreated: User;
+    dateCreated: Date | null;
+    comment: string | null;
+    dateFrom: Date | null;
+    hoursCount: number;
+    feature: Feature;
+    bug: Bug;
+}
+
 export class User implements IUser {
     id!: number;
+    timeSpents!: TimeSpent[] | null;
     email!: string | null;
     password!: string | null;
     role!: Role;
@@ -2852,6 +3040,14 @@ export class User implements IUser {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            if (Array.isArray(_data["timeSpents"])) {
+                this.timeSpents = [] as any;
+                for (let item of _data["timeSpents"])
+                    this.timeSpents!.push(TimeSpent.fromJS(item));
+            }
+            else {
+                this.timeSpents = <any>null;
+            }
             this.email = _data["email"] !== undefined ? _data["email"] : <any>null;
             this.password = _data["password"] !== undefined ? _data["password"] : <any>null;
             this.role = _data["role"] ? Role.fromJS(_data["role"]) : <any>null;
@@ -2921,6 +3117,11 @@ export class User implements IUser {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id !== undefined ? this.id : <any>null;
+        if (Array.isArray(this.timeSpents)) {
+            data["timeSpents"] = [];
+            for (let item of this.timeSpents)
+                data["timeSpents"].push(item.toJSON());
+        }
         data["email"] = this.email !== undefined ? this.email : <any>null;
         data["password"] = this.password !== undefined ? this.password : <any>null;
         data["role"] = this.role ? this.role.toJSON() : <any>null;
@@ -2965,6 +3166,7 @@ export class User implements IUser {
 
 export interface IUser {
     id: number;
+    timeSpents: TimeSpent[] | null;
     email: string | null;
     password: string | null;
     role: Role;

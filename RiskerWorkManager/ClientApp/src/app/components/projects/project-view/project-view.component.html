@@ -8,13 +8,27 @@
         Add user to project
     </button>&nbsp;
 </mat-toolbar>
-<mat-label>Description</mat-label>
-<h3>{{project.description}}</h3>
-<mat-label>Content</mat-label>
-<p>{{project.content}}</p>
-<mat-list *ngIf="project.usersHasAccess != null">
-    <div  mat-subheader>Users</div>
-    <mat-list-item *ngFor="let user of project.usersHasAccess">
-        <mat-icon matListItemIcon>person</mat-icon>
-        {{user.user.email}}</mat-list-item>
-</mat-list>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            {{project.title}}
+        </mat-card-title>
+        <mat-card-subtitle>
+            Created: {{project.userCreated.email}}<br>
+            {{project.dateCreated | date:'shortDate'}}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <p>
+            {{project.description}}
+        </p>
+        <mat-list *ngIf="project.usersHasAccess != null && project.usersHasAccess.length > 0">
+        <div mat-subheader>Users</div>
+        <mat-list-item *ngFor="let user of project.usersHasAccess">
+            <mat-icon matListItemIcon>person</mat-icon>
+            {{user.user.email}}
+        </mat-list-item>
+    </mat-list>
+    </mat-card-content>
+</mat-card>
+

@@ -12,6 +12,7 @@ namespace WorkManagerDal
         VersionsRepository Versions { get; }
         BugsRepository Bugs { get; }
         NotesRespository Notes { get; }
+        TimeSpentRepository TimeSpents { get; }
         Task SaveAsync();
     }
 }

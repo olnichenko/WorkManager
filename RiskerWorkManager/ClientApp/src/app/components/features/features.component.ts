@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiClient, Feature, Project } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { ProjectService } from 'src/app/services/project.service';
+import { FeatureViewComponent } from './feature-view/feature-view.component';
 import { AddFeatureComponent } from './add-feature/add-feature.component';
 
 @Component({
@@ -49,6 +50,14 @@ export class FeaturesComponent implements OnInit {
   
   rowSelected(row: Feature){
     this.selectedFeature = row;
+  }
+
+  rowDblClick(row: Feature){
+    let item =  this.features.find(x => x.id == row.id);
+    const dialogRef = this.dialog.open(FeatureViewComponent, {
+      width: '600px',
+      data:{feature: item}
+    });
   }
 
   loadFeatures(): void{

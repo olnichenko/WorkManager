@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
@@ -12,6 +13,28 @@ namespace WorkManagerDal.Services
     {
         public ProjectsService(IWorkManagerUnitOfWork unitOfWork) : base(unitOfWork)
         {
+        }
+
+        public async Task<MenuVm> GetProjectMenuVmAsync(long projectId)
+        {
+            var project = await _unitOfWork.Projects
+                        .FindByCondition(x => x.Id == projectId)
+                        .Include(x => x.Features)
+                        .Include(x => x.Bugs)
+                        .SingleAsync();
+            if (project == null)
+            {
+                return null;
+            }
+            var featuresCount = project.Features
+                                .Count(x => x.IsDeleted != true && x.SolvedInVersion == null);
+            var bugsCount = project.Bugs
+                            .Count(x => x.IsDeleted != true && x.SolvedInVersion == null);
+            return new MenuVm
+            {
+                UnSolvedFeatures = featuresCount,
+                UnSolvedBugs = bugsCount
+            };
         }
 
         public async Task<Project> EditProjectAsync(Project project)

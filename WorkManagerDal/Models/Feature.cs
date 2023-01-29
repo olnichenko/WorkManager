@@ -10,5 +10,6 @@ namespace WorkManagerDal.Models
     {
         public Version? SolvedInVersion { get; set; }
         public bool? IsDeleted { get; set; }
+        public List<TimeSpent>? TimeSpents { get; set; } = new List<TimeSpent>();
     }
 }

@@ -18,11 +18,23 @@ namespace WorkManagerDal
         private VersionsRepository _versionsRepository;
         private BugsRepository _bugsRepository;
         private NotesRespository _notesRespository;
+        private TimeSpentRepository _timeSpentRepository;
         public WorkManagerUnitOfWork(WorkManagerDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
+        public TimeSpentRepository TimeSpents
+        {
+            get
+            {
+                if (_timeSpentRepository == null)
+                {
+                    _timeSpentRepository = new TimeSpentRepository(_dbContext);
+                }
+                return _timeSpentRepository;
+            }
+        }
         public NotesRespository Notes
         {
             get

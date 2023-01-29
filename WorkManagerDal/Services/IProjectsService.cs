@@ -4,11 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
     public interface IProjectsService : IBaseService
     {
+        Task<MenuVm> GetProjectMenuVmAsync(long projectId);
         Task<Project> CreateProjectAsync(Project project, long userId);
         Task<List<Project>> GetUserProjectsAsync(long userId);
         Task<Project> GetProjectByIdAsync(long id);

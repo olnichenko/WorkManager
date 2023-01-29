@@ -11,7 +11,6 @@ namespace WorkManagerDal.Models
     public class Project : BaseEntity
     {
         public string Title { get; set; }
-        public string? Content { get; set; }
         public string? Description { get; set; }
         public User? UserCreated { get; set; }
         public DateTime DateCreated { get; set; }

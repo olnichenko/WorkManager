@@ -34,6 +34,6 @@
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row (click)="rowSelected(row)" [class.selected-row]="row == selectedFeature"
+  <tr mat-row (click)="rowSelected(row)" (dblclick)="rowDblClick(row)" [class.selected-row]="row == selectedFeature"
     *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
