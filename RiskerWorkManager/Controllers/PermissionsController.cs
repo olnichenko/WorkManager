@@ -32,7 +32,7 @@ namespace RiskerWorkManager.Controllers
         /// <returns>result status</returns>
         [HttpPost]
         [AuthorizePermission(PermissionsService.Permission_Edit)]
-        public async Task<bool> ChangePermission(int roleId, string permissionName, bool isEnabled)
+        public async Task<bool> ChangePermission(long roleId, string permissionName, bool isEnabled)
         {
             var role = await _rolesService.GetRoleWithPermissionsAsync(roleId);
             var isRoleContainPermission = role.Permissions.Any(x => x.Name == permissionName);

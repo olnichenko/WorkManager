@@ -7,7 +7,7 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.ViewModels
 {
-    public class RoleVm : BaseEntity<int>
+    public class RoleVm : BaseEntity
     {
         public string Name { get; set; }
         public List<Permission> Permissions { get; set; } = new();

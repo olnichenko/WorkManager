@@ -7,7 +7,7 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.ViewModels
 {
-    public class UserVm : BaseEntity<long>
+    public class UserVm : BaseEntity
     {
         public DateTime DateRegistration { get; set; }
         public bool IsBlocked { get; set; }

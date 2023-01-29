@@ -3,7 +3,7 @@
 namespace WorkManagerDal.Models
 {
     [Index(nameof(Email), IsUnique = true)]
-    public class User : BaseEntity<long>
+    public class User : BaseEntity
     {
         public string Email { get; set; }
         public string Password { get; set; }

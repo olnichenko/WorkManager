@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace WorkManagerDal.Models
 {
     [Index(nameof(Name), IsUnique = true)]
-    public class Permission : BaseEntity<int>
+    public class Permission : BaseEntity
     {
         public string Name { get; set; }
         public List<Role> Roles { get; set; } = new();

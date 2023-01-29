@@ -4,18 +4,23 @@
         <a matListItemTitle [routerLinkActive]="['link-active']" [routerLink]="['/project', projectId, 'features']" >Features</a>
     </mat-list-item>
     <mat-divider></mat-divider>
-    <mat-list-item>
-        <mat-icon matBadge="4" matBadgeSize="small" matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Bugs</div>
+    <mat-list-item class="pointer" (click)="navigateTo('bugs')">
+        <mat-icon matBadge="4" matBadgeSize="small" matListItemIcon>report</mat-icon>
+        <div matListItemTitle [routerLinkActive]="['link-active']" [routerLink]="['/project', projectId, 'bugs']">Bugs</div>
     </mat-list-item>
     <mat-divider></mat-divider>
-    <mat-list-item>
-        <mat-icon matBadge="11" matBadgeSize="small" matListItemIcon>folder</mat-icon>
-        <div matListItemTitle>Notes</div>
+    <mat-list-item class="pointer" (click)="navigateTo('notes')">
+        <mat-icon matBadge="11" matBadgeSize="small" matListItemIcon>speaker_notes</mat-icon>
+        <div matListItemTitle [routerLinkActive]="['link-active']" [routerLink]="['/project', projectId, 'notes']">Notes</div>
     </mat-list-item>
     <mat-divider></mat-divider>
     <mat-list-item class="pointer" (click)="navigateTo('versions')">
-        <mat-icon matBadge="2" matBadgeSize="small" matListItemIcon>folder</mat-icon>
+        <mat-icon matListItemIcon>swap_vert</mat-icon>
         <div matListItemTitle [routerLinkActive]="['link-active']" [routerLink]="['/project', projectId, 'versions']">Versions</div>
+    </mat-list-item>
+    <mat-divider></mat-divider>
+    <mat-list-item class="pointer" (click)="navigateTo('time-sheets')">
+        <mat-icon matListItemIcon>timer</mat-icon>
+        <div matListItemTitle [routerLinkActive]="['link-active']" [routerLink]="['/project', projectId, 'time-sheets']">TimeSheet</div>
     </mat-list-item>
 </mat-list>

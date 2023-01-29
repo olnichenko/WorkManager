@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WorkManagerDal.Models
 {
-    public class Project : BaseEntity<long>
+    public class Project : BaseEntity
     {
         public string Title { get; set; }
         public string? Content { get; set; }

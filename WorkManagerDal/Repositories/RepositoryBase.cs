@@ -23,5 +23,6 @@ namespace WorkManagerDal.Repositories
         public void Create(T entity) => _workManagerDbContext.Set<T>().Add(entity);
         public void Update(T entity) => _workManagerDbContext.Set<T>().Update(entity);
         public void Delete(T entity) => _workManagerDbContext.Set<T>().Remove(entity);
+        public T Find(long id) => _workManagerDbContext.Set<T>().Find(id);
     }
 }

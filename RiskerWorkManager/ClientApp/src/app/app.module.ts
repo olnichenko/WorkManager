@@ -40,6 +40,9 @@ import { AddFeatureComponent } from './components/features/add-feature/add-featu
 import { RiskErrorHandler } from './services/error-handler';
 import { VersionsComponent } from './components/versions/versions.component';
 import { EditVersionComponent } from './components/versions/edit-version/edit-version.component';
+import { BugsComponent } from './components/bugs/bugs.component';
+import { NotesComponent } from './components/notes/notes.component';
+import { TimeSheetsComponent } from './components/time-sheets/time-sheets.component';
 
 const projectRoutes: Routes = [
   { path: '', component: ProjectViewComponent,
@@ -50,6 +53,12 @@ const projectRoutes: Routes = [
   canActivate: [AuthGuardServiceChildGuard]  },
   { path: 'versions', component: VersionsComponent,
   canActivate: [AuthGuardServiceChildGuard]  },
+  { path: 'bugs', component: BugsComponent,
+  canActivate: [AuthGuardServiceChildGuard]  },
+  { path: 'notes', component: NotesComponent,
+  canActivate: [AuthGuardServiceChildGuard]  },
+  { path: 'time-sheets', component: TimeSheetsComponent,
+  canActivate: [AuthGuardServiceChildGuard]  }
 ]
 
 const adminRoutes: Routes = [
@@ -100,7 +109,10 @@ const appRoutes: Routes = [
     FeaturesComponent,
     AddFeatureComponent,
     VersionsComponent,
-    EditVersionComponent
+    EditVersionComponent,
+    BugsComponent,
+    NotesComponent,
+    TimeSheetsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

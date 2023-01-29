@@ -34,7 +34,7 @@ namespace WorkManagerDal.Services
             await _unitOfWork.SaveAsync();
             return role;
         }
-        public async Task DeleteRoleToPemissionAsync(int roleId, string permissionName)
+        public async Task DeleteRoleToPemissionAsync(long roleId, string permissionName)
         {
             var role = await _unitOfWork.Roles.FindByConditionWithTracking(x => x.Id == roleId).Include(x => x.Permissions).SingleOrDefaultAsync();
             var permission = await _unitOfWork.Permissions.FindByConditionWithTracking(x => x.Name == permissionName).Include(x => x.Roles).SingleOrDefaultAsync();
@@ -43,7 +43,7 @@ namespace WorkManagerDal.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task AddRoleToPermissionAsync(int roleId, string permissionName)
+        public async Task AddRoleToPermissionAsync(long roleId, string permissionName)
         {
             var role = await _unitOfWork.Roles.FindByConditionWithTracking(x => x.Id == roleId).Include(x => x.Permissions).SingleOrDefaultAsync();
             var permission = await _unitOfWork.Permissions.FindByConditionWithTracking(x => x.Name == permissionName).Include(x => x.Roles).SingleOrDefaultAsync();
@@ -57,7 +57,7 @@ namespace WorkManagerDal.Services
             await _unitOfWork.SaveAsync();
             return role;
         }
-        public async Task<Role> GetRoleWithPermissionsAsync(int id)
+        public async Task<Role> GetRoleWithPermissionsAsync(long id)
         {
             var role = await _unitOfWork.Roles.FindByCondition(x => x.Id == id).Include("Permissions").SingleOrDefaultAsync();
             return role;

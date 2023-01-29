@@ -7,7 +7,7 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.ViewModels
 {
-    public class ProjectVm : BaseEntity<long>
+    public class ProjectVm : BaseEntity
     {
         public string Title { get; set; }
         public string? Content { get; set; }

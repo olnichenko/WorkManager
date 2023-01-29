@@ -66,7 +66,7 @@ namespace WorkManagerDal.Services
                         if (editedFiature.SolvedInVersion != null)
                         {
                             var previousVersion = await _unitOfWork.Versions
-                                .FindByConditionWithTracking(x => x.Id == solvedInVersionId)
+                                .FindByConditionWithTracking(x => x.Id == editedFiature.SolvedInVersion.Id)
                                 .Include(x => x.Features)
                                 .SingleAsync();
                             previousVersion.Features.Remove(editedFiature);

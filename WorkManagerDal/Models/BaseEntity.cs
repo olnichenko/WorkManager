@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace WorkManagerDal.Models
 {
-    public abstract class BaseEntity<T>
+    public abstract class BaseEntity
     {
         [Key]
-        public T Id { get; set; }
+        public long Id { get; set; }
     }
 }

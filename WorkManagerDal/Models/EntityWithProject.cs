@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WorkManagerDal.Models
 {
-    public class EntityWithProject : BaseEntity<long>
+    public class EntityWithProject : BaseEntity
     {
         public string Title { get; set; }
         public string? Content { get; set; }
