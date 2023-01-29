@@ -1,4 +1,4 @@
-<form [formGroup]="featureForm" novalidate (ngSubmit)="save()" autocomplete="off">
+<form [formGroup]="bugForm" novalidate (ngSubmit)="save()" autocomplete="off">
     <mat-card>
         <mat-card-header>
             <mat-card-title>{{title}}</mat-card-title>
@@ -10,7 +10,7 @@
                         <mat-label>Name</mat-label>
                         <input matInput formControlName="title">
                         <mat-error
-                            *ngIf="featureForm.get('title')?.invalid && (featureForm.get('title')?.dirty || featureForm.get('title')?.touched)">
+                            *ngIf="bugForm.get('title')?.invalid && (bugForm.get('title')?.dirty || bugForm.get('title')?.touched)">
                             {{getErrorMessage('title')}}</mat-error>
                     </mat-form-field>
                 </div>
@@ -21,7 +21,7 @@
                         <mat-label>Description</mat-label>
                         <textarea matInput rows="6" formControlName="content"></textarea>
                         <mat-error
-                            *ngIf="featureForm.get('content')?.invalid && (featureForm.get('content')?.dirty || featureForm.get('content')?.touched)">
+                            *ngIf="bugForm.get('content')?.invalid && (bugForm.get('content')?.dirty || bugForm.get('content')?.touched)">
                             {{getErrorMessage('content')}}</mat-error>
                     </mat-form-field>
                 </div>
@@ -41,11 +41,11 @@
             </div>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-raised-button [disabled]="!featureForm.valid" color="primary" type="submit">
+            <button mat-raised-button [disabled]="!bugForm.valid" color="primary" type="submit">
                 Save
                 <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status"
                     aria-hidden="true"></span>
-                <mat-icon [class.color-active]="featureForm.valid">done_outline</mat-icon>
+                <mat-icon [class.color-active]="bugForm.valid">done_outline</mat-icon>
             </button>
         </mat-card-actions>
     </mat-card>

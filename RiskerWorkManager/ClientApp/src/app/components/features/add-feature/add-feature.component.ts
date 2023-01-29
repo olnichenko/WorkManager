@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,8 +14,8 @@ export class AddFeatureComponent implements OnInit {
   featureForm!: FormGroup;
   title: string = "";
   public showLoader: boolean = false;
-  @Input() feature: Feature | null = null;
-  @Input() projectId!: number;
+  feature: Feature | null = null;
+  projectId!: number;
   versions: Version[] = [];
   selectedVersion!: number;
   
@@ -29,7 +29,7 @@ export class AddFeatureComponent implements OnInit {
     this.feature = this.data.feature;
     this.projectId = this.data.projectId;
     this.title = this.feature == null ? "Add new feature" : "Edit feature";
-    this.selectedVersion = this.feature.solvedInVersion?.id;
+    this.selectedVersion = this.feature?.solvedInVersion?.id;
 
     this.apiClient.getVersionsByProject(this.projectId).subscribe(data => {
       this.versions = data;

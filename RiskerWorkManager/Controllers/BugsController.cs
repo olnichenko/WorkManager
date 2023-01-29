@@ -3,48 +3,46 @@ using Microsoft.AspNetCore.Mvc;
 using RiskerWorkManager.Attributes;
 using RiskerWorkManager.PermissionValidators;
 using RiskerWorkManager.Services;
-using System.Runtime.InteropServices;
 using WorkManagerDal.Models;
 using WorkManagerDal.Services;
-using WorkManagerDal.ViewModels;
 
 namespace RiskerWorkManager.Controllers
 {
     [Route("[controller]/[action]")]
     [ApiController]
-    public class FeaturesController : ControllerBase, IDisposable
+    public class BugsController : ControllerBase, IDisposable
     {
-        private readonly IFeaturesService _featuresService;
+        private readonly IBugsService _bugsService;
         private readonly IProjectsService _projectsService;
         private readonly IUserIdentityService _userIdentityService;
 
-        public FeaturesController(IFeaturesService featuresService, IUserIdentityService userIdentityService, IProjectsService projectsService)
+        public BugsController(IBugsService bugsService, IUserIdentityService userIdentityService, IProjectsService projectsService)
         {
-            _featuresService = featuresService;
+            _bugsService = bugsService;
             _userIdentityService = userIdentityService;
             _projectsService = projectsService;
         }
 
         [HttpPost]
         [AuthorizePermission]
-        public async Task<bool> DeleteFeature(long featureId)
+        public async Task<bool> DeleteBug(long bugId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
-            var feature = await _featuresService.FindAsync(featureId);
-            var project = await _projectsService.GetProjectByIdAsync(feature.Project.Id);
+            var bug = await _bugsService.FindAsync(bugId);
+            var project = await _projectsService.GetProjectByIdAsync(bug.Project.Id);
 
             if (!project.ValidateUserViewPermission(user))
             {
                 return false;
             }
 
-            await _featuresService.DeleteAsync(feature);
+            await _bugsService.DeleteAsync(bug);
             return true;
         }
 
         [HttpPost]
         [AuthorizePermission]
-        public async Task<List<Feature>> GetFeaturesByProject(long projectId)
+        public async Task<List<Bug>> GetBugsByProject(long projectId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var project = await _projectsService.GetProjectByIdAsync(projectId);
@@ -54,13 +52,13 @@ namespace RiskerWorkManager.Controllers
                 return null;
             }
 
-            var features = await _featuresService.GetFeaturesByProjectAsync(projectId);
-            return features;
+            var bugs = await _bugsService.GetBugsByProjectAsync(projectId);
+            return bugs;
         }
 
         [HttpPost]
         [AuthorizePermission]
-        public async Task<Feature> CreateOrUpdateFeature(Feature feature, long projectId, long solvedInversionId)
+        public async Task<Bug> CreateOrUpdateBug(Bug bug, long projectId, long solvedInversionId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
             var editedProject = await _projectsService.GetProjectByIdAsync(projectId);
@@ -69,13 +67,13 @@ namespace RiskerWorkManager.Controllers
             {
                 return null;
             }
-            await _featuresService.CreateOrUpdateFeatureAsync(feature, user.Id, editedProject.Id, solvedInversionId);
-            return feature;
+            await _bugsService.CreateOrUpdateBugAsync(bug, user.Id, editedProject.Id, solvedInversionId);
+            return bug;
         }
 
         public void Dispose()
         {
-            _featuresService.Dispose();
+            _bugsService.Dispose();
             _projectsService.Dispose();
         }
     }

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,8 +14,8 @@ export class EditVersionComponent implements OnInit {
   versionForm!: FormGroup;
   title: string = "";
   public showLoader: boolean = false;
-  @Input() version: Version | null = null;
-  @Input() projectId!: number;
+  version: Version | null = null;
+  projectId!: number;
   
   constructor(protected formBuilder: FormBuilder, 
     protected snackBar: MatSnackBar, 

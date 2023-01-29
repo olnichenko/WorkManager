@@ -15,6 +15,6 @@ namespace WorkManagerDal.Repositories
         void Create(T entity);
         void Update(T entity);
         void Delete(T entity);
-        T Find(long id);
+        Task<T> FindAsync(long id);
     }
 }

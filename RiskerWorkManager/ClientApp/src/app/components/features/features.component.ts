@@ -13,7 +13,7 @@ import { AddFeatureComponent } from './add-feature/add-feature.component';
 })
 export class FeaturesComponent implements OnInit {
 
-  selectedFeature!: Feature;
+  selectedFeature: Feature | null = null;
   project: Project = new Project();
   features: Feature[] = [];
   displayedColumns: string[] = ['title', 'userCreated', 'dateCreated', 'solvedInVersion'];
@@ -32,6 +32,20 @@ export class FeaturesComponent implements OnInit {
       this.loadFeatures();
     });
   }
+
+  confirmDelete(){
+    var result = confirm("Are you sure you want to delete feature?");
+    if(result){
+      this.apiClient.deleteFeature(this.selectedFeature?.id).subscribe(data => {
+        if(data){
+          this.snackBar.open("Feature deleted", "Succes");
+          this.loadFeatures();
+        }else{
+          this.snackBar.open("Error", "Error");
+        }
+      })
+    }
+  }
   
   rowSelected(row: Feature){
     this.selectedFeature = row;
@@ -40,6 +54,7 @@ export class FeaturesComponent implements OnInit {
   loadFeatures(): void{
     this.apiClient.getFeaturesByProject(this.project.id).subscribe((features) => {
       this.features = features;
+      this.selectedFeature = null;
     })
   }
 

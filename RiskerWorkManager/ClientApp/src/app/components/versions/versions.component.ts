@@ -12,7 +12,7 @@ import { EditVersionComponent } from './edit-version/edit-version.component';
   styleUrls: ['./versions.component.css']
 })
 export class VersionsComponent implements OnInit {
-  selectedVersion!: Version;
+  selectedVersion: Version | null = null;
   project: Project = new Project();
   versions: Version[] = [];
   isEnableEdit = false;
@@ -72,6 +72,7 @@ export class VersionsComponent implements OnInit {
   loadVersions(){
     this.apiClient.getVersionsByProject(this.project.id).subscribe(data => {
       this.versions = data;
+      this.selectedVersion = null;
     })
   }
 }

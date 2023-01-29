@@ -66,6 +66,10 @@ mat-card {
   color: green !important;
 }
 
+.color-active{
+  color: green;
+}
+
 .text-noworap {
   white-space: nowrap;
 }

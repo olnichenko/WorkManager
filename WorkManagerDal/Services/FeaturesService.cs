@@ -14,10 +14,25 @@ namespace WorkManagerDal.Services
         {
         }
 
+        public async Task<Feature> FindAsync(long featureId)
+        {
+            var feature = await _unitOfWork.Features
+                .FindByConditionWithTracking(x => x.Id == featureId)
+                .Include(x => x.Project)
+                .SingleOrDefaultAsync();
+            return feature;
+        }
+
+        public async Task DeleteAsync(Feature feature)
+        {
+            feature.IsDeleted = true;
+            await _unitOfWork.SaveAsync();
+        }
+
         public async Task<List<Feature>> GetFeaturesByProjectAsync(long projectId)
         {
             var features = await _unitOfWork.Features
-                .FindByCondition(x => x.Project.Id == projectId)
+                .FindByCondition(x => x.Project.Id == projectId && x.IsDeleted != true)
                 .Include(x => x.UserCreated)
                 .Include(x => x.SolvedInVersion)
                 .OrderByDescending(x => x.DateCreated)

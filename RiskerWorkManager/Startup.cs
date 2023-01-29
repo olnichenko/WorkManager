@@ -32,8 +32,8 @@ namespace RiskerWorkManager
             var dbSettings = configuration.GetSection(DbSettings.SectionName).Get<DbSettings>();
             var corsSettings = configuration.GetSection(CORSSettings.SectionName).Get<CORSSettings>();
 
-            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped((_) => new WorkManagerDbContext(dbSettings.ConnectionString));
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IWorkManagerUnitOfWork, WorkManagerUnitOfWork>();
             services.AddScoped<IUsersService, UsersService>();
             services.AddScoped<IRolesService, RolesService>();
@@ -44,6 +44,8 @@ namespace RiskerWorkManager
             services.AddScoped<IProjectsService, ProjectsService>();
             services.AddScoped<IFeaturesService, FeaturesService>();
             services.AddScoped<IVersionsService, VersionsService>();
+            services.AddScoped<IBugsService, BugsService>();
+            services.AddScoped<INotesService, NotesService>();
 
             services.AddCors(options =>
             {

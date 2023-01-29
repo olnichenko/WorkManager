@@ -9,5 +9,6 @@ namespace WorkManagerDal.Models
     public class Bug : EntityWithProject
     {
         public Version? SolvedInVersion { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }

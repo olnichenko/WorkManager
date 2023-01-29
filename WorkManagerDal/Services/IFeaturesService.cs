@@ -11,5 +11,7 @@ namespace WorkManagerDal.Services
     {
         Task CreateOrUpdateFeatureAsync(Feature feature, long userId, long projectId, long solvedInversion);
         Task<List<Feature>> GetFeaturesByProjectAsync(long projectId);
+        Task DeleteAsync(Feature feature);
+        Task<Feature> FindAsync(long featureId);
     }
 }

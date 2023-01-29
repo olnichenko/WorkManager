@@ -58,13 +58,18 @@ namespace WorkManagerDal.Services
 
         public async Task<List<Project>> GetUserProjectsAsync(long userId)
         {
-            var projects = await _unitOfWork.Projects.FindByCondition(x => x.UserCreated.Id == userId).OrderByDescending(x => x.DateCreated).ToListAsync();
+            var projects = await _unitOfWork.Projects
+                .FindByCondition(x => x.UserCreated.Id == userId && x.IsDeleted != true)
+                .OrderByDescending(x => x.DateCreated)
+                .ToListAsync();
             return projects;
         }
 
         public async Task<List<Project>> GetUserHaveAccessProjectsAsync(long userId)
         {
-            var project = await _unitOfWork.Projects.FindByCondition(x => x.UsersHasAccess.Any(y => y.User.Id == userId)).OrderByDescending(x => x.DateCreated).ToListAsync();
+            var project = await _unitOfWork.Projects
+                .FindByCondition(x => x.UsersHasAccess.Any(y => y.User.Id == userId) && x.IsDeleted != true)
+                .OrderByDescending(x => x.DateCreated).ToListAsync();
             return project;
         }
     }

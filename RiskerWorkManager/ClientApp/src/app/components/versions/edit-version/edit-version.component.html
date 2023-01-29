@@ -9,7 +9,7 @@
                     <mat-form-field class="full-width">
                         <mat-label>Name</mat-label>
                         <input matInput formControlName="title">
-                        <mat-error *ngIf="versionForm.get('name')?.invalid && (versionForm.get('name')?.dirty || versionForm.get('name')?.touched)">{{getErrorMessage('title')}}</mat-error>
+                        <mat-error *ngIf="versionForm.get('title')?.invalid && (versionForm.get('title')?.dirty || versionForm.get('title')?.touched)">{{getErrorMessage('title')}}</mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -27,6 +27,7 @@
             <button mat-raised-button [disabled]="!versionForm.valid" color="primary" type="submit">
                 Save
                 <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+                <mat-icon [class.color-active]="versionForm.valid">done_outline</mat-icon>
             </button>
         </mat-card-actions>
     </mat-card>

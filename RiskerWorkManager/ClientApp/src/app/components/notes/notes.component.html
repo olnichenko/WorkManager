@@ -1,1 +1,37 @@
-<p>notes works!</p>
+<mat-toolbar *ngIf="isEnableEdit">
+    <button mat-raised-button (click)="openNewDialog()" type="button">
+        <mat-icon>add</mat-icon>
+        Add new note
+    </button>&nbsp;
+    <button mat-raised-button type="button" [disabled]="selectedNote == null" (click)="openEditDialog()">
+      <mat-icon>edit_square</mat-icon>
+      Edit note
+  </button>&nbsp;
+  <button mat-raised-button type="button" [disabled]="selectedNote == null" (click)="confirmDelete()">
+    <mat-icon>close</mat-icon>
+    Delete note
+  </button>
+</mat-toolbar>
+<table mat-table [dataSource]="notes" class="mat-elevation-z8">
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef> Title </th>
+      <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="userCreated">
+      <th mat-header-cell *matHeaderCellDef> User Created </th>
+      <td mat-cell *matCellDef="let element"> {{element.userCreated.email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dateCreated">
+      <th mat-header-cell *matHeaderCellDef> Date Created </th>
+      <td mat-cell *matCellDef="let element"> {{element.dateCreated | date:'shortDate'}} </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row 
+    (click)="rowSelected(row)"
+    [class.selected-row]="row == selectedNote"
+    *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+

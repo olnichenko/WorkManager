@@ -27,6 +27,7 @@
             <button mat-raised-button [disabled]="!projectForm.valid" color="primary" type="submit">
                 Save
                 <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+                <mat-icon [class.color-active]="projectForm.valid">done_outline</mat-icon>
             </button>
         </mat-card-actions>
     </mat-card>
