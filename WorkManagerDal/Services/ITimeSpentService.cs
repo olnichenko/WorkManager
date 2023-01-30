@@ -12,7 +12,7 @@ namespace WorkManagerDal.Services
         Task<List<TimeSpent>> GetByBugAsync(long bugId);
         Task<List<TimeSpent>> GetByFeatureAsync(long featureId);
         Task<List<TimeSpent>> GetByProjectAsync(long projectId);
-        Task CreateOrUpdateTimeSpentAsync(TimeSpent timeSpent, long userId, long featureId, long bugId);
+        Task CreateOrUpdateTimeSpentAsync(TimeSpent timeSpent, long userId, Feature feature, Bug bug);
         Task DeleteAsync(TimeSpent timeSpent);
     }
 }

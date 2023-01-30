@@ -1,11 +1,11 @@
 <mat-card>
     <mat-card-header>
-        <mat-card-title>{{feature.title}}</mat-card-title>
-        <mat-card-subtitle>Created: {{feature.userCreated.email}}<br>{{feature.dateCreated | date:'shortDate'}}
+        <mat-card-title>{{bug.title}}</mat-card-title>
+        <mat-card-subtitle>Created: {{bug.userCreated.email}}<br>{{bug.dateCreated | date:'shortDate'}}
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        {{feature.content}}
+        {{bug.content}}
     </mat-card-content>
     <mat-card-actions>
         <button mat-raised-button color="primary" (click)="openEditTimeSpentDialog()">

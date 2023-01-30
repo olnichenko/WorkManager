@@ -1,1 +1,53 @@
-<p>edit-time-spent works!</p>
+<form [formGroup]="timeSpentForm" novalidate (ngSubmit)="save()" autocomplete="off">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Comment</mat-label>
+                        <input matInput formControlName="comment">
+                        <mat-error
+                            *ngIf="timeSpentForm.get('comment')?.invalid && (timeSpentForm.get('comment')?.dirty || timeSpentForm.get('comment')?.touched)">
+                            {{getErrorMessage('comment')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Start Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="dateFrom">
+                        <mat-hint>MM/DD/YYYY</mat-hint>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                        <mat-error
+                            *ngIf="timeSpentForm.get('dateFrom')?.invalid && (timeSpentForm.get('dateFrom')?.dirty || timeSpentForm.get('dateFrom')?.touched)">
+                            {{getErrorMessage('dateFrom')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Hours Count</mat-label>
+                        <input matInput type="number" formControlName="hoursCount">
+                        <mat-error
+                            *ngIf="timeSpentForm.get('hoursCount')?.invalid && (timeSpentForm.get('hoursCount')?.dirty || timeSpentForm.get('hoursCount')?.touched)">
+                            {{getErrorMessage('hoursCount')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button [disabled]="!timeSpentForm.valid" color="primary" type="submit">
+                Save
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status"
+                    aria-hidden="true"></span>
+                <mat-icon [class.color-active]="timeSpentForm.valid">done_outline</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</form>

@@ -40,9 +40,9 @@ namespace WorkManagerDal.Services
                 .ToListAsync();
             return timeSpents;
         }
-        public async Task CreateOrUpdateTimeSpentAsync(TimeSpent timeSpent, long userId, long featureId, long bugId)
+        public async Task CreateOrUpdateTimeSpentAsync(TimeSpent timeSpent, long userId, Feature feature, Bug bug)
         {
-            if (featureId == 0 && bugId == 0)
+            if (feature == null && bug == null)
             {
                 return;
             }
@@ -52,14 +52,12 @@ namespace WorkManagerDal.Services
                 _unitOfWork.TimeSpents.Create(timeSpent);
                 var tUser = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Id == userId).SingleAsync();
                 tUser.TimeSpents.Add(timeSpent);
-                if (featureId > 0)
+                if (feature != null)
                 {
-                    var feature = await _unitOfWork.Features.FindByConditionWithTracking(x => x.Id == featureId).SingleAsync();
                     feature.TimeSpents.Add(timeSpent);
                 }
                 else
                 {
-                    var bug = await _unitOfWork.Bugs.FindByConditionWithTracking(x => x.Id == bugId).SingleAsync();
                     bug.TimeSpents.Add(timeSpent);
                 }
             }

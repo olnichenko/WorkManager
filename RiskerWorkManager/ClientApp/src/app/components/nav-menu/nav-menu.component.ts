@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { IsActiveMatchOptions, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserVm } from '../../api-clients/api-client';
 import { AccountService } from '../../services/account.service';
@@ -13,10 +14,22 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   public user: UserVm | null | undefined;
   private subscriptions: Subscription[] = [];
 
-  constructor(public accountService: AccountService, private cd: ChangeDetectorRef) { }
+  constructor(public accountService: AccountService, private cd: ChangeDetectorRef, private router: Router) { }
   ngOnInit(): void {
     this.addSubscriptions();
   }
+
+  // projectLinkActive(): string{
+  //   let matchOptions: IsActiveMatchOptions = {
+  //     paths: 'subset',
+  //     matrixParams: 'ignored',
+  //     queryParams: 'ignored',
+  //     fragment: 'ignored'
+  // };
+  //   return this.router.isActive('/', matchOptions) 
+  //   || this.router.isActive('/projects', matchOptions)
+  //   || this.router.isActive('/project', matchOptions) ? 'link-active' : '';
+  // }
 
   collapse() {
     this.isExpanded = false;

@@ -5,6 +5,7 @@ import { ApiClient, Bug, Project } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { EditBugComponent } from './edit-bug/edit-bug.component';
+import { BugViewComponent } from './bug-view/bug-view.component';
 
 @Component({
   selector: 'app-bugs',
@@ -41,6 +42,14 @@ export class BugsComponent implements OnInit {
 
   rowSelected(row: Bug) {
     this.selectedBug = row;
+  }
+
+  rowDblClick(row: Bug) {
+    let item = this.bugs.find(x => x.id == row.id);
+    const dialogRef = this.dialog.open(BugViewComponent, {
+      width: '600px',
+      data: { bug: item }
+    });
   }
 
   loadBugs(): void {

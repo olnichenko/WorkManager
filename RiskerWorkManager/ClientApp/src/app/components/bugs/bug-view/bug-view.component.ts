@@ -1,30 +1,30 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ApiClient, Feature, TimeSpent } from 'src/app/api-clients/api-client';
+import { ApiClient, Bug, TimeSpent } from 'src/app/api-clients/api-client';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditTimeSpentComponent } from '../../time-sheets/edit-time-spent/edit-time-spent.component';
 
 @Component({
-  selector: 'app-feature-view',
-  templateUrl: './feature-view.component.html',
-  styleUrls: ['./feature-view.component.css']
+  selector: 'app-bug-view',
+  templateUrl: './bug-view.component.html',
+  styleUrls: ['./bug-view.component.css']
 })
-export class FeatureViewComponent implements OnInit {
+export class BugViewComponent implements OnInit {
 
-  feature!: Feature;
+  bug!: Bug;
   showLoader: boolean = false;
   timeSpents: TimeSpent[] = [];
 
   constructor(protected snackBar: MatSnackBar,
     protected apiClient: ApiClient,
     public dialog: MatDialog,
-    @Inject(MAT_DIALOG_DATA) public data: { feature: Feature },
-    public dialogRef: MatDialogRef<FeatureViewComponent>) { }
+    @Inject(MAT_DIALOG_DATA) public data: { bug: Bug },
+    public dialogRef: MatDialogRef<BugViewComponent>) { }
 
   openEditTimeSpentDialog() {
     const dialogTimeSpentRefRef = this.dialog.open(EditTimeSpentComponent, {
       width: '600px',
-      data: { timeSpent: null, featureId: this.feature.id, bugId: 0 }
+      data: { timeSpent: null, featureId: 0, bugId: this.bug.id }
     });
 
     dialogTimeSpentRefRef.afterClosed().subscribe(result => {
@@ -36,15 +36,14 @@ export class FeatureViewComponent implements OnInit {
     });
   }
 
-  loadTimeTrack() {
-    this.apiClient.getTimeSpentByFeature(this.feature.id).subscribe(data => {
-      this.timeSpents = data;
-    })
-  }
-
   ngOnInit(): void {
-    this.feature = this.data.feature;
+    this.bug = this.data.bug;
     this.loadTimeTrack();
   }
 
+  loadTimeTrack() {
+    this.apiClient.getTimeSpentByBug(this.bug.id).subscribe(data => {
+      this.timeSpents = data;
+    })
+  }
 }

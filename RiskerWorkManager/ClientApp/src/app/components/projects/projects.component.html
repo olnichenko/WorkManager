@@ -20,5 +20,7 @@
             <div matListItemLine>{{myProject.description}}</div>
         </mat-list-item>
     </mat-list>
-
+    <div *ngIf="myProjects.length == 0 && myAccessProjects.length == 0">
+        <h1>You don`t have any project</h1>
+    </div>
 </div>
