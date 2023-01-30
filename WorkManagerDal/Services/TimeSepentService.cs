@@ -36,6 +36,8 @@ namespace WorkManagerDal.Services
             var timeSpents = await _unitOfWork.TimeSpents
                 .FindByCondition(x => x.Feature.Project.Id == projectId || x.Bug.Project.Id == projectId)
                 .Include(x => x.UserCreated)
+                .Include(x => x.Bug)
+                .Include(x => x.Feature)
                 .OrderByDescending(x => x.DateFrom)
                 .ToListAsync();
             return timeSpents;

@@ -1,35 +1,71 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { ApiClient, Feature, TimeSpent } from 'src/app/api-clients/api-client';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EditTimeSpentComponent } from './edit-time-spent/edit-time-spent.component';
+import { ApiClient, TimeSpent, Project } from 'src/app/api-clients/api-client';
+import { AccountService } from 'src/app/services/account.service';
+import { ProjectService } from 'src/app/services/project.service';
 
 @Component({
   selector: 'app-time-sheets',
   templateUrl: './time-sheets.component.html',
   styleUrls: ['./time-sheets.component.css']
 })
-export class TimeSheetsComponent {
+export class TimeSheetsComponent implements OnInit {
 
-  
-  showLoader: boolean = false;
+  selectedTimeSpent: TimeSpent | null = null;
+  project: Project = new Project();
+  timeSpentList: TimeSpent[] = [];
+  displayedColumns: string[] = ['dateFrom', 'userCreated', 'hoursCount', 'taskType', 'taskName', 'comment'];
+  isEnableEdit = false;
 
-  constructor(protected snackBar: MatSnackBar,
-    protected apiClient: ApiClient,
-    public dialog: MatDialog) { }
+  constructor(protected apiClient: ApiClient,
+    public accountService: AccountService,
+    public dialog: MatDialog,
+    public projectSevice: ProjectService,
+    protected snackBar: MatSnackBar) { }
 
-  openEditTimeSpentDialog() {
-    const dialogTimeSpentRefRef = this.dialog.open(EditTimeSpentComponent, {
-      width: '600px',
-      data:{timeSpent: null, featureId: 0, bugId: 0}
-    });
+  exportToExcel() {
 
-    dialogTimeSpentRefRef.afterClosed().subscribe(result => {
-      let project = result;
-      if (project != null) {
-        this.snackBar.open("Time spent saved", "Succes");
-      }
+  }
+
+  ngOnInit(): void {
+    this.isEnableEdit = this.projectSevice.isUserCanEditProject();
+    this.projectSevice.project.subscribe((data) => {
+      this.project = data;
+      this.load();
     });
   }
 
+  rowDblClick(row: TimeSpent) {
+    // let item = this.bugs.find(x => x.id == row.id);
+    // const dialogRef = this.dialog.open(BugViewComponent, {
+    //   width: '600px',
+    //   data: { bug: item }
+    // });
+  }
+
+  load(): void {
+    this.apiClient.getTimeSpentByProject(this.project.id).subscribe((data) => {
+      this.timeSpentList = data;
+      this.selectedTimeSpent = null;
+    })
+  }
+
+  confirmDelete() {
+    var result = confirm("Are you sure you want to delete time spent?");
+    if (result) {
+      // this.apiClient.deleteBug(this.selectedBug?.id).subscribe(data => {
+      //   if (data) {
+      //     this.snackBar.open("Bug deleted", "Succes");
+      //     this.loadBugs();
+      //   } else {
+      //     this.snackBar.open("Error", "Error");
+      //   }
+      // })
+    }
+  }
+
+  rowSelected(row: TimeSpent) {
+    this.selectedTimeSpent = row;
+  }
 }

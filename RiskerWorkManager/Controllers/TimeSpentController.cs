@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RiskerWorkManager.Attributes;
 using RiskerWorkManager.PermissionValidators;
 using RiskerWorkManager.Services;
+using System;
 using WorkManagerDal.Models;
 using WorkManagerDal.Services;
 using WorkManagerDal.ViewModels;
@@ -30,6 +31,22 @@ namespace RiskerWorkManager.Controllers
             _featuresService = featuresService;
             _bugsService = bugsService;
             _projectsService = projectsService;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public async Task<List<TimeSpent>> GetTimeSpentByProject(long projectId)
+        {
+            var user = _userIdentityService.GetCurrentUser(HttpContext);
+            var project = await _projectsService.GetProjectByIdAsync(projectId);
+
+            if (!project.ValidateUserViewPermission(user))
+            {
+                return null;
+            }
+
+            var timeSpentList = await _timeSpentService.GetByProjectAsync(projectId);
+            return timeSpentList;
         }
 
         [HttpPost]
