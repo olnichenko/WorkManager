@@ -1,7 +1,10 @@
 <mat-toolbar *ngIf="isEnableEdit">
-    filters
+    <button mat-raised-button (click)="exportToExcel()" type="button">
+        <mat-icon>list_alt</mat-icon>
+        Export to Excel
+    </button>&nbsp;
 </mat-toolbar>
-<table mat-table [dataSource]="timeSpentList" class="mat-elevation-z8">
+<table mat-table [dataSource]="timeSpentList"  id="time-sheet-table">
     <ng-container matColumnDef="dateFrom">
         <th mat-header-cell *matHeaderCellDef> Date from </th>
         <td mat-cell *matCellDef="let element"> {{element.dateFrom | date:'shortDate'}} </td>
@@ -24,7 +27,8 @@
 
     <ng-container matColumnDef="taskName">
         <th mat-header-cell *matHeaderCellDef> Task title </th>
-        <td mat-cell *matCellDef="let element"> {{element.feature == null ? element.bug?.title : element.feature?.title}}
+        <td mat-cell *matCellDef="let element"> {{element.feature == null ? element.bug?.title :
+            element.feature?.title}}
         </td>
     </ng-container>
 

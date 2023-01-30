@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiClient, TimeSpent, Project } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { ProjectService } from 'src/app/services/project.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-time-sheets',
@@ -25,7 +26,15 @@ export class TimeSheetsComponent implements OnInit {
     protected snackBar: MatSnackBar) { }
 
   exportToExcel() {
-
+    let element = document.getElementById('time-sheet-table');
+    const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+ 
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+ 
+    /* save to file */  
+    XLSX.writeFile(wb, 'time_sheet_table.xlsx');
   }
 
   ngOnInit(): void {
