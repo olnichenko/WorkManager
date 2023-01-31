@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
@@ -42,6 +43,64 @@ namespace WorkManagerDal.Services
                 .ToListAsync();
             return timeSpents;
         }
+        public async Task<List<TimeSpent>> GetByFilterAsync(TimeSheetFilterVm filter)
+        {
+            var timeSpents = _unitOfWork
+                .TimeSpents
+                .FindAll()
+                .Include(x => x.UserCreated)
+                .Include(x => x.Bug.Project)
+                .Include(x => x.Feature.Project)
+                .OrderByDescending(x => x.DateFrom) as IQueryable<TimeSpent>;
+
+            if (filter.ProjectId > 0)
+            {
+                timeSpents = timeSpents.Where(x => x.Bug.Project.Id == filter.ProjectId || x.Feature.Project.Id == filter.ProjectId);
+            }
+            if (!string.IsNullOrEmpty(filter.UserCreatedEmail))
+            {
+                timeSpents = timeSpents.Where(x => x.UserCreated.Email == filter.UserCreatedEmail);
+            }
+            if (filter.StartDateFrom.HasValue)
+            {
+                timeSpents = timeSpents.Where(x => x.DateFrom >= filter.StartDateFrom);
+            }
+            if (filter.EndDateFrom.HasValue)
+            {
+                timeSpents = timeSpents.Where(x => x.DateFrom <= filter.EndDateFrom);
+            }
+            if (filter.TaskId > 0)
+            {
+                if (filter.TaskType == "Bug")
+                {
+                    timeSpents = timeSpents.Where(x => x.Bug.Id == filter.TaskId);
+                }
+                if (filter.TaskType == "Feature")
+                {
+                    timeSpents = timeSpents.Where(x => x.Feature.Id == filter.TaskId);
+                }
+                if (filter.TaskType == "All")
+                {
+                    timeSpents = timeSpents.Where(x => x.Feature.Id == filter.TaskId || x.Bug.Id == filter.TaskId);
+                }
+            }
+            else
+            {
+                if (filter.TaskType == "Bug")
+                {
+                    timeSpents = timeSpents.Where(x => x.Bug != null);
+                }
+                if (filter.TaskType == "Feature")
+                {
+                    timeSpents = timeSpents.Where(x => x.Feature != null);
+                }
+            }
+            
+            var result = await timeSpents
+                .ToListAsync();
+            return result;
+        }
+
         public async Task CreateOrUpdateTimeSpentAsync(TimeSpent timeSpent, long userId, Feature feature, Bug bug)
         {
             if (feature == null && bug == null)

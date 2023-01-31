@@ -78,7 +78,7 @@ const adminRoutes: Routes = [
 ];
 
 const appRoutes: Routes = [
-  { path: '', component: ProjectsComponent, pathMatch: 'full' },
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'register-admin', component: RegisterAdminComponent },
@@ -131,7 +131,7 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     AgGridModule,
     MaterialModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { onSameUrlNavigation: 'reload' }),
     BrowserAnimationsModule
   ],
   providers: [

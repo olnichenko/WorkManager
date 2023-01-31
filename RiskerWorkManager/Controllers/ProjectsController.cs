@@ -43,6 +43,21 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission]
+        public async Task<bool> RemoveUserFromProject(string email, long projectId)
+        {
+            var user = _userIdentityService.GetCurrentUser(HttpContext);
+            var editedProject = await _projectsService.GetProjectByIdAsync(projectId);
+
+            if (!editedProject.ValidateUserViewPermission(user))
+            {
+                return false;
+            }
+            var result = await _projectsService.RemoveUserFromProjectAsync(editedProject, email);
+            return result;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
         public async Task<bool> AddUserToProject(string email, long projectId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);

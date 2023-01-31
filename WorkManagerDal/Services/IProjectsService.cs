@@ -10,6 +10,7 @@ namespace WorkManagerDal.Services
 {
     public interface IProjectsService : IBaseService
     {
+        Task<bool> RemoveUserFromProjectAsync(Project project, string email);
         Task<MenuVm> GetProjectMenuVmAsync(long projectId);
         Task<Project> CreateProjectAsync(Project project, long userId);
         Task<List<Project>> GetUserProjectsAsync(long userId);

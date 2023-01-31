@@ -13,22 +13,24 @@
         <mat-card-title>
             {{project.title}}
         </mat-card-title>
-        <mat-card-subtitle>
-            Created: {{project.userCreated.email}}<br>
+        <mat-card-subtitle class="float-end">
             {{project.dateCreated | date:'shortDate'}}
+        </mat-card-subtitle>
+        <mat-card-subtitle>
+            Created: {{project.userCreated.email}}
         </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
         <p>
             {{project.description}}
         </p>
-        <mat-list *ngIf="project.usersHasAccess != null && project.usersHasAccess.length > 0">
-        <div mat-subheader>Users</div>
-        <mat-list-item *ngFor="let user of project.usersHasAccess">
-            <mat-icon matListItemIcon>person</mat-icon>
-            {{user.user.email}}
-        </mat-list-item>
-    </mat-list>
+        <mat-action-list *ngIf="project.usersHasAccess != null && project.usersHasAccess.length > 0">
+            <div mat-subheader>Users</div>
+            <mat-list-item *ngFor="let user of project.usersHasAccess" (click)="removeUserFromProject(user.user.email!)">
+                <mat-icon *ngIf="isEnableEdit" matListItemIcon>close</mat-icon>
+                <mat-icon matListItemIcon>person</mat-icon>
+                {{user.user.email}}
+            </mat-list-item>
+        </mat-action-list>
     </mat-card-content>
 </mat-card>
-

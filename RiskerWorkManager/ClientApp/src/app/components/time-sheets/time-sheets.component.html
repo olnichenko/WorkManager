@@ -1,10 +1,63 @@
-<mat-toolbar *ngIf="isEnableEdit">
-    <button mat-raised-button (click)="exportToExcel()" type="button">
-        <mat-icon>list_alt</mat-icon>
-        Export to Excel
-    </button>&nbsp;
-</mat-toolbar>
-<table mat-table [dataSource]="timeSpentList"  id="time-sheet-table">
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Filter:</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="row">
+            <div class="col-3">
+                <mat-form-field class="full-width">
+                    <mat-label>User email</mat-label>
+                    <input matInput [(ngModel)]="timeSheetFilterVm.userCreatedEmail">
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="full-width">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="pickerStart" [(ngModel)]="timeSheetFilterVm.startDateFrom">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerStart></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-3">
+                <mat-form-field class="full-width">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="timeSheetFilterVm.endDateFrom">
+                    <mat-hint>MM/DD/YYYY</mat-hint>
+                    <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerEnd></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <!-- <div class="col-2">
+                <mat-form-field class="full-width">
+                    <mat-label class="full-width">Number</mat-label>
+                    <input matInput type="number" [(ngModel)]="timeSheetFilterVm.taskId">
+                </mat-form-field>
+            </div> -->
+            <div class="col-3">
+                <mat-form-field class="full-width">
+                    <mat-label>Task type</mat-label>
+                    <mat-select [(ngModel)]="timeSheetFilterVm.taskType">
+                        <mat-option value="All">All</mat-option>
+                        <mat-option value="Feature">Feature</mat-option>
+                        <mat-option value="Bug">Bug</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button (click)="load()" type="button">
+            <mat-icon>search</mat-icon>
+            Search
+        </button>&nbsp;
+        <button mat-raised-button *ngIf="isEnableEdit" (click)="exportToExcel()" type="button">
+            <mat-icon>list_alt</mat-icon>
+            Export to Excel
+        </button>&nbsp;
+    </mat-card-actions>
+</mat-card>
+<table mat-table [dataSource]="timeSpentList" id="time-sheet-table">
     <ng-container matColumnDef="dateFrom">
         <th mat-header-cell *matHeaderCellDef> Date from </th>
         <td mat-cell *matCellDef="let element"> {{element.dateFrom | date:'shortDate'}} </td>
@@ -18,6 +71,11 @@
     <ng-container matColumnDef="hoursCount">
         <th mat-header-cell *matHeaderCellDef> Hours count </th>
         <td mat-cell *matCellDef="let element"> {{element.hoursCount}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="taskNumber">
+        <th mat-header-cell *matHeaderCellDef> Task number </th>
+        <td mat-cell *matCellDef="let element"> {{element.feature == null ? element.bug?.id : element.feature?.id}} </td>
     </ng-container>
 
     <ng-container matColumnDef="taskType">

@@ -43,6 +43,7 @@ export class AccountService {
       this.setCurrentUser(data);
       this.user.next(data);
       snack.dismiss();
+      this.router.navigate([this.router.url]);
     })
   }
 

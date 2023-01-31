@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ApiClient, TimeSpent, Project } from 'src/app/api-clients/api-client';
+import { ApiClient, TimeSpent, Project, TimeSheetFilterVm } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { ProjectService } from 'src/app/services/project.service';
 import * as XLSX from 'xlsx';
@@ -16,8 +16,9 @@ export class TimeSheetsComponent implements OnInit {
   selectedTimeSpent: TimeSpent | null = null;
   project: Project = new Project();
   timeSpentList: TimeSpent[] = [];
-  displayedColumns: string[] = ['dateFrom', 'userCreated', 'hoursCount', 'taskType', 'taskName', 'comment'];
+  displayedColumns: string[] = ['dateFrom', 'userCreated', 'hoursCount', 'taskType', 'taskNumber', 'taskName', 'comment'];
   isEnableEdit = false;
+  timeSheetFilterVm: TimeSheetFilterVm = new TimeSheetFilterVm();
 
   constructor(protected apiClient: ApiClient,
     public accountService: AccountService,
@@ -27,7 +28,7 @@ export class TimeSheetsComponent implements OnInit {
 
   exportToExcel() {
     let element = document.getElementById('time-sheet-table');
-    const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
+    const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
  
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
@@ -41,6 +42,11 @@ export class TimeSheetsComponent implements OnInit {
     this.isEnableEdit = this.projectSevice.isUserCanEditProject();
     this.projectSevice.project.subscribe((data) => {
       this.project = data;
+      this.timeSheetFilterVm.projectId = this.project.id;
+      this.timeSheetFilterVm.startDateFrom = new Date();
+      this.timeSheetFilterVm.startDateFrom.setDate(new Date().getDate() + -7);
+      this.timeSheetFilterVm.endDateFrom = new Date();
+      this.timeSheetFilterVm.taskType = "All";
       this.load();
     });
   }
@@ -54,7 +60,15 @@ export class TimeSheetsComponent implements OnInit {
   }
 
   load(): void {
-    this.apiClient.getTimeSpentByProject(this.project.id).subscribe((data) => {
+    // this.apiClient.getTimeSpentByProject(this.project.id).subscribe((data) => {
+    //   this.timeSpentList = data;
+    //   this.selectedTimeSpent = null;
+    // })
+    if(this.timeSheetFilterVm.taskId == null)
+    {
+      this.timeSheetFilterVm.taskId = 0;
+    }
+    this.apiClient.getTimeSpentByFilter(this.timeSheetFilterVm).subscribe(data => {
       this.timeSpentList = data;
       this.selectedTimeSpent = null;
     })

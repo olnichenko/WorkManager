@@ -61,6 +61,19 @@ namespace WorkManagerDal.Services
             return true;
         }
 
+        public async Task<bool> RemoveUserFromProjectAsync(Project project, string email)
+        {
+            var user = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Email == email).Include("ProjectsHasAccess.Project").SingleOrDefaultAsync();
+            if (user == null)
+            {
+                return false;
+            }
+            var projectToUser = user.ProjectsHasAccess.FirstOrDefault(x => x.Project.Id == project.Id);
+            user.ProjectsHasAccess.Remove(projectToUser);
+            await _unitOfWork.SaveAsync();
+            return true;
+        }
+
         public async Task<Project> GetProjectByIdAsync(long id)
         {
             var project = await _unitOfWork.Projects.FindByCondition(x => x.Id == id)

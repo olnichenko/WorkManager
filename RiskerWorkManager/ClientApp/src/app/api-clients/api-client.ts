@@ -1286,6 +1286,69 @@ export class ApiClient {
      * @param projectId (optional) 
      * @return Success
      */
+    removeUserFromProject(email: string | undefined, projectId: number | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/Projects/RemoveUserFromProject?";
+        if (email === null)
+            throw new Error("The parameter 'email' cannot be null.");
+        else if (email !== undefined)
+            url_ += "email=" + encodeURIComponent("" + email) + "&";
+        if (projectId === null)
+            throw new Error("The parameter 'projectId' cannot be null.");
+        else if (projectId !== undefined)
+            url_ += "projectId=" + encodeURIComponent("" + projectId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemoveUserFromProject(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemoveUserFromProject(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
+    }
+
+    protected processRemoveUserFromProject(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param email (optional) 
+     * @param projectId (optional) 
+     * @return Success
+     */
     addUserToProject(email: string | undefined, projectId: number | undefined): Observable<boolean> {
         let url_ = this.baseUrl + "/Projects/AddUserToProject?";
         if (email === null)
@@ -1850,6 +1913,70 @@ export class ApiClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = Role.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    getTimeSpentByFilter(body: TimeSheetFilterVm | undefined): Observable<TimeSpent[]> {
+        let url_ = this.baseUrl + "/TimeSpent/GetTimeSpentByFilter";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetTimeSpentByFilter(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetTimeSpentByFilter(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TimeSpent[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TimeSpent[]>;
+        }));
+    }
+
+    protected processGetTimeSpentByFilter(response: HttpResponseBase): Observable<TimeSpent[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(TimeSpent.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -3203,6 +3330,62 @@ export interface IRoleVm {
     id: number;
     name: string | null;
     permissions: Permission[] | null;
+}
+
+export class TimeSheetFilterVm implements ITimeSheetFilterVm {
+    userCreatedEmail!: string | null;
+    startDateFrom!: Date | null;
+    endDateFrom!: Date | null;
+    taskId!: number;
+    projectId!: number;
+    taskType!: string | null;
+
+    constructor(data?: ITimeSheetFilterVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.userCreatedEmail = _data["userCreatedEmail"] !== undefined ? _data["userCreatedEmail"] : <any>null;
+            this.startDateFrom = _data["startDateFrom"] ? new Date(_data["startDateFrom"].toString()) : <any>null;
+            this.endDateFrom = _data["endDateFrom"] ? new Date(_data["endDateFrom"].toString()) : <any>null;
+            this.taskId = _data["taskId"] !== undefined ? _data["taskId"] : <any>null;
+            this.projectId = _data["projectId"] !== undefined ? _data["projectId"] : <any>null;
+            this.taskType = _data["taskType"] !== undefined ? _data["taskType"] : <any>null;
+        }
+    }
+
+    static fromJS(data: any): TimeSheetFilterVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new TimeSheetFilterVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["userCreatedEmail"] = this.userCreatedEmail !== undefined ? this.userCreatedEmail : <any>null;
+        data["startDateFrom"] = this.startDateFrom ? this.startDateFrom.toISOString() : <any>null;
+        data["endDateFrom"] = this.endDateFrom ? this.endDateFrom.toISOString() : <any>null;
+        data["taskId"] = this.taskId !== undefined ? this.taskId : <any>null;
+        data["projectId"] = this.projectId !== undefined ? this.projectId : <any>null;
+        data["taskType"] = this.taskType !== undefined ? this.taskType : <any>null;
+        return data;
+    }
+}
+
+export interface ITimeSheetFilterVm {
+    userCreatedEmail: string | null;
+    startDateFrom: Date | null;
+    endDateFrom: Date | null;
+    taskId: number;
+    projectId: number;
+    taskType: string | null;
 }
 
 export class TimeSpent implements ITimeSpent {
