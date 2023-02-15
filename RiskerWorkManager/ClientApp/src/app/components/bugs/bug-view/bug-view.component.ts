@@ -36,6 +36,22 @@ export class BugViewComponent implements OnInit {
     });
   }
 
+  editTimeSpent(timeSpentId: number) {
+    let spent = this.timeSpents.filter(x => x.id = timeSpentId);
+    const dialogTimeSpentRefRef = this.dialog.open(EditTimeSpentComponent, {
+      width: '600px',
+      data: { timeSpent: spent[0], featureId: 0, bugId: this.bug.id }
+    });
+
+    dialogTimeSpentRefRef.afterClosed().subscribe(result => {
+      result;
+      if (result != null) {
+        this.snackBar.open("Time spent saved", "Succes");
+        this.loadTimeTrack();
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.bug = this.data.bug;
     this.loadTimeTrack();

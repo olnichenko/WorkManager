@@ -12,17 +12,17 @@
     </button>
 </mat-dialog-actions>
 <mat-dialog-content>
-    <mat-list *ngIf="timeSpents.length > 0">
+    <mat-action-list *ngIf="timeSpents.length > 0">
         <div mat-subheader>Time tracking</div>
-        <mat-list-item *ngFor="let item of timeSpents">
+        <mat-list-item *ngFor="let item of timeSpents" (click)="editTimeSpent(item.id)">
             <mat-icon matListItemIcon>av_timer</mat-icon>
             <div matListItemTitle>
-                {{item.dateFrom | date:'shortDate'}} {{item.userCreated.email}} {{item.hoursCount}}
+                {{item.dateFrom | date:'shortDate'}} {{item.userCreated.email}} - {{item.hoursCount}} Hours
             </div>
             <div matListItemLine>
                 {{item.comment}}
                 <mat-divider></mat-divider>
             </div>
         </mat-list-item>
-    </mat-list>
+    </mat-action-list>
 </mat-dialog-content>

@@ -101,6 +101,7 @@ namespace WorkManagerDal.Services
             return result;
         }
 
+
         public async Task CreateOrUpdateTimeSpentAsync(TimeSpent timeSpent, long userId, Feature feature, Bug bug)
         {
             if (feature == null && bug == null)

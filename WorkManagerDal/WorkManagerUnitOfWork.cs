@@ -19,9 +19,23 @@ namespace WorkManagerDal
         private BugsRepository _bugsRepository;
         private NotesRespository _notesRespository;
         private TimeSpentRepository _timeSpentRepository;
+        private FileUploadedRepository _fileUploadedRepository;
+        private CommentsRepository _commentsRepository;
         public WorkManagerUnitOfWork(WorkManagerDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public FileUploadedRepository Files
+        {
+            get
+            {
+                if (_fileUploadedRepository == null)
+                {
+                    _fileUploadedRepository = new FileUploadedRepository(_dbContext);
+                }
+                return _fileUploadedRepository;
+            }
         }
 
         public TimeSpentRepository TimeSpents

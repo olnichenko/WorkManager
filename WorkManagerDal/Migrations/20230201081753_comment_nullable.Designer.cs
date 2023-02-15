@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WorkManagerDal;
 
@@ -10,9 +11,11 @@ using WorkManagerDal;
 namespace WorkManagerDal.Migrations
 {
     [DbContext(typeof(WorkManagerDbContext))]
-    partial class WorkManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230201081753_comment_nullable")]
+    partial class commentnullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -69,39 +72,6 @@ namespace WorkManagerDal.Migrations
                     b.HasIndex("UserCreatedId");
 
                     b.ToTable("Bugs");
-                });
-
-            modelBuilder.Entity("WorkManagerDal.Models.Comment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("BugId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("FeatureId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("UserCreatedId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BugId");
-
-                    b.HasIndex("FeatureId");
-
-                    b.HasIndex("UserCreatedId");
-
-                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("WorkManagerDal.Models.Feature", b =>
@@ -301,64 +271,6 @@ namespace WorkManagerDal.Migrations
                     b.ToTable("TimeSpents");
                 });
 
-            modelBuilder.Entity("WorkManagerDal.Models.UploadedFile", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("BugId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("CommentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("DateCreated")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("FeatureId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FileType")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("NoteId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("ProjectId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("UserCreatedId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("VersionId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BugId");
-
-                    b.HasIndex("CommentId");
-
-                    b.HasIndex("FeatureId");
-
-                    b.HasIndex("NoteId");
-
-                    b.HasIndex("ProjectId");
-
-                    b.HasIndex("UserCreatedId");
-
-                    b.HasIndex("VersionId");
-
-                    b.ToTable("UploadedFiles");
-                });
-
             modelBuilder.Entity("WorkManagerDal.Models.User", b =>
                 {
                     b.Property<long>("Id")
@@ -468,27 +380,6 @@ namespace WorkManagerDal.Migrations
                     b.Navigation("UserCreated");
                 });
 
-            modelBuilder.Entity("WorkManagerDal.Models.Comment", b =>
-                {
-                    b.HasOne("WorkManagerDal.Models.Bug", "Bug")
-                        .WithMany("Comments")
-                        .HasForeignKey("BugId");
-
-                    b.HasOne("WorkManagerDal.Models.Feature", "Feature")
-                        .WithMany("Comments")
-                        .HasForeignKey("FeatureId");
-
-                    b.HasOne("WorkManagerDal.Models.User", "UserCreated")
-                        .WithMany()
-                        .HasForeignKey("UserCreatedId");
-
-                    b.Navigation("Bug");
-
-                    b.Navigation("Feature");
-
-                    b.Navigation("UserCreated");
-                });
-
             modelBuilder.Entity("WorkManagerDal.Models.Feature", b =>
                 {
                     b.HasOne("WorkManagerDal.Models.Project", "Project")
@@ -574,51 +465,6 @@ namespace WorkManagerDal.Migrations
                     b.Navigation("UserCreated");
                 });
 
-            modelBuilder.Entity("WorkManagerDal.Models.UploadedFile", b =>
-                {
-                    b.HasOne("WorkManagerDal.Models.Bug", "Bug")
-                        .WithMany("Files")
-                        .HasForeignKey("BugId");
-
-                    b.HasOne("WorkManagerDal.Models.Comment", "Comment")
-                        .WithMany("Files")
-                        .HasForeignKey("CommentId");
-
-                    b.HasOne("WorkManagerDal.Models.Feature", "Feature")
-                        .WithMany("Files")
-                        .HasForeignKey("FeatureId");
-
-                    b.HasOne("WorkManagerDal.Models.Note", "Note")
-                        .WithMany()
-                        .HasForeignKey("NoteId");
-
-                    b.HasOne("WorkManagerDal.Models.Project", "Project")
-                        .WithMany("Files")
-                        .HasForeignKey("ProjectId");
-
-                    b.HasOne("WorkManagerDal.Models.User", "UserCreated")
-                        .WithMany("Files")
-                        .HasForeignKey("UserCreatedId");
-
-                    b.HasOne("WorkManagerDal.Models.Version", "Version")
-                        .WithMany("Files")
-                        .HasForeignKey("VersionId");
-
-                    b.Navigation("Bug");
-
-                    b.Navigation("Comment");
-
-                    b.Navigation("Feature");
-
-                    b.Navigation("Note");
-
-                    b.Navigation("Project");
-
-                    b.Navigation("UserCreated");
-
-                    b.Navigation("Version");
-                });
-
             modelBuilder.Entity("WorkManagerDal.Models.User", b =>
                 {
                     b.HasOne("WorkManagerDal.Models.Role", "Role")
@@ -645,24 +491,11 @@ namespace WorkManagerDal.Migrations
 
             modelBuilder.Entity("WorkManagerDal.Models.Bug", b =>
                 {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Files");
-
                     b.Navigation("TimeSpents");
-                });
-
-            modelBuilder.Entity("WorkManagerDal.Models.Comment", b =>
-                {
-                    b.Navigation("Files");
                 });
 
             modelBuilder.Entity("WorkManagerDal.Models.Feature", b =>
                 {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Files");
-
                     b.Navigation("TimeSpents");
                 });
 
@@ -671,8 +504,6 @@ namespace WorkManagerDal.Migrations
                     b.Navigation("Bugs");
 
                     b.Navigation("Features");
-
-                    b.Navigation("Files");
 
                     b.Navigation("Notes");
 
@@ -692,8 +523,6 @@ namespace WorkManagerDal.Migrations
 
                     b.Navigation("Features");
 
-                    b.Navigation("Files");
-
                     b.Navigation("Notes");
 
                     b.Navigation("Projects");
@@ -710,8 +539,6 @@ namespace WorkManagerDal.Migrations
                     b.Navigation("Bugs");
 
                     b.Navigation("Features");
-
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

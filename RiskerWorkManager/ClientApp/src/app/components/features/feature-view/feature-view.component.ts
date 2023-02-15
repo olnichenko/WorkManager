@@ -21,6 +21,22 @@ export class FeatureViewComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { feature: Feature },
     public dialogRef: MatDialogRef<FeatureViewComponent>) { }
 
+  editTimeSpent(timeSpentId: number) {
+    let spent = this.timeSpents.filter(x => x.id = timeSpentId);
+    const dialogTimeSpentRefRef = this.dialog.open(EditTimeSpentComponent, {
+      width: '600px',
+      data: { timeSpent: spent[0], featureId: this.feature.id, bugId: 0 }
+    });
+
+    dialogTimeSpentRefRef.afterClosed().subscribe(result => {
+      result;
+      if (result != null) {
+        this.snackBar.open("Time spent saved", "Succes");
+        this.loadTimeTrack();
+      }
+    });
+  }
+
   openEditTimeSpentDialog() {
     const dialogTimeSpentRefRef = this.dialog.open(EditTimeSpentComponent, {
       width: '600px',

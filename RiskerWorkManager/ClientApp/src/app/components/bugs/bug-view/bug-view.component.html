@@ -1,32 +1,30 @@
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>{{bug.title}}</mat-card-title>
-        <mat-card-subtitle>Created: {{bug.userCreated.email}}<br>{{bug.dateCreated | date:'shortDate'}}
-        </mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        {{bug.content}}
-    </mat-card-content>
-    <mat-card-actions>
-        <button mat-raised-button color="primary" (click)="openEditTimeSpentDialog()">
-            Track time
-            <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
-            <mat-icon class='color-active'>av_timer</mat-icon>
-        </button>
-    </mat-card-actions>
-    <mat-card-content>
-        <mat-list *ngIf="timeSpents.length > 0">
-            <div mat-subheader>Time tracking</div>
-            <mat-list-item *ngFor="let item of timeSpents">
-                <mat-icon matListItemIcon>av_timer</mat-icon>
-                <div matListItemTitle>
-                    {{item.dateFrom | date:'shortDate'}} {{item.userCreated.email}} {{item.hoursCount}}
-                </div>
-                <div matListItemLine>
-                    {{item.comment}}
-                    <mat-divider></mat-divider>
-                </div>
-            </mat-list-item>
-        </mat-list>
-    </mat-card-content>
-</mat-card>
+<h2 mat-dialog-title>{{bug.title}}</h2>
+
+<mat-dialog-content>
+    <h3>Created: {{bug.userCreated.email}}<span class="float-end">{{bug.dateCreated | date:'shortDate'}}</span></h3>
+    {{bug.content}}
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" (click)="openEditTimeSpentDialog()">
+        Track time
+        <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+        <mat-icon class='color-active'>av_timer</mat-icon>
+    </button>
+</mat-dialog-actions>
+
+<mat-dialog-content>
+    <mat-action-list *ngIf="timeSpents.length > 0">
+        <div mat-subheader>Time tracking</div>
+        <mat-list-item *ngFor="let item of timeSpents" (click)="editTimeSpent(item.id)">
+            <mat-icon matListItemIcon>av_timer</mat-icon>
+            <div matListItemTitle>
+                {{item.dateFrom | date:'shortDate'}} {{item.userCreated.email}} - {{item.hoursCount}} Hours
+            </div>
+            <div matListItemLine>
+                {{item.comment}}
+                <mat-divider></mat-divider>
+            </div>
+        </mat-list-item>
+    </mat-action-list>
+</mat-dialog-content>

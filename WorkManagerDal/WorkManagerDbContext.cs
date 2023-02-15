@@ -41,5 +41,7 @@ namespace WorkManagerDal
         public DbSet<Project> Projects { get; set; }
         public DbSet<Models.Version> Versions { get; set; }
         public DbSet<ProjectsToUsers> ProjectsToUsers { get; set; }
+        public DbSet<UploadedFile> UploadedFiles { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }
