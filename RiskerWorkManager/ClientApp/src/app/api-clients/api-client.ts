@@ -619,6 +619,195 @@ export class ApiClient {
 
     /**
      * @param featureId (optional) 
+     * @param bugId (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    createOrUpdateComment(featureId: number | undefined, bugId: number | undefined, body: Comment | undefined): Observable<Comment> {
+        let url_ = this.baseUrl + "/Comments/CreateOrUpdateComment?";
+        if (featureId === null)
+            throw new Error("The parameter 'featureId' cannot be null.");
+        else if (featureId !== undefined)
+            url_ += "featureId=" + encodeURIComponent("" + featureId) + "&";
+        if (bugId === null)
+            throw new Error("The parameter 'bugId' cannot be null.");
+        else if (bugId !== undefined)
+            url_ += "bugId=" + encodeURIComponent("" + bugId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreateOrUpdateComment(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreateOrUpdateComment(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Comment>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Comment>;
+        }));
+    }
+
+    protected processCreateOrUpdateComment(response: HttpResponseBase): Observable<Comment> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Comment.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param featureId (optional) 
+     * @return Success
+     */
+    getCommentsByFeature(featureId: number | undefined): Observable<Comment[]> {
+        let url_ = this.baseUrl + "/Comments/GetCommentsByFeature?";
+        if (featureId === null)
+            throw new Error("The parameter 'featureId' cannot be null.");
+        else if (featureId !== undefined)
+            url_ += "featureId=" + encodeURIComponent("" + featureId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetCommentsByFeature(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetCommentsByFeature(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Comment[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Comment[]>;
+        }));
+    }
+
+    protected processGetCommentsByFeature(response: HttpResponseBase): Observable<Comment[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(Comment.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param commentId (optional) 
+     * @return Success
+     */
+    deleteComment(commentId: number | undefined): Observable<boolean> {
+        let url_ = this.baseUrl + "/Comments/DeleteComment?";
+        if (commentId === null)
+            throw new Error("The parameter 'commentId' cannot be null.");
+        else if (commentId !== undefined)
+            url_ += "commentId=" + encodeURIComponent("" + commentId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteComment(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteComment(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
+    }
+
+    protected processDeleteComment(response: HttpResponseBase): Observable<boolean> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param featureId (optional) 
      * @return Success
      */
     deleteFeature(featureId: number | undefined): Observable<boolean> {
@@ -2689,6 +2878,7 @@ export class Bug implements IBug {
     solvedInVersion!: Version;
     isDeleted!: boolean | null;
     timeSpents!: TimeSpent[] | null;
+    comments!: Comment[] | null;
 
     constructor(data?: IBug) {
         if (data) {
@@ -2717,6 +2907,14 @@ export class Bug implements IBug {
             else {
                 this.timeSpents = <any>null;
             }
+            if (Array.isArray(_data["comments"])) {
+                this.comments = [] as any;
+                for (let item of _data["comments"])
+                    this.comments!.push(Comment.fromJS(item));
+            }
+            else {
+                this.comments = <any>null;
+            }
         }
     }
 
@@ -2742,6 +2940,11 @@ export class Bug implements IBug {
             for (let item of this.timeSpents)
                 data["timeSpents"].push(item.toJSON());
         }
+        if (Array.isArray(this.comments)) {
+            data["comments"] = [];
+            for (let item of this.comments)
+                data["comments"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -2756,6 +2959,63 @@ export interface IBug {
     solvedInVersion: Version;
     isDeleted: boolean | null;
     timeSpents: TimeSpent[] | null;
+    comments: Comment[] | null;
+}
+
+export class Comment implements IComment {
+    id!: number;
+    userCreated!: User;
+    dateCreated!: Date | null;
+    content!: string | null;
+    bug!: Bug;
+    feature!: Feature;
+
+    constructor(data?: IComment) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"] !== undefined ? _data["id"] : <any>null;
+            this.userCreated = _data["userCreated"] ? User.fromJS(_data["userCreated"]) : <any>null;
+            this.dateCreated = _data["dateCreated"] ? new Date(_data["dateCreated"].toString()) : <any>null;
+            this.content = _data["content"] !== undefined ? _data["content"] : <any>null;
+            this.bug = _data["bug"] ? Bug.fromJS(_data["bug"]) : <any>null;
+            this.feature = _data["feature"] ? Feature.fromJS(_data["feature"]) : <any>null;
+        }
+    }
+
+    static fromJS(data: any): Comment {
+        data = typeof data === 'object' ? data : {};
+        let result = new Comment();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id !== undefined ? this.id : <any>null;
+        data["userCreated"] = this.userCreated ? this.userCreated.toJSON() : <any>null;
+        data["dateCreated"] = this.dateCreated ? this.dateCreated.toISOString() : <any>null;
+        data["content"] = this.content !== undefined ? this.content : <any>null;
+        data["bug"] = this.bug ? this.bug.toJSON() : <any>null;
+        data["feature"] = this.feature ? this.feature.toJSON() : <any>null;
+        return data;
+    }
+}
+
+export interface IComment {
+    id: number;
+    userCreated: User;
+    dateCreated: Date | null;
+    content: string | null;
+    bug: Bug;
+    feature: Feature;
 }
 
 export class Feature implements IFeature {
@@ -2768,6 +3028,7 @@ export class Feature implements IFeature {
     solvedInVersion!: Version;
     isDeleted!: boolean | null;
     timeSpents!: TimeSpent[] | null;
+    comments!: Comment[] | null;
 
     constructor(data?: IFeature) {
         if (data) {
@@ -2796,6 +3057,14 @@ export class Feature implements IFeature {
             else {
                 this.timeSpents = <any>null;
             }
+            if (Array.isArray(_data["comments"])) {
+                this.comments = [] as any;
+                for (let item of _data["comments"])
+                    this.comments!.push(Comment.fromJS(item));
+            }
+            else {
+                this.comments = <any>null;
+            }
         }
     }
 
@@ -2821,6 +3090,11 @@ export class Feature implements IFeature {
             for (let item of this.timeSpents)
                 data["timeSpents"].push(item.toJSON());
         }
+        if (Array.isArray(this.comments)) {
+            data["comments"] = [];
+            for (let item of this.comments)
+                data["comments"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -2835,6 +3109,7 @@ export interface IFeature {
     solvedInVersion: Version;
     isDeleted: boolean | null;
     timeSpents: TimeSpent[] | null;
+    comments: Comment[] | null;
 }
 
 export class MenuVm implements IMenuVm {
@@ -3469,6 +3744,7 @@ export class User implements IUser {
     versions!: Version[] | null;
     bugs!: Bug[] | null;
     features!: Feature[] | null;
+    comments!: Comment[] | null;
 
     constructor(data?: IUser) {
         if (data) {
@@ -3546,6 +3822,14 @@ export class User implements IUser {
             else {
                 this.features = <any>null;
             }
+            if (Array.isArray(_data["comments"])) {
+                this.comments = [] as any;
+                for (let item of _data["comments"])
+                    this.comments!.push(Comment.fromJS(item));
+            }
+            else {
+                this.comments = <any>null;
+            }
         }
     }
 
@@ -3602,6 +3886,11 @@ export class User implements IUser {
             for (let item of this.features)
                 data["features"].push(item.toJSON());
         }
+        if (Array.isArray(this.comments)) {
+            data["comments"] = [];
+            for (let item of this.comments)
+                data["comments"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -3623,6 +3912,7 @@ export interface IUser {
     versions: Version[] | null;
     bugs: Bug[] | null;
     features: Feature[] | null;
+    comments: Comment[] | null;
 }
 
 export class UserVm implements IUserVm {

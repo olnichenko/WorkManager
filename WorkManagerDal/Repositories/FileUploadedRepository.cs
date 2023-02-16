@@ -7,10 +7,10 @@ using WorkManagerDal.Models;
 
 namespace WorkManagerDal.Repositories
 {
-    public class FileUploadedRepository : RepositoryBase<UploadedFile>
-    {
-        public FileUploadedRepository(WorkManagerDbContext workManagerDbContext) : base(workManagerDbContext)
-        {
-        }
-    }
+    //public class FileUploadedRepository : RepositoryBase<UploadedFile>
+    //{
+    //    public FileUploadedRepository(WorkManagerDbContext workManagerDbContext) : base(workManagerDbContext)
+    //    {
+    //    }
+    //}
 }

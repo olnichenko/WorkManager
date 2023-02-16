@@ -11,7 +11,7 @@ namespace WorkManagerDal.Models
         public Version? SolvedInVersion { get; set; }
         public bool? IsDeleted { get; set; }
         public List<TimeSpent>? TimeSpents { get; set; } = new List<TimeSpent>();
-        public List<UploadedFile>? Files { get; set; } = new List<UploadedFile>();
+        //public List<UploadedFile>? Files { get; set; } = new List<UploadedFile>();
         public List<Comment>? Comments { get; set; } = new List<Comment>();
     }
 }

@@ -19,22 +19,22 @@ namespace WorkManagerDal
         private BugsRepository _bugsRepository;
         private NotesRespository _notesRespository;
         private TimeSpentRepository _timeSpentRepository;
-        private FileUploadedRepository _fileUploadedRepository;
+        //private FileUploadedRepository _fileUploadedRepository;
         private CommentsRepository _commentsRepository;
         public WorkManagerUnitOfWork(WorkManagerDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public FileUploadedRepository Files
+        public CommentsRepository Comments
         {
             get
             {
-                if (_fileUploadedRepository == null)
+                if (_commentsRepository == null)
                 {
-                    _fileUploadedRepository = new FileUploadedRepository(_dbContext);
+                    _commentsRepository = new CommentsRepository(_dbContext);
                 }
-                return _fileUploadedRepository;
+                return _commentsRepository;
             }
         }
 

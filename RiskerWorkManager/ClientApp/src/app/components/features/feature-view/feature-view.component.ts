@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { ApiClient, Feature, TimeSpent } from 'src/app/api-clients/api-client';
+import { ApiClient, Feature, TimeSpent, Comment } from 'src/app/api-clients/api-client';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditTimeSpentComponent } from '../../time-sheets/edit-time-spent/edit-time-spent.component';
+import { EditCommentComponent } from '../../comments/edit-comment/edit-comment.component';
 
 @Component({
   selector: 'app-feature-view',
@@ -14,6 +15,7 @@ export class FeatureViewComponent implements OnInit {
   feature!: Feature;
   showLoader: boolean = false;
   timeSpents: TimeSpent[] = [];
+  comments: Comment[] = [];
 
   constructor(protected snackBar: MatSnackBar,
     protected apiClient: ApiClient,
@@ -33,6 +35,23 @@ export class FeatureViewComponent implements OnInit {
       if (result != null) {
         this.snackBar.open("Time spent saved", "Succes");
         this.loadTimeTrack();
+      }
+    });
+  }
+
+  openEditCommentDialog(commentId: number){
+    let comment = this.comments.filter(x => x.id = commentId)[0];
+
+    const dialogTimeSpentRefRef = this.dialog.open(EditCommentComponent, {
+      width: '600px',
+      data: { comment: comment, featureId: this.feature.id, bugId: 0 }
+    });
+
+    dialogTimeSpentRefRef.afterClosed().subscribe(result => {
+      result;
+      if (result != null) {
+        this.snackBar.open("Data saved", "Succes");
+        this.loadComments();
       }
     });
   }
@@ -58,8 +77,15 @@ export class FeatureViewComponent implements OnInit {
     })
   }
 
+  loadComments(){
+    this.apiClient.getCommentsByFeature(this.feature.id).subscribe(data => {
+      this.comments = data;
+    })
+  }
+
   ngOnInit(): void {
     this.feature = this.data.feature;
+    this.loadComments();
     this.loadTimeTrack();
   }
 

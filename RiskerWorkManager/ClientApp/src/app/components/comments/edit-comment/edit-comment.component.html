@@ -1,0 +1,29 @@
+<form [formGroup]="commentForm" novalidate (ngSubmit)="save()">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="row">
+                <div class="col">
+                    <mat-form-field class="full-width">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput rows="6" formControlName="content"></textarea>
+                        <mat-error
+                            *ngIf="commentForm.get('content')?.invalid && (commentForm.get('content')?.dirty || commentForm.get('content')?.touched)">
+                            {{getErrorMessage('content')}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-raised-button color="primary" type="button" (click)="delete()">
+                Delete
+            </button>&nbsp;
+            <button mat-raised-button [disabled]="!commentForm.valid" color="primary" type="submit">
+                Save
+                <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</form>
