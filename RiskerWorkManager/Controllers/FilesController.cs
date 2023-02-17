@@ -20,12 +20,21 @@ namespace RiskerWorkManager.Controllers
         {
             _filesService.DeleteFileFromFeature(fileName, featureId);
         }
+
         [HttpPost]
         [AuthorizePermission]
         public void RemoveFileFromProject(string fileName, long projectId)
         {
             _filesService.DeleteFileFromProject(fileName, projectId);
         }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public void RemoveFileFromBug(string fileName, long bugId)
+        {
+            _filesService.DeleteFileFromBug(fileName, bugId);
+        }
+
         [HttpPost]
         [AuthorizePermission]
         public List<string> GetFeatureFiles(long featureId)
@@ -36,6 +45,7 @@ namespace RiskerWorkManager.Controllers
             }
             return _filesService.GetFeatureFileNames(featureId);
         }
+
         [HttpPost]
         [AuthorizePermission]
         public List<string> GetProjectFiles(long projectId)
@@ -46,6 +56,18 @@ namespace RiskerWorkManager.Controllers
             }
             return _filesService.GetProjectFileNames(projectId);
         }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public List<string> GetBugFiles(long bugId)
+        {
+            if (bugId == 0)
+            {
+                return null;
+            }
+            return _filesService.GetBugFileNames(bugId);
+        }
+
         [HttpPost]
         public async Task<IActionResult> UploadToFeature(long featureId)
         {
@@ -56,6 +78,7 @@ namespace RiskerWorkManager.Controllers
 
             return Ok();
         }
+
         [HttpPost]
         public async Task<IActionResult> UploadToProject(long projectId)
         {
@@ -63,6 +86,17 @@ namespace RiskerWorkManager.Controllers
             var files = formCollection.Files;
 
             await _filesService.SaveFilesToProjectAsync(files, projectId);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadToBug(long bugId)
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var files = formCollection.Files;
+
+            await _filesService.SaveFilesToBugAsync(files, bugId);
 
             return Ok();
         }

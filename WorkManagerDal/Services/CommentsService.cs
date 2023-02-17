@@ -23,6 +23,15 @@ namespace WorkManagerDal.Services
                 .ToListAsync();
             return comments;
         }
+        public async Task<List<Comment>> GetCommentsByBugAsync(long bugId)
+        {
+            var comments = await _unitOfWork.Comments
+                .FindByCondition(x => x.Bug.Id == bugId)
+                .Include(x => x.UserCreated)
+                .OrderByDescending(x => x.DateCreated)
+                .ToListAsync();
+            return comments;
+        }
         public async Task CreateOrUpdateAsync(Comment comment, long userId, long featureId, long bugId)
         {
             if (comment.Id == 0)

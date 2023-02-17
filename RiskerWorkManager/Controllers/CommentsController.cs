@@ -28,15 +28,16 @@ namespace RiskerWorkManager.Controllers
         public async Task<Comment> CreateOrUpdateComment(Comment comment, long featureId, long bugId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);
-            //var editedProject = await _projectsService.GetProjectByIdAsync(projectId);
-
-            //if (!editedProject.ValidateUserViewPermission(user))
-            //{
-            //    return null;
-            //}
-
             await _commentsService.CreateOrUpdateAsync(comment, user.Id, featureId, bugId);
             return comment;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public async Task<List<Comment>> GetCommentsByBug(long bugId)
+        {
+            var comments = await _commentsService.GetCommentsByBugAsync(bugId);
+            return comments;
         }
 
         [HttpPost]

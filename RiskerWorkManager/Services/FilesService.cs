@@ -15,7 +15,7 @@ namespace RiskerWorkManager.Services
         }
         public List<string> GetFeatureFileNames(long featureId)
         {
-            var path = GetFeaturesDirectory(featureId);
+            var path = GetFeatureDirectory(featureId);
             return GetDirectoryFileNames(path);
         }
         public List<string> GetProjectFileNames(long projetId)
@@ -23,9 +23,14 @@ namespace RiskerWorkManager.Services
             var path = GetProjectDirectory(projetId);
             return GetDirectoryFileNames(path);
         }
+        public List<string> GetBugFileNames(long bugId)
+        {
+            var path = GetBugDirectory(bugId);
+            return GetDirectoryFileNames(path);
+        }
         public void DeleteFileFromFeature(string fileName, long featureId)
         {
-            var path = GetFeaturesDirectory(featureId) + fileName;
+            var path = GetFeatureDirectory(featureId) + fileName;
             DeleteFile(path);
         }
         public void DeleteFileFromProject(string fileName, long projectId)
@@ -33,9 +38,14 @@ namespace RiskerWorkManager.Services
             var path = GetProjectDirectory(projectId) + fileName;
             DeleteFile(path);
         }
+        public void DeleteFileFromBug(string fileName, long bugId)
+        {
+            var path = GetBugDirectory(bugId) + fileName;
+            DeleteFile(path);
+        }
         public async Task SaveFilesToFeatureAsync(IFormFileCollection files, long featureId)
         {
-            var path = GetFeaturesDirectory(featureId);
+            var path = GetFeatureDirectory(featureId);
             await SaveFilesAsync(files, path);
         }
         public async Task SaveFilesToProjectAsync(IFormFileCollection files, long projectId)
@@ -43,7 +53,11 @@ namespace RiskerWorkManager.Services
             var path = GetProjectDirectory(projectId);
             await SaveFilesAsync(files, path);
         }
-
+        public async Task SaveFilesToBugAsync(IFormFileCollection files, long bugId)
+        {
+            var path = GetBugDirectory(bugId);
+            await SaveFilesAsync(files, path);
+        }
         private string ProjectsDirectoryPath
         {
             get
@@ -60,14 +74,27 @@ namespace RiskerWorkManager.Services
             }
         }
 
+        private string BugsDirectoryPath
+        {
+            get
+            {
+                return _appEnvironment.WebRootPath + "/Files/Bugs/";
+            }
+        }
+
         private string GetProjectDirectory(long projectId)
         {
             return ProjectsDirectoryPath + projectId + "/";
         }
 
-        private string GetFeaturesDirectory(long featureId)
+        private string GetFeatureDirectory(long featureId)
         {
             return FeaturesDirectoryPath + featureId + "/";
+        }
+
+        private string GetBugDirectory(long bugId)
+        {
+            return BugsDirectoryPath + bugId + "/";
         }
 
         private async Task SaveFilesAsync(IFormFileCollection files, string path)

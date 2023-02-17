@@ -13,5 +13,6 @@ namespace WorkManagerDal.Services
         Task DeleteAsync(long commentId);
         Task<Comment> FindAsync(long commentId);
         Task<List<Comment>> GetCommentsByFeatureAsync(long featureId);
+        Task<List<Comment>> GetCommentsByBugAsync(long bugId);
     }
 }

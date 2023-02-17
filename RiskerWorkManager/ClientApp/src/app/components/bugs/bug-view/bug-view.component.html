@@ -10,10 +10,42 @@
         Track time
         <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
         <mat-icon class='color-active'>av_timer</mat-icon>
+    </button>&nbsp;
+    <button mat-raised-button color="primary" (click)="openEditCommentDialog(0)">
+        Add comment
+        <span class="spinner-border spinner-border-sm" *ngIf="showLoader" role="status" aria-hidden="true"></span>
+        <mat-icon class='color-active'>chat</mat-icon>
     </button>
 </mat-dialog-actions>
 
 <mat-dialog-content>
+    <div class="row">
+        <div class="col">
+            <div mat-subheader>Files</div>
+            <input #file type="file" id="customFile" multiple (change)="upload(file.files)" />
+        </div>
+    </div>
+    <div class="row p-1" *ngFor="let item of files">
+        <div class="col">
+            <button mat-raised-button (click)="removeFile(item)">
+                <mat-icon>close</mat-icon>
+            </button>&nbsp;
+            <button mat-raised-button (click)="viewFile(item)">{{item}}</button>
+        </div>
+    </div>
+    <mat-action-list *ngIf="comments.length > 0">
+        <div mat-subheader>Comments</div>
+        <mat-list-item *ngFor="let item of comments" (click)="openEditCommentDialog(item.id)">
+            <mat-icon matListItemIcon>chat</mat-icon>
+            <div matListItemTitle>
+                {{item.dateCreated | date:'shortDate'}} {{item.userCreated.email}}
+            </div>
+            <div matListItemLine>
+                {{item.content}}
+                <mat-divider></mat-divider>
+            </div>
+        </mat-list-item>
+    </mat-action-list>
     <mat-action-list *ngIf="timeSpents.length > 0">
         <div mat-subheader>Time tracking</div>
         <mat-list-item *ngFor="let item of timeSpents" (click)="editTimeSpent(item.id)">
