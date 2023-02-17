@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>{{note.title}}</h2>
+
+<mat-dialog-content>
+    <h3>Created: {{note.userCreated.email}}<span class="float-end">{{note.dateCreated | date:'shortDate'}}</span></h3>
+    {{note.content}}
+</mat-dialog-content>
+
+<mat-dialog-content>
+    <div class="row">
+        <div class="col">
+            <div mat-subheader>Files</div>
+            <input #file type="file" id="customFile" multiple (change)="upload(file.files)" />
+        </div>
+    </div>
+    <div class="row p-1" *ngFor="let item of files">
+        <div class="col">
+            <button mat-raised-button (click)="removeFile(item)">
+                <mat-icon>close</mat-icon>
+            </button>&nbsp;
+            <button mat-raised-button (click)="viewFile(item)">{{item}}</button>
+        </div>
+    </div>
+</mat-dialog-content>

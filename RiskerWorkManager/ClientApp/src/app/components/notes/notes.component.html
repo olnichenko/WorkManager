@@ -10,6 +10,10 @@
   <button mat-raised-button type="button" [disabled]="selectedNote == null" (click)="confirmDelete()">
     <mat-icon>close</mat-icon>
     Delete note
+  </button>&nbsp;
+  <button mat-raised-button [disabled]="selectedNote == null" (click)="rowDblClick(selectedNote!)">
+    View details
+    <mat-icon>zoom_in</mat-icon>
   </button>
 </mat-toolbar>
 <table mat-table [dataSource]="notes" class="mat-elevation-z8">
@@ -31,6 +35,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row 
     (click)="rowSelected(row)"
+    (dblclick)="rowDblClick(row)" 
     [class.selected-row]="row == selectedNote"
     *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>

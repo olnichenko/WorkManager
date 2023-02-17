@@ -11,5 +11,10 @@
         List<string> GetBugFileNames(long bugId);
         void DeleteFileFromBug(string fileName, long bugId);
         Task SaveFilesToBugAsync(IFormFileCollection files, long bugId);
+        List<string> GetNoteFileNames(long noteId);
+        void DeleteFileFromNote(string fileName, long noteId);
+        void DeleteAllFilesFromNote(long noteId);
+        Task SaveFilesToNoteAsync(IFormFileCollection files, long noteId);
+
     }
 }

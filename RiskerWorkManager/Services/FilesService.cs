@@ -28,6 +28,11 @@ namespace RiskerWorkManager.Services
             var path = GetBugDirectory(bugId);
             return GetDirectoryFileNames(path);
         }
+        public List<string> GetNoteFileNames(long noteId)
+        {
+            var path = GetNoteDirectory(noteId);
+            return GetDirectoryFileNames(path);
+        }
         public void DeleteFileFromFeature(string fileName, long featureId)
         {
             var path = GetFeatureDirectory(featureId) + fileName;
@@ -43,6 +48,16 @@ namespace RiskerWorkManager.Services
             var path = GetBugDirectory(bugId) + fileName;
             DeleteFile(path);
         }
+        public void DeleteFileFromNote(string fileName, long noteId)
+        {
+            var path = GetNoteDirectory(noteId) + fileName;
+            DeleteFile(path);
+        }
+        public void DeleteAllFilesFromNote(long noteId)
+        {
+            var path = GetNoteDirectory(noteId);
+            DeleteDirectory(path);
+        }
         public async Task SaveFilesToFeatureAsync(IFormFileCollection files, long featureId)
         {
             var path = GetFeatureDirectory(featureId);
@@ -56,6 +71,11 @@ namespace RiskerWorkManager.Services
         public async Task SaveFilesToBugAsync(IFormFileCollection files, long bugId)
         {
             var path = GetBugDirectory(bugId);
+            await SaveFilesAsync(files, path);
+        }
+        public async Task SaveFilesToNoteAsync(IFormFileCollection files, long noteId)
+        {
+            var path = GetNoteDirectory(noteId);
             await SaveFilesAsync(files, path);
         }
         private string ProjectsDirectoryPath
@@ -82,6 +102,14 @@ namespace RiskerWorkManager.Services
             }
         }
 
+        private string NotesDirectoryPath
+        {
+            get
+            {
+                return _appEnvironment.WebRootPath + "/Files/Notes/";
+            }
+        }
+
         private string GetProjectDirectory(long projectId)
         {
             return ProjectsDirectoryPath + projectId + "/";
@@ -95,6 +123,11 @@ namespace RiskerWorkManager.Services
         private string GetBugDirectory(long bugId)
         {
             return BugsDirectoryPath + bugId + "/";
+        }
+
+        private string GetNoteDirectory(long noteId)
+        {
+            return NotesDirectoryPath + noteId + "/";
         }
 
         private async Task SaveFilesAsync(IFormFileCollection files, string path)

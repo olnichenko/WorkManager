@@ -15,12 +15,17 @@ namespace RiskerWorkManager.Controllers
         private readonly INotesService _notesService;
         private readonly IProjectsService _projectsService;
         private readonly IUserIdentityService _userIdentityService;
+        private readonly IFilesService _filesService;
 
-        public NotesController(INotesService notesService, IUserIdentityService userIdentityService, IProjectsService projectsService)
+        public NotesController(INotesService notesService, 
+            IUserIdentityService userIdentityService, 
+            IProjectsService projectsService,
+            IFilesService filesService)
         {
             _notesService = notesService;
             _userIdentityService = userIdentityService;
             _projectsService = projectsService;
+            _filesService = filesService;
         }
 
         [HttpPost]
@@ -66,8 +71,9 @@ namespace RiskerWorkManager.Controllers
             {
                 return false;
             }
-
+            _filesService.DeleteAllFilesFromNote(note.Id);
             await _notesService.DeleteAsync(note);
+            
             return true;
         }
         public void Dispose()

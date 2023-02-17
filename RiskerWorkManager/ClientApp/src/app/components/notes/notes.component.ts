@@ -5,6 +5,7 @@ import { ApiClient, Note, Project } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { EditNoteComponent } from './edit-note/edit-note.component';
+import { NoteViewComponent } from './note-view/note-view.component';
 
 @Component({
   selector: 'app-notes',
@@ -41,6 +42,14 @@ export class NotesComponent implements OnInit {
 
   rowSelected(row: Note) {
     this.selectedNote = row;
+  }
+
+  rowDblClick(row: Note){
+    let item =  this.notes.find(x => x.id == row.id);
+    const dialogRef = this.dialog.open(NoteViewComponent, {
+      width: '600px',
+      data:{note: item}
+    });
   }
 
   openNewDialog(): void {

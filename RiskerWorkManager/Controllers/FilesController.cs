@@ -37,6 +37,13 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission]
+        public void RemoveFileFromNote(string fileName, long noteId)
+        {
+            _filesService.DeleteFileFromNote(fileName, noteId);
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
         public List<string> GetFeatureFiles(long featureId)
         {
             if (featureId == 0)
@@ -69,6 +76,17 @@ namespace RiskerWorkManager.Controllers
         }
 
         [HttpPost]
+        [AuthorizePermission]
+        public List<string> GetNoteFiles(long noteId)
+        {
+            if (noteId == 0)
+            {
+                return null;
+            }
+            return _filesService.GetNoteFileNames(noteId);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> UploadToFeature(long featureId)
         {
             var formCollection = await Request.ReadFormAsync();
@@ -97,6 +115,17 @@ namespace RiskerWorkManager.Controllers
             var files = formCollection.Files;
 
             await _filesService.SaveFilesToBugAsync(files, bugId);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadToNote(long noteId)
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var files = formCollection.Files;
+
+            await _filesService.SaveFilesToNoteAsync(files, noteId);
 
             return Ok();
         }
