@@ -15,6 +15,20 @@
                     </mat-form-field>
                 </div>
             </div>
+            <div class="row">
+                <div class="col">
+                    <div mat-subheader>Files</div>
+                    <input #file type="file" id="customFile" multiple (change)="addFilesToUpload(file.files)" />
+                </div>
+            </div>
+            <div class="row p-1" *ngFor="let item of files">
+                <div class="col">
+                    <button mat-raised-button (click)="removeFile(item)">
+                        <mat-icon>close</mat-icon>
+                    </button>&nbsp;
+                    <button mat-raised-button (click)="viewFile(item)">{{item}}</button>
+                </div>
+            </div>
         </mat-card-content>
         <mat-card-actions>
             <button mat-raised-button color="primary" type="button" (click)="delete()">

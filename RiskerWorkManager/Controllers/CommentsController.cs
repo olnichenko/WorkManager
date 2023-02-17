@@ -15,12 +15,17 @@ namespace RiskerWorkManager.Controllers
         private readonly ICommentsService _commentsService;
         private readonly IProjectsService _projectsService;
         private readonly IUserIdentityService _userIdentityService;
+        private readonly IFilesService _filesService;
 
-        public CommentsController(ICommentsService commentsService, IUserIdentityService userIdentityService, IProjectsService projectsService)
+        public CommentsController(ICommentsService commentsService, 
+            IUserIdentityService userIdentityService, 
+            IProjectsService projectsService,
+            IFilesService filesService)
         {
             _commentsService = commentsService;
             _userIdentityService = userIdentityService;
             _projectsService = projectsService;
+            _filesService = filesService;
         }
 
         [HttpPost]
@@ -61,7 +66,7 @@ namespace RiskerWorkManager.Controllers
             {
                 return false;
             }
-
+            _filesService.DeleteAllFilesFromComment(commentId);
             await _commentsService.DeleteAsync(commentId);
             return true;
         }

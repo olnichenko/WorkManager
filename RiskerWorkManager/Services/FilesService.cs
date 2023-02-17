@@ -33,6 +33,11 @@ namespace RiskerWorkManager.Services
             var path = GetNoteDirectory(noteId);
             return GetDirectoryFileNames(path);
         }
+        public List<string> GetCommentFileNames(long commentId)
+        {
+            var path = GetCommentDirectory(commentId);
+            return GetDirectoryFileNames(path);
+        }
         public void DeleteFileFromFeature(string fileName, long featureId)
         {
             var path = GetFeatureDirectory(featureId) + fileName;
@@ -58,6 +63,16 @@ namespace RiskerWorkManager.Services
             var path = GetNoteDirectory(noteId);
             DeleteDirectory(path);
         }
+        public void DeleteFileFromComment(string fileName, long commentId)
+        {
+            var path = GetCommentDirectory(commentId) + fileName;
+            DeleteFile(path);
+        }
+        public void DeleteAllFilesFromComment(long commentId)
+        {
+            var path = GetCommentDirectory(commentId);
+            DeleteDirectory(path);
+        }
         public async Task SaveFilesToFeatureAsync(IFormFileCollection files, long featureId)
         {
             var path = GetFeatureDirectory(featureId);
@@ -77,6 +92,18 @@ namespace RiskerWorkManager.Services
         {
             var path = GetNoteDirectory(noteId);
             await SaveFilesAsync(files, path);
+        }
+        public async Task SaveFilesToCommentAsync(IFormFileCollection files, long commentId)
+        {
+            var path = GetCommentDirectory(commentId);
+            await SaveFilesAsync(files, path);
+        }
+        private string CommentsDirectoryPath
+        {
+            get
+            {
+                return _appEnvironment.WebRootPath + "/Files/Comments/";
+            }
         }
         private string ProjectsDirectoryPath
         {
@@ -109,7 +136,10 @@ namespace RiskerWorkManager.Services
                 return _appEnvironment.WebRootPath + "/Files/Notes/";
             }
         }
-
+        private string GetCommentDirectory(long commentId)
+        {
+            return CommentsDirectoryPath + commentId + "/";
+        }
         private string GetProjectDirectory(long projectId)
         {
             return ProjectsDirectoryPath + projectId + "/";

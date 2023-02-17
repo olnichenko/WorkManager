@@ -14,6 +14,14 @@ namespace RiskerWorkManager.Controllers
         {
             _filesService = filesService;
         }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public void RemoveFileFromComment(string fileName, long commentId)
+        {
+            _filesService.DeleteFileFromComment(fileName, commentId);
+        }
+
         [HttpPost]
         [AuthorizePermission]
         public void RemoveFileFromFeature(string fileName, long featureId)
@@ -40,6 +48,17 @@ namespace RiskerWorkManager.Controllers
         public void RemoveFileFromNote(string fileName, long noteId)
         {
             _filesService.DeleteFileFromNote(fileName, noteId);
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public List<string> GetCommentFiles(long commentId)
+        {
+            if (commentId == 0)
+            {
+                return null;
+            }
+            return _filesService.GetCommentFileNames(commentId);
         }
 
         [HttpPost]
@@ -84,6 +103,17 @@ namespace RiskerWorkManager.Controllers
                 return null;
             }
             return _filesService.GetNoteFileNames(noteId);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadToComment(long commentId)
+        {
+            var formCollection = await Request.ReadFormAsync();
+            var files = formCollection.Files;
+
+            await _filesService.SaveFilesToCommentAsync(files, commentId);
+
+            return Ok();
         }
 
         [HttpPost]

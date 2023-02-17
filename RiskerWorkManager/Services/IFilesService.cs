@@ -15,6 +15,10 @@
         void DeleteFileFromNote(string fileName, long noteId);
         void DeleteAllFilesFromNote(long noteId);
         Task SaveFilesToNoteAsync(IFormFileCollection files, long noteId);
+        Task SaveFilesToCommentAsync(IFormFileCollection files, long commentId);
+        void DeleteAllFilesFromComment(long commentId);
+        void DeleteFileFromComment(string fileName, long commentId);
+        List<string> GetCommentFileNames(long commentId);
 
     }
 }
