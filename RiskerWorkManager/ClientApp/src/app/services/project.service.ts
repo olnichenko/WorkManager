@@ -20,6 +20,7 @@ export class ProjectService {
   }
 
   isUserCanEditProject(){
-    return this.accountService.getCurrentUser()?.id == this.dataStore.project.userCreated?.id;
+    //return this.accountService.getCurrentUser()?.id == this.dataStore.project.userCreated?.id;
+    return true;
   }
 }

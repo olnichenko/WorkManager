@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ApiClient, Feature, Project } from 'src/app/api-clients/api-client';
+import { ApiClient, Feature, Project, ProjectItemFilterVm, Version } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { FeatureViewComponent } from './feature-view/feature-view.component';
@@ -19,6 +19,8 @@ export class FeaturesComponent implements OnInit {
   features: Feature[] = [];
   displayedColumns: string[] = ['title', 'userCreated', 'dateCreated', 'solvedInVersion'];
   isEnableEdit = false;
+  filter: ProjectItemFilterVm = new ProjectItemFilterVm();
+  versions: Version[] = [];
 
   constructor(protected apiClient: ApiClient, 
     public accountService: AccountService, 
@@ -28,9 +30,18 @@ export class FeaturesComponent implements OnInit {
 
   ngOnInit(): void { 
     this.isEnableEdit = this.projectSevice.isUserCanEditProject();
+    
     this.projectSevice.project.subscribe((data) => {
       this.project = data;
+      this.filter.projectId = this.project.id;
+      this.filter.startDateFrom = new Date();
+      this.filter.startDateFrom.setDate(new Date().getDate() + -7);
+      this.filter.endDateFrom = new Date();
+      this.filter.endDateFrom.setDate(new Date().getDate() + 1);
       this.loadFeatures();
+      this.apiClient.getVersionsByProject(this.project.id).subscribe(data =>{
+        this.versions = data;
+      })
     });
   }
 
@@ -61,7 +72,7 @@ export class FeaturesComponent implements OnInit {
   }
 
   loadFeatures(): void{
-    this.apiClient.getFeaturesByProject(this.project.id).subscribe((features) => {
+    this.apiClient.getFeaturesByFilter(this.filter).subscribe((features) => {
       this.features = features;
       this.selectedFeature = null;
     })

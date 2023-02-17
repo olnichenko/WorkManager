@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
@@ -14,6 +15,36 @@ namespace WorkManagerDal.Services
         {
         }
 
+        public async Task<List<Bug>> GetBugsByFilterAsync(ProjectItemFilterVm filter)
+        {
+            var bugs = _unitOfWork.Bugs
+                .FindByCondition(x => x.Project.Id == filter.ProjectId && x.IsDeleted != true)
+                .Include(x => x.UserCreated)
+                .Include(x => x.SolvedInVersion)
+                .OrderByDescending(x => x.DateCreated) as IQueryable<Bug>;
+            if (!string.IsNullOrEmpty(filter.UserCreatedEmail))
+            {
+                bugs = bugs.Where(x => x.UserCreated.Email.Contains(filter.UserCreatedEmail));
+            }
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                bugs = bugs.Where(x => x.Title.Contains(filter.Title));
+            }
+            if (filter.StartDateFrom.HasValue)
+            {
+                bugs = bugs.Where(x => x.DateCreated >= filter.StartDateFrom);
+            }
+            if (filter.EndDateFrom.HasValue)
+            {
+                bugs = bugs.Where(x => x.DateCreated <= filter.EndDateFrom);
+            }
+            if (filter.SolvedVersion > 0)
+            {
+                bugs = bugs.Where(x => x.SolvedInVersion.Id == filter.SolvedVersion);
+            }
+            var result = await bugs.ToListAsync();
+            return result;
+        }
         public async Task<Bug> FindAsync(long bugId)
         {
             var bug = await _unitOfWork.Bugs

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
@@ -13,5 +14,6 @@ namespace WorkManagerDal.Services
         Task DeleteAsync(Bug bug);
         Task<List<Bug>> GetBugsByProjectAsync(long projectId);
         Task CreateOrUpdateBugAsync(Bug bug, long userId, long projectId, long solvedInVersionId);
+        Task<List<Bug>> GetBugsByFilterAsync(ProjectItemFilterVm filter);
     }
 }

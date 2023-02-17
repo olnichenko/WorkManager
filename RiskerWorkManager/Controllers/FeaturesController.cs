@@ -44,6 +44,14 @@ namespace RiskerWorkManager.Controllers
 
         [HttpPost]
         [AuthorizePermission]
+        public async Task<List<Feature>> GetFeaturesByFilter(ProjectItemFilterVm filter)
+        {
+            var features = await _featuresService.GetFeaturesByFilterAsync(filter);
+            return features;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
         public async Task<List<Feature>> GetFeaturesByProject(long projectId)
         {
             var user = _userIdentityService.GetCurrentUser(HttpContext);

@@ -1,3 +1,60 @@
+<mat-card>
+  <mat-card-header>
+      <mat-card-title>Filter:</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+      <div class="row">
+          <div class="col-3">
+              <mat-form-field class="full-width">
+                  <mat-label>User email</mat-label>
+                  <input matInput [(ngModel)]="filter.userCreatedEmail">
+              </mat-form-field>
+          </div>
+          <div class="col-3">
+            <mat-form-field class="full-width">
+                <mat-label>Title</mat-label>
+                <input matInput [(ngModel)]="filter.title">
+            </mat-form-field>
+        </div>
+          <div class="col-2">
+              <mat-form-field class="full-width">
+                  <mat-label>Start Date</mat-label>
+                  <input matInput [matDatepicker]="pickerStart" [(ngModel)]="filter.startDateFrom">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerStart></mat-datepicker>
+              </mat-form-field>
+          </div>
+          <div class="col-2">
+              <mat-form-field class="full-width">
+                  <mat-label>End Date</mat-label>
+                  <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="filter.endDateFrom">
+                  <mat-hint>MM/DD/YYYY</mat-hint>
+                  <mat-datepicker-toggle matIconSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerEnd></mat-datepicker>
+              </mat-form-field>
+          </div>
+
+          <div class="col-2">
+              <mat-form-field class="full-width">
+                  <mat-label>Solved in version</mat-label>
+                  <mat-select [(ngModel)]="filter.solvedVersion">
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let item of versions" [value]="item.id">
+                        {{item.title}}
+                    </mat-option>
+                  </mat-select>
+              </mat-form-field>
+          </div>
+      </div>
+  </mat-card-content>
+  <mat-card-actions>
+      <button mat-raised-button (click)="loadFeatures()" type="button">
+          <mat-icon>search</mat-icon>
+          Search
+      </button>
+  </mat-card-actions>
+</mat-card>
 <mat-toolbar>
   <button mat-raised-button *ngIf="isEnableEdit" (click)="openNewDialog()" type="button">
     <mat-icon>add</mat-icon>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ApiClient, Bug, Project } from 'src/app/api-clients/api-client';
+import { ApiClient, Bug, Project, ProjectItemFilterVm, Version } from 'src/app/api-clients/api-client';
 import { AccountService } from 'src/app/services/account.service';
 import { ProjectService } from 'src/app/services/project.service';
 import { EditBugComponent } from './edit-bug/edit-bug.component';
@@ -19,6 +19,8 @@ export class BugsComponent implements OnInit {
   bugs: Bug[] = [];
   displayedColumns: string[] = ['title', 'userCreated', 'dateCreated', 'solvedInVersion'];
   isEnableEdit = false;
+  filter: ProjectItemFilterVm = new ProjectItemFilterVm();
+  versions: Version[] = [];
 
   constructor(protected apiClient: ApiClient,
     public accountService: AccountService,
@@ -53,10 +55,14 @@ export class BugsComponent implements OnInit {
   }
 
   loadBugs(): void {
-    this.apiClient.getBugsByProject(this.project.id).subscribe((data) => {
+    this.apiClient.getBugsByFilter(this.filter).subscribe((data) => {
       this.bugs = data;
       this.selectedBug = null;
     })
+    // this.apiClient.getBugsByProject(this.project.id).subscribe((data) => {
+    //   this.bugs = data;
+    //   this.selectedBug = null;
+    // })
   }
 
   openNewDialog(): void {
@@ -96,7 +102,15 @@ export class BugsComponent implements OnInit {
     this.isEnableEdit = this.projectSevice.isUserCanEditProject();
     this.projectSevice.project.subscribe((data) => {
       this.project = data;
+      this.filter.projectId = this.project.id;
+      this.filter.startDateFrom = new Date();
+      this.filter.startDateFrom.setDate(new Date().getDate() + -7);
+      this.filter.endDateFrom = new Date();
+      this.filter.endDateFrom.setDate(new Date().getDate() + 1);
       this.loadBugs();
+      this.apiClient.getVersionsByProject(this.project.id).subscribe(data =>{
+        this.versions = data;
+      })
     });
   }
 }

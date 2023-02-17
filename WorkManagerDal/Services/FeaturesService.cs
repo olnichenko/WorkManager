@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
@@ -27,6 +28,37 @@ namespace WorkManagerDal.Services
         {
             feature.IsDeleted = true;
             await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<List<Feature>> GetFeaturesByFilterAsync(ProjectItemFilterVm filter)
+        {
+            var features = _unitOfWork.Features
+                .FindByCondition(x => x.Project.Id == filter.ProjectId && x.IsDeleted != true)
+                .Include(x => x.UserCreated)
+                .Include(x => x.SolvedInVersion)
+                .OrderByDescending(x => x.DateCreated) as IQueryable<Feature>;
+            if (!string.IsNullOrEmpty(filter.UserCreatedEmail))
+            {
+                features = features.Where(x => x.UserCreated.Email.Contains(filter.UserCreatedEmail));
+            }
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                features = features.Where(x => x.Title.Contains(filter.Title));
+            }
+            if (filter.StartDateFrom.HasValue)
+            {
+                features = features.Where(x => x.DateCreated >= filter.StartDateFrom);
+            }
+            if (filter.EndDateFrom.HasValue)
+            {
+                features = features.Where(x => x.DateCreated <= filter.EndDateFrom);
+            }
+            if (filter.SolvedVersion > 0)
+            {
+                features = features.Where(x => x.SolvedInVersion.Id == filter.SolvedVersion);
+            }
+            var result = await features.ToListAsync();
+            return result;
         }
 
         public async Task<List<Feature>> GetFeaturesByProjectAsync(long projectId)

@@ -5,6 +5,7 @@ using RiskerWorkManager.PermissionValidators;
 using RiskerWorkManager.Services;
 using WorkManagerDal.Models;
 using WorkManagerDal.Services;
+using WorkManagerDal.ViewModels;
 
 namespace RiskerWorkManager.Controllers
 {
@@ -38,6 +39,14 @@ namespace RiskerWorkManager.Controllers
 
             await _bugsService.DeleteAsync(bug);
             return true;
+        }
+
+        [HttpPost]
+        [AuthorizePermission]
+        public async Task<List<Bug>> GetBugsByFilter(ProjectItemFilterVm filter)
+        {
+            var bugs = await _bugsService.GetBugsByFilterAsync(filter);
+            return bugs;
         }
 
         [HttpPost]

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorkManagerDal.Models;
+using WorkManagerDal.ViewModels;
 
 namespace WorkManagerDal.Services
 {
@@ -13,5 +14,6 @@ namespace WorkManagerDal.Services
         Task<List<Feature>> GetFeaturesByProjectAsync(long projectId);
         Task DeleteAsync(Feature feature);
         Task<Feature> FindAsync(long featureId);
+        Task<List<Feature>> GetFeaturesByFilterAsync(ProjectItemFilterVm filter);
     }
 }
