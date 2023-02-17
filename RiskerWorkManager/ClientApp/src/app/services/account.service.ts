@@ -43,7 +43,13 @@ export class AccountService {
       this.setCurrentUser(data);
       this.user.next(data);
       snack.dismiss();
-      this.router.navigate([this.router.url]);
+      let currentUrl = this.router.url;
+      this.router.navigateByUrl(`/`).then(
+        () => {
+          this.router.navigateByUrl(currentUrl);
+        });
+      //window.location.reload();
+      //this.router.navigate([this.router.url]);
     })
   }
 
