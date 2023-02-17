@@ -22,7 +22,8 @@
             ],
             "assets": [
               "src/assets",
-              "src/favicon.ico"
+              "src/favicon.ico",
+              "src/web.config"
             ],
             "index": "src/index.html",
             "main": "src/main.ts",
