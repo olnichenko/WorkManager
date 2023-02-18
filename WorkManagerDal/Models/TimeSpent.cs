@@ -12,7 +12,7 @@ namespace WorkManagerDal.Models
         public DateTime? DateCreated { get; set; }
         public string? Comment { get; set; }
         public DateTime? DateFrom { get; set; }
-        public int HoursCount { get; set; }
+        public double HoursCount { get; set; }
         public Feature? Feature { get; set; }
         public Bug? Bug { get; set; }
     }
