@@ -22,56 +22,55 @@ export class FeaturesComponent implements OnInit {
   filter: ProjectItemFilterVm = new ProjectItemFilterVm();
   versions: Version[] = [];
 
-  constructor(protected apiClient: ApiClient, 
-    public accountService: AccountService, 
-    public dialog: MatDialog, 
+  constructor(protected apiClient: ApiClient,
+    public accountService: AccountService,
+    public dialog: MatDialog,
     public projectSevice: ProjectService,
-    protected snackBar: MatSnackBar){}
+    protected snackBar: MatSnackBar) { }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.isEnableEdit = this.projectSevice.isUserCanEditProject();
-    
+
     this.projectSevice.project.subscribe((data) => {
       this.project = data;
       this.filter.projectId = this.project.id;
       this.filter.startDateFrom = new Date();
       this.filter.startDateFrom.setDate(new Date().getDate() + -7);
       this.filter.endDateFrom = new Date();
-      this.filter.endDateFrom.setDate(new Date().getDate() + 1);
       this.loadFeatures();
-      this.apiClient.getVersionsByProject(this.project.id).subscribe(data =>{
+      this.apiClient.getVersionsByProject(this.project.id).subscribe(data => {
         this.versions = data;
       })
     });
   }
 
-  confirmDelete(){
+  confirmDelete() {
     var result = confirm("Are you sure you want to delete feature?");
-    if(result){
+    if (result) {
       this.apiClient.deleteFeature(this.selectedFeature?.id).subscribe(data => {
-        if(data){
+        if (data) {
           this.snackBar.open("Feature deleted", "Succes");
           this.loadFeatures();
-        }else{
+        } else {
           this.snackBar.open("Error", "Error");
         }
       })
     }
   }
-  
-  rowSelected(row: Feature){
+
+  rowSelected(row: Feature) {
     this.selectedFeature = row;
   }
 
-  rowDblClick(row: Feature){
-    let item =  this.features.find(x => x.id == row.id);
+  rowDblClick(row: Feature) {
+    let item = this.features.find(x => x.id == row.id);
     const dialogRef = this.dialog.open(FeatureViewComponent, {
       width: '600px',
-      data:{feature: item}
+      data: { feature: item }
     });
   }
 
-  loadFeatures(): void{
+  loadFeatures(): void {
     this.apiClient.getFeaturesByFilter(this.filter).subscribe((features) => {
       this.features = features;
       this.selectedFeature = null;
@@ -81,7 +80,7 @@ export class FeaturesComponent implements OnInit {
   openNewDialog(): void {
     const dialogRef = this.dialog.open(AddFeatureComponent, {
       width: '800px',
-      data:{feature: null, projectId: this.project.id}
+      data: { feature: null, projectId: this.project.id }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -94,12 +93,12 @@ export class FeaturesComponent implements OnInit {
   }
 
   openEditDialog(): void {
-    if (this.selectedFeature == null){
+    if (this.selectedFeature == null) {
       return;
     }
     const dialogRef = this.dialog.open(AddFeatureComponent, {
       width: '800px',
-      data:{feature: this.selectedFeature, projectId: this.project.id}
+      data: { feature: this.selectedFeature, projectId: this.project.id }
     });
 
     dialogRef.afterClosed().subscribe(result => {

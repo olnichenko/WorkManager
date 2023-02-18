@@ -59,10 +59,6 @@ export class BugsComponent implements OnInit {
       this.bugs = data;
       this.selectedBug = null;
     })
-    // this.apiClient.getBugsByProject(this.project.id).subscribe((data) => {
-    //   this.bugs = data;
-    //   this.selectedBug = null;
-    // })
   }
 
   openNewDialog(): void {
@@ -106,9 +102,8 @@ export class BugsComponent implements OnInit {
       this.filter.startDateFrom = new Date();
       this.filter.startDateFrom.setDate(new Date().getDate() + -7);
       this.filter.endDateFrom = new Date();
-      this.filter.endDateFrom.setDate(new Date().getDate() + 1);
       this.loadBugs();
-      this.apiClient.getVersionsByProject(this.project.id).subscribe(data =>{
+      this.apiClient.getVersionsByProject(this.project.id).subscribe(data => {
         this.versions = data;
       })
     });
