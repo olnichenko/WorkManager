@@ -18,7 +18,7 @@ namespace WorkManagerDal.Services
         {
             if (note.Id == 0)
             {
-                note.DateCreated = DateTime.UtcNow;
+                note.DateCreated = DateTime.Now;
                 _unitOfWork.Notes.Create(note);
                 var tUser = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Id == userId).SingleAsync();
                 var tProject = await _unitOfWork.Projects.FindByConditionWithTracking(x => x.Id == projectId).SingleAsync();

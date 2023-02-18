@@ -63,11 +63,11 @@ namespace WorkManagerDal.Services
             }
             if (filter.StartDateFrom.HasValue)
             {
-                timeSpents = timeSpents.Where(x => x.DateFrom >= filter.StartDateFrom);
+                timeSpents = timeSpents.Where(x => x.DateFrom.Value.Date >= filter.StartDateFrom.Value.Date);
             }
             if (filter.EndDateFrom.HasValue)
             {
-                timeSpents = timeSpents.Where(x => x.DateFrom <= filter.EndDateFrom);
+                timeSpents = timeSpents.Where(x => x.DateFrom.Value.Date <= filter.EndDateFrom.Value.Date);
             }
             if (filter.TaskId > 0)
             {
@@ -110,7 +110,7 @@ namespace WorkManagerDal.Services
             }
             if (timeSpent.Id == 0)
             {
-                timeSpent.DateCreated = DateTime.UtcNow;
+                timeSpent.DateCreated = DateTime.Now;
                 _unitOfWork.TimeSpents.Create(timeSpent);
                 var tUser = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Id == userId).SingleAsync();
                 tUser.TimeSpents.Add(timeSpent);

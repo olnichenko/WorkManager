@@ -32,11 +32,11 @@ namespace WorkManagerDal.Services
             }
             if (filter.StartDateFrom.HasValue)
             {
-                bugs = bugs.Where(x => x.DateCreated >= filter.StartDateFrom);
+                bugs = bugs.Where(x => x.DateCreated.Value.Date >= filter.StartDateFrom.Value.Date);
             }
             if (filter.EndDateFrom.HasValue)
             {
-                bugs = bugs.Where(x => x.DateCreated <= filter.EndDateFrom);
+                bugs = bugs.Where(x => x.DateCreated.Value.Date <= filter.EndDateFrom.Value.Date);
             }
             if (filter.SolvedVersion > 0)
             {
@@ -77,7 +77,7 @@ namespace WorkManagerDal.Services
 
             if (bug.Id == 0)
             {
-                bug.DateCreated = DateTime.UtcNow;
+                bug.DateCreated = DateTime.Now;
                 _unitOfWork.Bugs.Create(bug);
                 var tUser = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Id == userId).SingleAsync();
                 var tProject = await _unitOfWork.Projects.FindByConditionWithTracking(x => x.Id == projectId).SingleAsync();

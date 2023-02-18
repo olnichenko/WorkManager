@@ -17,7 +17,7 @@ namespace WorkManagerDal.Services
         {
             if (version.Id == 0)
             {
-                version.DateCreated = DateTime.UtcNow;
+                version.DateCreated = DateTime.Now;
                 _unitOfWork.Versions.Create(version);
                 var tUser = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Id == userId).SingleAsync();
                 var tProject = await _unitOfWork.Projects.FindByConditionWithTracking(x => x.Id == projectId).SingleAsync();

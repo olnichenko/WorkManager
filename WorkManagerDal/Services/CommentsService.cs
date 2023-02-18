@@ -36,7 +36,7 @@ namespace WorkManagerDal.Services
         {
             if (comment.Id == 0)
             {
-                comment.DateCreated = DateTime.UtcNow;
+                comment.DateCreated = DateTime.Now;
                 _unitOfWork.Comments.Create(comment);
                 var tUser = await _unitOfWork.Users.FindByConditionWithTracking(x => x.Id == userId).SingleAsync();
                 tUser.Comments.Add(comment);
