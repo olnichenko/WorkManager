@@ -51,6 +51,10 @@ mat-card {
   color: #3996C1 !important;
 }
 
+mat-card{
+  background-color: white !important;
+}
+
 .form-card {
   min-width: 120px;
   margin: 20px auto;

@@ -15,7 +15,7 @@ export class UsersComponent implements OnInit {
 
   @ViewChild(AgGridAngular) agGrid!: AgGridAngular;
   users: UserVm[] = [];
-  pageSize: number = 10;
+  pageSize: number = 100;
   currentPage: number = 1;
   usersCount: number = 0;
   searchEmail: string = "";
