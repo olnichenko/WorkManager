@@ -41,7 +41,10 @@ button.mat-primary:disabled {
 
 mat-card {
   box-shadow: 2px 3px 6px gray !important;
-  background-color: floralwhite !important;
+  background-color: white !important;
+}
+mat-toolbar{
+  background-color: white !important;
 }
 .mat-form-field-ripple {
   background-color: #3996C1 !important;
@@ -49,10 +52,6 @@ mat-card {
 
 .mat-form-field.mat-focused .mat-form-field-label {
   color: #3996C1 !important;
-}
-
-mat-card{
-  background-color: white !important;
 }
 
 .form-card {
